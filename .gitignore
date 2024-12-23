@@ -177,7 +177,7 @@ devenv.local.nix
 bff/main
 build_output/
 crystaldb-collector.db
-autodba-collector.conf
+crystaldba-collector.conf
 :memory:
 prometheus_data
 

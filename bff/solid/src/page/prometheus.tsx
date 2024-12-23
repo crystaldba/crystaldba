@@ -4,7 +4,7 @@ import { contextState } from "../context_state";
 import { ApiEndpoint } from "../state";
 import { EchartsLinechart } from "../view/echarts_linechart";
 
-export function PagePrometheus(title = "Prometheus Metrics | AutoDBA") {
+export function PagePrometheus(title = "Prometheus Metrics | Crystal DBA") {
   const { state, setState } = contextState();
   setState("apiThrottle", "needDataFor", ApiEndpoint.prometheus_metrics);
 

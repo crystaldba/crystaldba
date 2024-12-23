@@ -3,13 +3,13 @@
 # SPDX-Identifier: Apache-2.0
 
 # Set the base directory based on installation
-PARENT_DIR="${PARENT_DIR:-/usr/local/autodba}"
+PARENT_DIR="${PARENT_DIR:-/usr/local/crystaldba}"
 
 # Set default values for PROMETHEUS_HOST and COLLECTOR_API_URL
 export PROMETHEUS_HOST="${PROMETHEUS_HOST:-localhost:9090}"
 export PROMETHEUS_URL="http://${PROMETHEUS_HOST}"
 export COLLECTOR_API_URL="${COLLECTOR_API_URL:-http://localhost:7080}"
-export AUTODBA_API_KEY="${AUTODBA_API_KEY:-DEFAULT-API-KEY}"
+export CRYSTALDBA_API_KEY="${CRYSTALDBA_API_KEY:-DEFAULT-API-KEY}"
 
 function clean_up {
     # Perform program exit housekeeping

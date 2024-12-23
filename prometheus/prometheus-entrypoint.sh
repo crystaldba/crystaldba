@@ -3,13 +3,13 @@
 # SPDX-Identifier: Apache-2.0
 
 # Set the base directory based on installation
-PARENT_DIR="${PARENT_DIR:-/usr/local/autodba}"
+PARENT_DIR="${PARENT_DIR:-/usr/local/crystaldba}"
 
 # Start the reloader service
 $PARENT_DIR/bin/prometheus-reloader &
 
 # Choose config file based on reprocessing status
-if [ "${AUTODBA_REPROCESS_FULL_SNAPSHOTS}" = "true" ] || [ "${AUTODBA_REPROCESS_COMPACT_SNAPSHOTS}" = "true" ]; then
+if [ "${CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS}" = "true" ] || [ "${CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS}" = "true" ]; then
     CONFIG_SOURCE="$PARENT_DIR/config/prometheus/prometheus.reprocess.yml"
 else
     CONFIG_SOURCE="$PARENT_DIR/config/prometheus/prometheus.normal.yml"

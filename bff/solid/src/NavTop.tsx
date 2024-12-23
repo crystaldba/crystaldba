@@ -10,7 +10,7 @@ export function NavTop(props: { class?: string; children: Anything }) {
       >
         <A href="/" class="flex items-center gap-2" end>
           <img src="/logo.svg" alt="logo" class="h-7" />
-          <span class="text-2xl font-medium">AutoDBA</span>
+          <span class="text-2xl font-medium">Crystal DBA</span>
         </A>
         <section class="flex flex-wrap gap-4 items-center">
           {props.children}

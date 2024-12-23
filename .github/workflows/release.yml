@@ -22,7 +22,7 @@ jobs:
       - name: Get previous tag
         id: get_prev_tag
         run: |
-          PREV_VERSION=$(grep -oP 'autodba-\K[0-9]+\.[0-9]+\.[0-9]+(-rc\d+)?$' "README.md")
+          PREV_VERSION=$(grep -oP 'crystaldba-\K[0-9]+\.[0-9]+\.[0-9]+(-rc\d+)?$' "README.md")
           echo "PREV_VERSION is \"$PREV_VERSION\""
           echo "PREV_RELEASE_TAG=${PREV_VERSION}" >> $GITHUB_ENV
       
@@ -39,11 +39,11 @@ jobs:
 
       - name: Build Docker image for release
         run: |
-          docker build -f Dockerfile . --target release --tag autodbarelease
+          docker build -f Dockerfile . --target release --tag crystaldbarelease
 
       - name: Copy artifacts
         run: |
-          docker run --rm -v ./release_output:/release_output autodbarelease /bin/bash -c "cp /home/autodba/release_output/* /release_output"
+          docker run --rm -v ./release_output:/release_output crystaldbarelease /bin/bash -c "cp /home/crystaldba/release_output/* /release_output"
 
       - name: Extract changelog for current release
         id: extract_changelog

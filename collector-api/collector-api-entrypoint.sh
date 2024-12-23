@@ -3,7 +3,7 @@
 # SPDX-Identifier: Apache-2.0
 
 # Set the base directory based on installation
-PARENT_DIR="${PARENT_DIR:-/usr/local/autodba}"
+PARENT_DIR="${PARENT_DIR:-/usr/local/crystaldba}"
 PROMETHEUS_HOST="${PROMETHEUS_HOST:-localhost:9090}"
 
 # Wait for Prometheus to be ready
@@ -16,4 +16,4 @@ echo "collector-api: Prometheus is ready."
 cd $PARENT_DIR/share/collector_api_server
 
 # Start the Collector API Server
-exec ./collector-api-server  --reprocess-full=${AUTODBA_REPROCESS_FULL_SNAPSHOTS:-false} --reprocess-compact=${AUTODBA_REPROCESS_COMPACT_SNAPSHOTS:-false}
+exec ./collector-api-server  --reprocess-full=${CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS:-false} --reprocess-compact=${CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS:-false}

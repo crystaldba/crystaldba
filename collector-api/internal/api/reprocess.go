@@ -304,7 +304,7 @@ func signalPrometheusConfigChange() error {
 
 	log.Printf("Successfully switched Prometheus to normal configuration")
 
-	reprocessDoneFile := os.Getenv("AUTODBA_REPROCESS_DONE_FILE")
+	reprocessDoneFile := os.Getenv("CRYSTALDBA_REPROCESS_DONE_FILE")
 
 	if reprocessDoneFile == "" {
 		reprocessDoneFile = "/tmp/reprocess-done"

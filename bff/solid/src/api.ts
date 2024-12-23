@@ -10,7 +10,7 @@ const getAccessKey = () => {
 
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   const headers = new Headers(options.headers || {});
-  headers.set("Autodba-Access-Key", getAccessKey());
+  headers.set("Crystaldba-Access-Key", getAccessKey());
 
   const response = await fetch(url, {
     ...options,

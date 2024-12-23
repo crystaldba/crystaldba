@@ -52,32 +52,32 @@ func run(webappPath string) error {
 	var config server.Config
 	config.WebappPath = webappPath
 
-	forceBypassAccessKey := os.Getenv("AUTODBA_FORCE_BYPASS_ACCESS_KEY")
+	forceBypassAccessKey := os.Getenv("CRYSTALDBA_FORCE_BYPASS_ACCESS_KEY")
 	config.ForceBypassAccessKey = forceBypassAccessKey == "true"
 
 	// Get access key from environment variable with fallback to config file
-	accessKey := os.Getenv("AUTODBA_ACCESS_KEY")
+	accessKey := os.Getenv("CRYSTALDBA_ACCESS_KEY")
 	if !config.ForceBypassAccessKey && accessKey == "" {
-		return fmt.Errorf("access key must be set via the AUTODBA_ACCESS_KEY environment variable")
+		return fmt.Errorf("access key must be set via the CRYSTALDBA_ACCESS_KEY environment variable")
 	}
 	config.AccessKey = accessKey
 
 	var ok bool
 	// Get port from environment variable with fallback to config file
-	port := os.Getenv("AUTODBA_BFF_PORT")
+	port := os.Getenv("CRYSTALDBA_BFF_PORT")
 	if port == "" {
 		port, ok = rawConfig["port"].(string)
 		if !ok || port == "" {
-			return fmt.Errorf("port must be set via the AUTODBA_BFF_PORT environment variable or in the config file")
+			return fmt.Errorf("port must be set via the CRYSTALDBA_BFF_PORT environment variable or in the config file")
 		}
 	}
 	config.Port = port
 
-	dataPath := os.Getenv("AUTODBA_DATA_PATH")
+	dataPath := os.Getenv("CRYSTALDBA_DATA_PATH")
 	if dataPath == "" {
 		dataPath, ok = rawConfig["data_path"].(string)
 		if !ok || dataPath == "" {
-			return fmt.Errorf("data path must be set via the AUTODBA_DATA_PATH environment variable or in the config file")
+			return fmt.Errorf("data path must be set via the CRYSTALDBA_DATA_PATH environment variable or in the config file")
 		}
 	}
 	config.DataPath = dataPath

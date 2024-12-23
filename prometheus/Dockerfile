@@ -15,7 +15,7 @@ RUN wget -O go.tgz "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
 ENV PATH="/usr/lib/go/bin:${PATH}" \
     GOROOT="/usr/lib/go"
 
-WORKDIR /usr/local/autodba
+WORKDIR /usr/local/crystaldba
 
 # Install Prometheus
 RUN wget -qO- https://github.com/prometheus/prometheus/releases/download/v2.55.1/prometheus-2.55.1.linux-amd64.tar.gz | tar -xzf - -C /tmp/ \
@@ -34,12 +34,12 @@ COPY recording_rules.yml ./config/prometheus/recording_rules.yml
 # Copy and build the reloader service
 COPY cmd/reloader /build/reloader
 WORKDIR /build/reloader
-RUN go build -o /usr/local/autodba/bin/prometheus-reloader
+RUN go build -o /usr/local/crystaldba/bin/prometheus-reloader
 
 # Reset WORKDIR
-WORKDIR /usr/local/autodba
+WORKDIR /usr/local/crystaldba
 
-COPY prometheus-entrypoint.sh /usr/local/autodba/bin/prometheus-entrypoint.sh
-RUN chmod +x /usr/local/autodba/bin/prometheus-entrypoint.sh
+COPY prometheus-entrypoint.sh /usr/local/crystaldba/bin/prometheus-entrypoint.sh
+RUN chmod +x /usr/local/crystaldba/bin/prometheus-entrypoint.sh
 
-CMD ["/usr/local/autodba/bin/prometheus-entrypoint.sh"]
+CMD ["/usr/local/crystaldba/bin/prometheus-entrypoint.sh"]

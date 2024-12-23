@@ -22,13 +22,13 @@ func main() {
 		// Get the base directory
 		parentDir := os.Getenv("PARENT_DIR")
 		if parentDir == "" {
-			parentDir = "/usr/local/autodba"
+			parentDir = "/usr/local/crystaldba"
 		}
 		log.Printf("Using parent directory: %s", parentDir)
 
 		// Update environment variables
-		os.Setenv("AUTODBA_REPROCESS_FULL_SNAPSHOTS", "false")
-		os.Setenv("AUTODBA_REPROCESS_COMPACT_SNAPSHOTS", "false")
+		os.Setenv("CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS", "false")
+		os.Setenv("CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS", "false")
 		log.Printf("Updated environment variables to disable reprocessing")
 
 		// Copy normal config to active config

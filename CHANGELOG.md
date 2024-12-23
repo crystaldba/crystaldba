@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] - 2024-12-23
+
+### Added
+- **Backfill support** to rapidly populate a Prometheus database with historical snapshots.
+
+### Changed
+- **Renamed to Crystal DBA** to reflect the current product positioning.
+- **Prometheus default configuration** to limit resource usage.
+
+### Fixed
+- **Filter by query** previous release introduced a regression in filtering by query.
+- **Timeseries data returned out of order** when data spans more than one day.
+
 ## [0.6.0] - 2024-12-06
 
 ### Added
@@ -30,8 +43,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Query filter options** to properly include database identifier.
 - **Installation issues** affecting new deployments.
 
-### Security    
-- **Added AUTODBA_FORCE_BYPASS_ACCESS_KEY environment variable** for flexible authentication control during development and testing.
+### Security
+- **Added CRYSTALDBA_FORCE_BYPASS_ACCESS_KEY environment variable** for flexible authentication control during development and testing.
 
 ## [0.5.0] - 2024-11-04
 

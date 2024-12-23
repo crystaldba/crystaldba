@@ -53,7 +53,7 @@ var (
 var defaultConfig = ContainerConfig{
 	ProjectDir:          "../",
 	Dockerfile:          "../Dockerfile",
-	ContainerName:       "autodba_test",
+	ContainerName:       "crystaldba_test",
 	PrometheusPort:      "9090",
 	BffPort:             "4000",
 	DefaultMetricPeriod: "5",
@@ -92,7 +92,7 @@ aws_secret_access_key = %s
 
 	log.Println("GeneratedCollector config:\n ", collectorConfig)
 
-	configFilePath := filepath.Join(containerConfig.ProjectDir, "autodba-collector.conf")
+	configFilePath := filepath.Join(containerConfig.ProjectDir, "crystaldba-collector.conf")
 
 	absolutePath, err := filepath.Abs(configFilePath)
 	if err != nil {
@@ -141,7 +141,7 @@ func SetupTestContainer(config *ContainerConfig, dbInfo DbInfo, imageName string
 
 	log.Println("Preparing mounts and environment variables...")
 
-	mountTarget := "/usr/local/autodba/share/collector/collector.conf"
+	mountTarget := "/usr/local/crystaldba/share/collector/collector.conf"
 	mounts := []mount.Mount{
 		{
 			Type:   mount.TypeBind,

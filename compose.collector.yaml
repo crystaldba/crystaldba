@@ -6,10 +6,10 @@ services:
       context: collector
       dockerfile: Dockerfile
     volumes:
-      - ./collector/autodba-collector.conf:/usr/local/autodba/share/collector/collector.conf:ro
+      - ./collector/crystaldba-collector.conf:/usr/local/crystaldba/share/collector/collector.conf:ro
     depends_on:
-      - autodba-agent
+      - crystaldba-agent
     networks:
-      - autodba_network
+      - crystaldba_network
     environment:
-      - COLLECTOR_API_URL=http://autodba-agent:7080
+      - COLLECTOR_API_URL=http://crystaldba-agent:7080

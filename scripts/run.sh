@@ -64,7 +64,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # Handle config file
-FIXED_CONFIG_FILE="./collector/autodba-collector.conf"
+FIXED_CONFIG_FILE="./collector/crystaldba-collector.conf"
 if [[ -z "$CONFIG_FILE" ]]; then
     if [ "$USE_COLLECTOR" = true ]; then
         echo "Error: Config file is required when using collector" >&2
@@ -80,7 +80,7 @@ else
     cp $CONFIG_FILE $FIXED_CONFIG_FILE
 fi
 
-INSTANCE_NAME="autodba-${USER//./_}-${INSTANCE_ID}"
+INSTANCE_NAME="crystaldba-${USER//./_}-${INSTANCE_ID}"
 
 function clean_up {
     # Only stop containers if --keep-containers wasn't specified
@@ -117,7 +117,7 @@ detect_compose_cmd() {
 export COLLECTOR_API_PORT=$((UID + 7000 + INSTANCE_ID))
 export BFF_WEBAPP_PORT=$((UID + 4000 + INSTANCE_ID))
 export PROMETHEUS_PORT=$((UID + 6000 + INSTANCE_ID))
-export CONFIG_FILE="/usr/local/autodba/config/autodba/collector.conf"
+export CONFIG_FILE="/usr/local/crystaldba/config/crystaldba/collector.conf"
 
 # Detect compose command
 COMPOSE_BIN=$(detect_compose_cmd)
@@ -135,15 +135,15 @@ $COMPOSE_CMD down
 
 # Set reprocessing environment variables
 if [ "$REPROCESS_FULL" = true ]; then
-    export AUTODBA_REPROCESS_FULL_SNAPSHOTS=true
+    export CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS=true
 else
-    export AUTODBA_REPROCESS_FULL_SNAPSHOTS=false
+    export CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS=false
 fi
 
 if [ "$REPROCESS_COMPACT" = true ]; then
-    export AUTODBA_REPROCESS_COMPACT_SNAPSHOTS=true
+    export CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS=true
 else
-    export AUTODBA_REPROCESS_COMPACT_SNAPSHOTS=false
+    export CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS=false
 fi
 
 # Build and start the containers
@@ -152,7 +152,7 @@ $COMPOSE_CMD up --build -d
 
 echo "=============================================================="
 echo ""
-echo "Running Docker containers for AutoDBA"
+echo "Running Docker containers for Crystal DBA"
 echo ""
 echo "           prometheus port: $PROMETHEUS_PORT"
 echo "                  bff port: $BFF_WEBAPP_PORT"

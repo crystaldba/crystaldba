@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --system --user-group --home-dir /home/autodba --shell /bin/bash autodba
+RUN useradd --system --user-group --home-dir /home/crystaldba --shell /bin/bash crystaldba
 
 # Install nvm and Node.js
 ENV NVM_DIR /usr/local/nvm
@@ -24,7 +24,7 @@ ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 FROM base AS solid_builder
 # Build web-app
-WORKDIR /home/autodba/solid
+WORKDIR /home/crystaldba/solid
 COPY solid/package.json solid/package-lock.json ./
 RUN npm install
 COPY solid ./
@@ -43,26 +43,26 @@ ENV PATH="/usr/lib/go/bin:${PATH}" \
 
 FROM go_builder as bff_builder
 # Build BFF
-WORKDIR /home/autodba/bff
+WORKDIR /home/crystaldba/bff
 # Ensure CGO is enabled
 ENV CGO_ENABLED=1
-RUN mkdir -p /usr/local/autodba/bin
+RUN mkdir -p /usr/local/crystaldba/bin
 COPY ./go.mod ./go.sum ./
 RUN go mod download
 COPY ./ ./
 RUN go build -o main ./cmd/main.go
-RUN cp main /usr/local/autodba/bin/autodba-bff
+RUN cp main /usr/local/crystaldba/bin/crystaldba-bff
 
 FROM base as bff_webapp
-WORKDIR /usr/local/autodba
+WORKDIR /usr/local/crystaldba
 
 COPY bff-entrypoint.sh ./bin/bff-entrypoint.sh
 RUN chmod +x ./bin/bff-entrypoint.sh
 
 # Copy built files from previous stages
-COPY --from=solid_builder /home/autodba/solid/dist ./share/webapp
-COPY --from=bff_builder /home/autodba/bff/config.json ./config/autodba/config.json
-COPY --from=bff_builder /usr/local/autodba/bin ./bin
+COPY --from=solid_builder /home/crystaldba/solid/dist ./share/webapp
+COPY --from=bff_builder /home/crystaldba/bff/config.json ./config/crystaldba/config.json
+COPY --from=bff_builder /usr/local/crystaldba/bin ./bin
 
-WORKDIR /usr/local/autodba/config/autodba
-CMD ["/usr/local/autodba/bin/bff-entrypoint.sh"]
+WORKDIR /usr/local/crystaldba/config/crystaldba
+CMD ["/usr/local/crystaldba/bin/bff-entrypoint.sh"]

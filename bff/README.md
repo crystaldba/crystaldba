@@ -14,7 +14,7 @@ Run formatting with: `go fmt ./...`
 
 ## Setting up for Development
 
-During development (say to attach a debugger) you may wish to run this BFF independently of the rest of the AutoDBA project.
+During development (say to attach a debugger) you may wish to run this BFF independently of the rest of the Crystal DBA project.
 The BFF requires access to a running Prometheus service, which you can create either by installing the project from a release or by using the `scripts/run.sh` script.
 
 You must identify the port that the Prometheus service is accessible on, e.g., 9090.

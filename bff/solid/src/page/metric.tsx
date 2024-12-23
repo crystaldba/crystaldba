@@ -4,7 +4,7 @@ import { contextState } from "../context_state";
 import { ApiEndpoint } from "../state";
 import { EchartsLinechart } from "../view/echarts_linechart";
 
-export function PageMetric(title = "Metrics | AutoDBA") {
+export function PageMetric(title = "Metrics | Crystal DBA") {
   const { state, setState } = contextState();
   setState("apiThrottle", "needDataFor", ApiEndpoint.metric);
 

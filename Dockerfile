@@ -36,11 +36,11 @@ ENV PATH="/usr/lib/go/bin:${PATH}" \
     GOROOT="/usr/lib/go"
 
 FROM builder as release
-WORKDIR /home/autodba
+WORKDIR /home/crystaldba
 COPY ./ ./
 RUN ./scripts/build.sh && \
     mkdir -p release_output && \
-    mv build_output/tar.gz/autodba-*.tar.gz release_output/  && \
+    mv build_output/tar.gz/crystaldba-*.tar.gz release_output/  && \
     mv build_output/tar.gz/collector-*.tar.gz release_output/  && \
     rm -rf build_output
 
@@ -52,16 +52,16 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 RUN cd ./solid && npx @biomejs/biome check --config-path=. .
 
 FROM builder AS test
-WORKDIR /home/autodba/bff
+WORKDIR /home/crystaldba/bff
 COPY bff/go.mod bff/go.sum ./
 RUN go mod download
 COPY bff/ ./
-RUN AUTODBA_ACCESS_KEY=test-access-key go test ./pkg/server -v
-RUN AUTODBA_ACCESS_KEY=test-access-key go test ./pkg/metrics -v
-RUN AUTODBA_ACCESS_KEY=test-access-key go test ./pkg/prometheus -v
+RUN CRYSTALDBA_ACCESS_KEY=test-access-key go test ./pkg/server -v
+RUN CRYSTALDBA_ACCESS_KEY=test-access-key go test ./pkg/metrics -v
+RUN CRYSTALDBA_ACCESS_KEY=test-access-key go test ./pkg/prometheus -v
 
-WORKDIR /home/autodba/collector-api
+WORKDIR /home/crystaldba/collector-api
 COPY collector-api/go.mod collector-api/go.sum ./
 RUN go mod download
 COPY collector-api/ ./
-RUN AUTODBA_API_KEY=test-api-key go test -v ./...
+RUN CRYSTALDBA_API_KEY=test-api-key go test -v ./...

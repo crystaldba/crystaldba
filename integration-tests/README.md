@@ -4,7 +4,7 @@
 
 First, build the main project docker image with the image name name you will pass into the test suite
 ```bash
-docker build -t autodba:latest ../
+docker build -t crystaldba:latest ../
 ```
 This image will be used by the test suite to create container instances to test against
 
@@ -13,7 +13,7 @@ The dbconfig json is a map of postgres versions to details for a db of that vers
 
 ```bash
 
-go test ./... -run TestAPISuite -v -timeout 20m -args -imageName autodba:latest -dbconfig='{
+go test ./... -run TestAPISuite -v -timeout 20m -args -imageName crystaldba:latest -dbconfig='{
   "16": {
     "description": "PostgreSQL 16 instance",
     "host": "your-db-host",
@@ -35,7 +35,7 @@ go test ./... -run TestAPISuite -v -timeout 20m -args -imageName autodba:latest 
 To test multiple postgres versions, create the appropriate databases and fill in the relevant information below
 
 ```bash
-go test ./... -run TestAPISuite -v -timeout 20m -args -imageName autodba:latest -dbconfig='{
+go test ./... -run TestAPISuite -v -timeout 20m -args -imageName crystaldba:latest -dbconfig='{
   "15": {
     "description": "PostgreSQL 15 instance",
     "host": "your-db-host",

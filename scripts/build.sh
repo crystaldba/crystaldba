@@ -35,10 +35,10 @@ echo "Building the project for multiple architectures..."
     cd bff
 
     # Build for x86_64
-    GOARCH=amd64 GOOS=linux go build -o ${OUTPUT_DIR}/autodba-bff-amd64 ./cmd/main.go
+    GOARCH=amd64 GOOS=linux go build -o ${OUTPUT_DIR}/crystaldba-bff-amd64 ./cmd/main.go
 
     # Build for ARM64
-    GOARCH=arm64 GOOS=linux go build -o ${OUTPUT_DIR}/autodba-bff-arm64 ./cmd/main.go
+    GOARCH=arm64 GOOS=linux go build -o ${OUTPUT_DIR}/crystaldba-bff-arm64 ./cmd/main.go
 
     # Copy the config.json
     cp config.json ${OUTPUT_DIR}/config.json
@@ -56,11 +56,11 @@ TMP_DIR="/tmp"
 
 for arch in amd64 arm64; do
     # Define paths relative to PARENT_DIR
-    PARENT_DIR="${TAR_GZ_DIR}/autodba-${VERSION}-${arch}/autodba-${VERSION}"
+    PARENT_DIR="${TAR_GZ_DIR}/crystaldba-${VERSION}-${arch}/crystaldba-${VERSION}"
     INSTALL_DIR="$PARENT_DIR/bin"
     WEBAPP_DIR="$PARENT_DIR/share/webapp"
     PROMETHEUS_CONFIG_DIR="$PARENT_DIR/config/prometheus"
-    AUTODBA_CONFIG_DIR="$PARENT_DIR/config/autodba"
+    CRYSTALDBA_CONFIG_DIR="$PARENT_DIR/config/crystaldba"
     PROMETHEUS_INSTALL_DIR="$PARENT_DIR/prometheus"
     COLLECTOR_DIR="${PARENT_DIR}/share/collector"
     COLLECTOR_RELEASE_DIR="${TAR_GZ_DIR}/collector-${VERSION}-${arch}/collector-${VERSION}"
@@ -101,13 +101,13 @@ for arch in amd64 arm64; do
     # Prepare directories for install
     mkdir -p "${INSTALL_DIR}"
     mkdir -p "${WEBAPP_DIR}"
-    mkdir -p "${AUTODBA_CONFIG_DIR}"
+    mkdir -p "${CRYSTALDBA_CONFIG_DIR}"
     
-    cp -r ${OUTPUT_DIR}/autodba-bff-${arch} "${INSTALL_DIR}/autodba-bff"
-    cp -r ${OUTPUT_DIR}/config.json "${AUTODBA_CONFIG_DIR}/config.json"
+    cp -r ${OUTPUT_DIR}/crystaldba-bff-${arch} "${INSTALL_DIR}/crystaldba-bff"
+    cp -r ${OUTPUT_DIR}/config.json "${CRYSTALDBA_CONFIG_DIR}/config.json"
     cp -r bff/solid/dist/* "${WEBAPP_DIR}"
-    cp entrypoint.sh "${INSTALL_DIR}/autodba-entrypoint.sh"
-    chmod +x "${INSTALL_DIR}/autodba-entrypoint.sh"
+    cp entrypoint.sh "${INSTALL_DIR}/crystaldba-entrypoint.sh"
+    chmod +x "${INSTALL_DIR}/crystaldba-entrypoint.sh"
 
     cp prometheus/prometheus-entrypoint.sh "${PARENT_DIR}/bin/"
     cp collector-api/collector-api-entrypoint.sh "${PARENT_DIR}/bin/"
@@ -131,9 +131,9 @@ for arch in amd64 arm64; do
     make build
     
     # Move collector binaries to release directory instead of renaming in place
-    mv pganalyze-collector "${COLLECTOR_RELEASE_DIR}/autodba-collector"
-    mv pganalyze-collector-helper "${COLLECTOR_RELEASE_DIR}/autodba-collector-helper"
-    mv pganalyze-collector-setup "${COLLECTOR_RELEASE_DIR}/autodba-collector-setup"
+    mv pganalyze-collector "${COLLECTOR_RELEASE_DIR}/crystaldba-collector"
+    mv pganalyze-collector-helper "${COLLECTOR_RELEASE_DIR}/crystaldba-collector-helper"
+    mv pganalyze-collector-setup "${COLLECTOR_RELEASE_DIR}/crystaldba-collector-setup"
     cd -
     rm -rf "${COLLECTOR_DIR}"
 
@@ -147,8 +147,8 @@ done
 create_tar_gz() {
     for arch in amd64 arm64; do
         echo "Creating tar.gz packages for ${arch}..."
-        # Create autodba package
-        tar -czvf "${TAR_GZ_DIR}/autodba-${VERSION}-${arch}.tar.gz" -C "${TAR_GZ_DIR}/autodba-${VERSION}-${arch}" .
+        # Create crystaldba package
+        tar -czvf "${TAR_GZ_DIR}/crystaldba-${VERSION}-${arch}.tar.gz" -C "${TAR_GZ_DIR}/crystaldba-${VERSION}-${arch}" .
         # Create collector package
         tar -czvf "${TAR_GZ_DIR}/collector-${VERSION}-${arch}.tar.gz" -C "${TAR_GZ_DIR}/collector-${VERSION}-${arch}" .
     done

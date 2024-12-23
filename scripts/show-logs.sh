@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Colors for different services
-AUTODBA_COLOR='\033[0;36m'      # Cyan for autodba
+CRYSTALDBA_COLOR='\033[0;36m'      # Cyan for crystaldba
 COLLECTOR_COLOR='\033[0;35m'    # Magenta for collector
 TIMESTAMP_COLOR='\033[0;33m'    # Yellow for timestamp
 NC='\033[0m'                    # No Color
@@ -10,12 +10,12 @@ NC='\033[0m'                    # No Color
 format_log() {
     while read -r line; do
         # Extract unit name and rest of the message
-        if [[ $line =~ autodba-collector ]]; then
+        if [[ $line =~ crystaldba-collector ]]; then
             service="collector"
             color=$COLLECTOR_COLOR
         else
-            service="autodba"
-            color=$AUTODBA_COLOR
+            service="crystaldba"
+            color=$CRYSTALDBA_COLOR
         fi
         
         # Extract timestamp and message
@@ -30,4 +30,4 @@ format_log() {
 }
 
 # Run journalctl with combined unit filter
-journalctl -xef -u autodba.service -u autodba-collector.service | format_log
+journalctl -xef -u crystaldba.service -u crystaldba-collector.service | format_log

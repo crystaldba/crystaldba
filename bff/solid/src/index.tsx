@@ -23,7 +23,7 @@ if (root)
   render(
     () => (
       <MetaProvider>
-        <Title>AutoDBA</Title>
+        <Title>Crystal DBA</Title>
         <App />
       </MetaProvider>
     ),

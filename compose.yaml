@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-    autodba-agent:
+    crystaldba-agent:
         build:
             context: collector-api
             dockerfile: Dockerfile
@@ -10,20 +10,20 @@ services:
         volumes:
             - type: volume
               source: collector_api_storage
-              target: /usr/local/autodba/share/collector_api_server/storage
+              target: /usr/local/crystaldba/share/collector_api_server/storage
               read_only: false
-            - prometheus_data:/usr/local/autodba/prometheus_data
+            - prometheus_data:/usr/local/crystaldba/prometheus_data
         depends_on:
-            - autodba-prometheus
+            - crystaldba-prometheus
         networks:
-            - autodba_network
+            - crystaldba_network
         environment:
-            - PROMETHEUS_HOST=${AUTODBA_PROMETHEUS_HOST:-autodba-prometheus:9090}
-            - COLLECTOR_API_URL=${AUTODBA_COLLECTOR_API_URL:-http://autodba-agent:7080}
-            - AUTODBA_API_KEY=${AUTODBA_API_KEY:-DEFAULT-API-KEY}
-            - AUTODBA_REPROCESS_FULL_SNAPSHOTS=${AUTODBA_REPROCESS_FULL_SNAPSHOTS:-false}
-            - AUTODBA_REPROCESS_COMPACT_SNAPSHOTS=${AUTODBA_REPROCESS_COMPACT_SNAPSHOTS:-false}
-    autodba-webapp:
+            - PROMETHEUS_HOST=${CRYSTALDBA_PROMETHEUS_HOST:-crystaldba-prometheus:9090}
+            - COLLECTOR_API_URL=${CRYSTALDBA_COLLECTOR_API_URL:-http://crystaldba-agent:7080}
+            - CRYSTALDBA_API_KEY=${CRYSTALDBA_API_KEY:-DEFAULT-API-KEY}
+            - CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS=${CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS:-false}
+            - CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS=${CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS:-false}
+    crystaldba-webapp:
         build:
             context: bff
             dockerfile: Dockerfile
@@ -32,37 +32,37 @@ services:
         ports:
             - "${BFF_WEBAPP_PORT:-4000}:4000"
         depends_on:
-            - autodba-prometheus
+            - crystaldba-prometheus
         networks:
-            - autodba_network
+            - crystaldba_network
         environment:
-            - PROMETHEUS_URL=${AUTODBA_PROMETHEUS_URL:-http://autodba-prometheus:9090}
-            - AUTODBA_ACCESS_KEY=${AUTODBA_ACCESS_KEY:-DEFAULT-ACCESS-KEY}
-            - AUTODBA_FORCE_BYPASS_ACCESS_KEY=${AUTODBA_FORCE_BYPASS_ACCESS_KEY:-false}
-            - AUTODBA_DATA_PATH=/usr/local/autodba/share/collector_api_server/storage
+            - PROMETHEUS_URL=${CRYSTALDBA_PROMETHEUS_URL:-http://crystaldba-prometheus:9090}
+            - CRYSTALDBA_ACCESS_KEY=${CRYSTALDBA_ACCESS_KEY:-DEFAULT-ACCESS-KEY}
+            - CRYSTALDBA_FORCE_BYPASS_ACCESS_KEY=${CRYSTALDBA_FORCE_BYPASS_ACCESS_KEY:-false}
+            - CRYSTALDBA_DATA_PATH=/usr/local/crystaldba/share/collector_api_server/storage
         volumes:
             - type: volume
               source: collector_api_storage
-              target: /usr/local/autodba/share/collector_api_server/storage
+              target: /usr/local/crystaldba/share/collector_api_server/storage
               read_only: true
-            - prometheus_data:/usr/local/autodba/prometheus_data
+            - prometheus_data:/usr/local/crystaldba/prometheus_data
 
-    autodba-prometheus:
+    crystaldba-prometheus:
         build:
             context: prometheus
             dockerfile: Dockerfile
         ports:
             - "${PROMETHEUS_PORT:-9090}:9090"
         volumes:
-            - prometheus_data:/usr/local/autodba/prometheus_data
+            - prometheus_data:/usr/local/crystaldba/prometheus_data
         networks:
-            - autodba_network
+            - crystaldba_network
         environment:
-            - AUTODBA_REPROCESS_FULL_SNAPSHOTS=${AUTODBA_REPROCESS_FULL_SNAPSHOTS:-false}
-            - AUTODBA_REPROCESS_COMPACT_SNAPSHOTS=${AUTODBA_REPROCESS_COMPACT_SNAPSHOTS:-false}
+            - CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS=${CRYSTALDBA_REPROCESS_FULL_SNAPSHOTS:-false}
+            - CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS=${CRYSTALDBA_REPROCESS_COMPACT_SNAPSHOTS:-false}
 
 networks:
-    autodba_network:
+    crystaldba_network:
         driver: bridge
 
 volumes:

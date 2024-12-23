@@ -17,7 +17,7 @@ RUN wget -O go.tgz "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
 ENV PATH="/usr/lib/go/bin:${PATH}" \
     GOROOT="/usr/lib/go"
 
-WORKDIR /usr/local/autodba
+WORKDIR /usr/local/crystaldba
 
 # Install promtool (required for reprocessing snapshots)
 RUN wget -qO- https://github.com/prometheus/prometheus/releases/download/v2.55.1/prometheus-2.55.1.linux-amd64.tar.gz | tar -xzf - -C /tmp/ \
@@ -30,7 +30,7 @@ RUN wget -qO- https://github.com/prometheus/prometheus/releases/download/v2.55.1
 # Prometheus recording rules config (used for reprocessing snapshots)
 COPY recording_rules.yml ./config/prometheus/recording_rules.yml
 
-WORKDIR /usr/local/autodba/share/collector_api_server
+WORKDIR /usr/local/crystaldba/share/collector_api_server
 
 # Create necessary directories
 RUN mkdir -p storage
@@ -40,10 +40,10 @@ ENV CGO_ENABLED=1
 COPY ./go.mod ./go.sum ./
 RUN go mod download
 
-COPY collector-api-entrypoint.sh /usr/local/autodba/bin/collector-api-entrypoint.sh
-RUN chmod +x /usr/local/autodba/bin/collector-api-entrypoint.sh
+COPY collector-api-entrypoint.sh /usr/local/crystaldba/bin/collector-api-entrypoint.sh
+RUN chmod +x /usr/local/crystaldba/bin/collector-api-entrypoint.sh
 
 COPY ./ ./
 RUN go build -o collector-api-server ./cmd/server/main.go
 
-CMD ["/usr/local/autodba/bin/collector-api-entrypoint.sh"]
+CMD ["/usr/local/crystaldba/bin/collector-api-entrypoint.sh"]

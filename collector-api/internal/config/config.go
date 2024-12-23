@@ -26,9 +26,9 @@ func LoadConfig(configPath string) (*Config, error) {
 	}
 	defer file.Close()
 
-	apiKey := os.Getenv("AUTODBA_API_KEY")
+	apiKey := os.Getenv("CRYSTALDBA_API_KEY")
 	if apiKey == "" {
-		return nil, fmt.Errorf("access key must be set via the AUTODBA_API_KEY environment variable")
+		return nil, fmt.Errorf("access key must be set via the CRYSTALDBA_API_KEY environment variable")
 	}
 
 	decoder := json.NewDecoder(file)

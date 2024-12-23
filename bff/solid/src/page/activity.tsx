@@ -1,7 +1,7 @@
 import { Title } from "@solidjs/meta";
 import { CubeActivity } from "../view/cube_activity";
 
-export function PageActivity(title = "Activity | AutoDBA") {
+export function PageActivity(title = "Activity | Crystal DBA") {
   return (
     <>
       <Title>{title}</Title>

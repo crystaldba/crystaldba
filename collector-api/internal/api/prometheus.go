@@ -59,7 +59,7 @@ type promResult struct {
 }
 
 func (c *prometheusClient) Do(req *http.Request) (*http.Response, error) {
-	req.Header.Set("User-Agent", "autodba")
+	req.Header.Set("User-Agent", "crystaldba")
 	return c.Client.Do(req)
 }
 

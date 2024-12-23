@@ -9,7 +9,7 @@ SOURCE_DIR=$(dirname "$(readlink -f "$0")")
 
 cd $SOURCE_DIR/..
 
-docker build -f Dockerfile . --target release --tag autodbarelease
-docker run --rm -v ./release_output:/release_output autodbarelease /bin/bash -c "cp /home/autodba/release_output/* /release_output"
+docker build -f Dockerfile . --target release --tag crystaldbarelease
+docker run --rm -v ./release_output:/release_output crystaldbarelease /bin/bash -c "cp /home/crystaldba/release_output/* /release_output"
 
 echo "Release artifacts are available in the release_output directory"

@@ -23,7 +23,7 @@ export default defineConfig({
         target: "http://localhost:5000/",
         secure: false,
         headers: {
-          "Autodba-Access-Key":
+          "Crystaldba-Access-Key":
             process.env.VITE_ACCESS_KEY || "DEFAULT-ACCESS-KEY",
         },
         //"pathRewrite": { "^/api": "" }

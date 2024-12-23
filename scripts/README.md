@@ -1,40 +1,40 @@
 
-# AutoDBA Scripts
+# Crystal DBA Scripts
 
-This directory contains a set of scripts for managing the AutoDBA project. Below is a summary of the provided scripts and their usage instructions.
+This directory contains a set of scripts for managing the Crystal DBA project. Below is a summary of the provided scripts and their usage instructions.
 
 ## Scripts
 
-1. **build.sh**: This script is used to build and release AutoDBA.
+1. **build.sh**: This script is used to build and release Crystal DBA.
 
 ### Usage:
 ```
 ./build.sh
 ```
-This will build the AutoDBA binaries for multiple architectures, prepare the web UI, include Prometheus, and generate release packages in the `build_output` directory.
+This will build the Crystal DBA binaries for multiple architectures, prepare the web UI, include Prometheus, and generate release packages in the `build_output` directory.
 
-2. **install.sh**: This script installs the AutoDBA project and its dependencies, including Prometheus. It supports both system-wide and user-specific installations.
+2. **install.sh**: This script installs the Crystal DBA project and its dependencies, including Prometheus. It supports both system-wide and user-specific installations.
 
 ### Usage:
 ```
 ./install.sh [--system] [--install-dir <DIRECTORY>] [--config <CONFIG_FILE>]
 ```
-- `--system`: Install system-wide under `/usr/local/autodba`. This flag also installs autodba as a service.
-- `--install-dir`: Specify a custom installation directory. If not specified, `$HOME/autodba` is used.
-- `--config`: Optionally provide an autodba configuration file that defines parameters for AutoDBA.
+- `--system`: Install system-wide under `/usr/local/crystaldba`. This flag also installs crystaldba as a service.
+- `--install-dir`: Specify a custom installation directory. If not specified, `$HOME/crystaldba` is used.
+- `--config`: Optionally provide an crystaldba configuration file that defines parameters for Crystal DBA.
 
 If the input is provided via stdin, it will be validated as valid JSON before use. If invalid JSON is provided, the script will throw an error and exit.
 
-3. **uninstall.sh**: This script uninstalls AutoDBA from the system, removing its binaries, Prometheus, and configuration files.
+3. **uninstall.sh**: This script uninstalls Crystal DBA from the system, removing its binaries, Prometheus, and configuration files.
 
 ### Usage:
 ```
 ./uninstall.sh [--system] [--install-dir <DIRECTORY>]
 ```
-- `--system`: Install system-wide under `/usr/local/autodba`. This flag also uninstalls autodba service.
-- `--install-dir`: Specify a custom installation directory. If not specified, `$HOME/autodba` is used.
+- `--system`: Install system-wide under `/usr/local/crystaldba`. This flag also uninstalls crystaldba service.
+- `--install-dir`: Specify a custom installation directory. If not specified, `$HOME/crystaldba` is used.
 
-4. **run.sh**: This script is used to run AutoDBA in a Docker container. It sets up a Docker environment, runs the AutoDBA image, and exposes Prometheus, BFF, and Collector API ports.
+4. **run.sh**: This script is used to run Crystal DBA in a Docker container. It sets up a Docker environment, runs the Crystal DBA image, and exposes Prometheus, BFF, and Collector API ports.
 
 ### Usage:
 ```
@@ -57,22 +57,22 @@ The script will automatically assign ports based on your user ID and instance ID
 ### Notes
 - Use `sudo` for running system-wide `install.sh` and `uninstall.sh` scripts.
 
-5. **install_release.sh**: This script automates the complete installation of AutoDBA from released packages. It handles both the Agent and Collector installation in a single command.
+5. **install_release.sh**: This script automates the complete installation of Crystal DBA from released packages. It handles both the Agent and Collector installation in a single command.
 
 ### Usage:
 ```bash
 ./install_release.sh [--config <CONFIG_FILE>] [--version <VERSION>]
 ```
-- `--config`: Path to the autodba.conf configuration file (required)
-- `--version`: Specify AutoDBA version to install (default: latest)
+- `--config`: Path to the crystaldba.conf configuration file (required)
+- `--version`: Specify Crystal DBA version to install (default: latest)
 
 The script will:
-- Download and install AutoDBA Agent
-- Download and install AutoDBA Collector
+- Download and install Crystal DBA Agent
+- Download and install Crystal DBA Collector
 - Set up systemd services for both components
 - Verify the installation
 
-6. **reprocess.sh**: This script manages the reprocessing of AutoDBA snapshots. It handles stopping services, enabling reprocessing, and restarting services automatically.
+6. **reprocess.sh**: This script manages the reprocessing of Crystal DBA snapshots. It handles stopping services, enabling reprocessing, and restarting services automatically.
 
 ### Usage:
 ```bash
@@ -80,7 +80,7 @@ sudo ./reprocess.sh
 ```
 
 The script will:
-- Stop AutoDBA services
+- Stop Crystal DBA services
 - Enable reprocessing flags
 - Start services with reprocessing enabled
 
@@ -88,11 +88,11 @@ The script will:
 
 You can monitor the reprocessing progress in the logs:
 ```bash
-sudo journalctl -fu autodba
-sudo journalctl -fu autodba-collector
+sudo journalctl -fu crystaldba
+sudo journalctl -fu crystaldba-collector
 ```
 
-7. **show-logs.sh**: This script provides a colorized view of the AutoDBA service logs, combining both autodba and collector logs into a single stream.
+7. **show-logs.sh**: This script provides a colorized view of the Crystal DBA service logs, combining both crystaldba and collector logs into a single stream.
 
 ### Usage:
 ```bash
@@ -100,15 +100,15 @@ sudo journalctl -fu autodba-collector
 ```
 
 The script will:
-- Display combined logs from autodba and autodba-collector services
+- Display combined logs from crystaldba and crystaldba-collector services
 - Color-code different components for better readability:
-  - Cyan: autodba service logs
+  - Cyan: crystaldba service logs
   - Magenta: collector service logs
   - Yellow: timestamps
 - Format the output in an easy-to-read format: `[timestamp] [service] message`
 
 Example output:
 ```
-Jan 15 10:30:45 [autodba] Starting AutoDBA service...
+Jan 15 10:30:45 [crystaldba] Starting Crystal DBA service...
 Jan 15 10:30:46 [collector] Initializing collector...
 ```

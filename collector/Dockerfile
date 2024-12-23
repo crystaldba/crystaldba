@@ -21,19 +21,19 @@ RUN wget -O go.tgz "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
 ENV PATH="/usr/lib/go/bin:${PATH}" \
     GOROOT="/usr/lib/go"
 
-RUN mkdir -p /usr/local/autodba/share/collector && \
-    git clone --recurse-submodules https://github.com/crystaldb/collector.git /usr/local/autodba/share/collector && \
-    cd /usr/local/autodba/share/collector && \
+RUN mkdir -p /usr/local/crystaldba/share/collector && \
+    git clone --recurse-submodules https://github.com/crystaldb/collector.git /usr/local/crystaldba/share/collector && \
+    cd /usr/local/crystaldba/share/collector && \
     git checkout 95ce04683c90bc99e0e9b17a2254764c30ffc289 && \
     wget https://github.com/protocolbuffers/protobuf/releases/download/v28.2/protoc-28.2-linux-x86_64.zip && unzip protoc-28.2-linux-x86_64.zip -d protoc && \
     make build && \
-    mv pganalyze-collector autodba-collector && \
-    mv pganalyze-collector-helper autodba-collector-helper && \
-    mv pganalyze-collector-setup autodba-collector-setup
+    mv pganalyze-collector crystaldba-collector && \
+    mv pganalyze-collector-helper crystaldba-collector-helper && \
+    mv pganalyze-collector-setup crystaldba-collector-setup
 
-COPY collector-entrypoint.sh /usr/local/autodba/bin/collector-entrypoint.sh
-RUN chmod +x /usr/local/autodba/bin/collector-entrypoint.sh
+COPY collector-entrypoint.sh /usr/local/crystaldba/bin/collector-entrypoint.sh
+RUN chmod +x /usr/local/crystaldba/bin/collector-entrypoint.sh
 
-WORKDIR /usr/local/autodba/share/collector
+WORKDIR /usr/local/crystaldba/share/collector
 
-CMD ["/usr/local/autodba/bin/collector-entrypoint.sh"]
+CMD ["/usr/local/crystaldba/bin/collector-entrypoint.sh"]
