@@ -5,6 +5,8 @@
 Crystal DBA is an AI teammate for PostgreSQL database administration.
 This project exists to ensure that everyone who runs PostgreSQL has access to a skilled virtual database administrator (DBA) at all times.
 
+See our [documentation](https://www.crystaldba.ai/docs/) for a full overview of Crystal DBA.
+
 ## 💡 Motivation
 
 We all want our production PostgreSQL databases to run well—they should be reliable, performant, efficient, scalable, and secure.
