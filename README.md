@@ -2,7 +2,7 @@
 
 # 🤖 Crystal DBA for PostgreSQL 🐘
 
-Crystal DBA is an AI agent that runs PostgreSQL databases.
+Crystal DBA is an AI teammate for PostgreSQL database administration.
 This project exists to ensure that everyone who runs PostgreSQL has access to a skilled virtual database administrator (DBA) at all times.
 
 ## 💡 Motivation
@@ -14,21 +14,17 @@ If not, you may find yourself working reactively, dealing with problems as they 
 Oftentimes, operational responsibility for databases falls to software engineers and site reliability engineers, who usually have many other things to do.
 They have better ways to spend their time than tuning or troubleshooting databases.
 
-Reliability and security are the top priorities for database operations, and our approach reflects that.
-The success of autonomous vehicles shows that with careful engineering, one can build systems that operate safely in complex environments.
-The time has come to do the same for similarly challenging IT operations—as Crystal DBA does for databases.
+Reliability and security are the top priorities for database operations.
+We focus on these first, to provide a solid foundation for delivering trustworthy suggestions for performance and efficiency.
+Crystal DBA is designed to give you advice on how to improve your database, but it will not take actions automatically without your review and consent.
 
 
 ## 🔍 Project Status: Observability Only
 
-As of today, this project includes only the basic observability features of Crystal DBA.
+The open source Crystal DBA product presently includes only database observability.
 Building an AI agent requires quality data, so we first need to make sure that this foundation is solid.
-
-Why did we put effort into tools for visualizing and exploring data when we envision a future were only machines consume it?
-For one, we need to verify that the data is sufficient to support good decision making—if a human expert does not have enough information to make a good decision, then we are probably asking too much of the AI agent if we expect it to do so.
-Furthermore, Crystal DBA's observability tools add value to the PostgreSQL ecosystem, even without an AI agent.
-
-The core AI agent is under development and will be released once it reaches a reasonable degree of accuracy and stability.
+The AI system remains under development and will be released once it reaches a solid degree of accuracy and stability.
+Please stay tuned for future releases, which will include the AI features of Crystal DBA.
 
 
 ## 🚧 Temporary Limitations
@@ -421,6 +417,7 @@ Our near-term roadmap includes the following:
 - Alerting
     - [ ] Accurate (low noise) alerting on current status
     - [ ] Predictive health alerts
+- To be announced
 
 
 ## 🤝 Contributing
