@@ -1,7 +1,7 @@
 {
   "server_host": "0.0.0.0",
   "server_port": 7080,
-  "db_path": "./storage/crystaldb-collector.db",
+  "db_path": "./storage/crystaldba-collector.db",
   "storage_dir": "./storage/",
   "debug": true
 }

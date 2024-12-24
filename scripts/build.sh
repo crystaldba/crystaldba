@@ -123,7 +123,7 @@ for arch in amd64 arm64; do
     echo "Building collector..."
     mkdir -p "${COLLECTOR_DIR}"
     mkdir -p "${COLLECTOR_RELEASE_DIR}"
-    git clone --recurse-submodules https://github.com/crystaldb/collector.git "${COLLECTOR_DIR}"
+    git clone --recurse-submodules https://github.com/crystaldba/collector.git "${COLLECTOR_DIR}"
     cd "${COLLECTOR_DIR}"
     git checkout 95ce04683c90bc99e0e9b17a2254764c30ffc289
     wget https://github.com/protocolbuffers/protobuf/releases/download/v28.2/protoc-28.2-linux-${PROTOC_ARCH_SUFFIX}.zip
