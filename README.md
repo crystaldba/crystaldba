@@ -39,7 +39,19 @@ However, the following temporary limitations are presently in place:
 - Only works with Google Cloud SQL and AWS RDS PostgreSQL.
 
 
-## 🚀 Installation
+## Quick Installation
+
+First, you need to apply the prerequisites from the [Prerequisites](#rerequisites) section below.
+
+Then, you need to create a `crystaldba.conf` file from the [Crystal DBA Collector Installation](#crystal-dba-collector-installation) section below.
+
+Then, you can install the latest agent and collector via:
+
+```bash
+sudo /bin/bash -c "$(curl https://raw.githubusercontent.com/crystaldba/crystaldba/refs/heads/main/scripts/install_release.sh)"
+```
+
+## 🚀 Detailed Installation
 
 ### Prerequisites
 
