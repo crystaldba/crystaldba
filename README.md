@@ -72,13 +72,13 @@ Choose the version appropriate to your architecture and operating system.
 For example:
 
 ```bash
-wget https://github.com/crystaldba/crystaldba/releases/latest/download/crystaldba-0.7.0-rc1-amd64.tar.gz
+wget https://github.com/crystaldba/crystaldba/releases/latest/download/crystaldba-0.7.0-amd64.tar.gz
 ```
 
 2. Extract the downloaded tar.gz file:
 ```bash
-tar -xzvf crystaldba-0.7.0-rc1-amd64.tar.gz
-cd crystaldba-0.7.0-rc1
+tar -xzvf crystaldba-0.7.0-amd64.tar.gz
+cd crystaldba-0.7.0
 ```
 
 3. Run the `install.sh` script to install Crystal DBA Agent.
@@ -316,13 +316,13 @@ Choose the version appropriate to your architecture and operating system.
 For example:
 
 ```bash
-wget https://github.com/crystaldba/crystaldba/releases/latest/download/collector-0.7.0-rc1-amd64.tar.gz
+wget https://github.com/crystaldba/crystaldba/releases/latest/download/collector-0.7.0-amd64.tar.gz
 ```
 
 2. Extract the downloaded tar.gz file:
 ```bash
-tar -xzvf collector-0.7.0-rc1-amd64.tar.gz
-cd collector-0.7.0-rc1
+tar -xzvf collector-0.7.0-amd64.tar.gz
+cd collector-0.7.0
 ```
 
 3. Run this command to create a configuration file (`crystaldba.conf`) and populate it with values appropriate to your environment:
