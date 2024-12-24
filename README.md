@@ -39,7 +39,19 @@ However, the following temporary limitations are presently in place:
 - Only works with Google Cloud SQL and AWS RDS PostgreSQL.
 
 
-## 🚀 Installation
+## 🚀 Quick Installation
+
+First, you need to apply the prerequisites from the [Prerequisites](#prerequisites) section below.
+
+Then, you need to create a `crystaldba.conf` file from the [Crystal DBA Collector Installation](#crystal-dba-collector-installation) section below.
+
+Then, you can install the latest agent and collector via:
+
+```bash
+sudo /bin/bash -c "$(curl https://raw.githubusercontent.com/crystaldba/crystaldba/refs/heads/main/scripts/install_release.sh)"
+```
+
+## 💻 Detailed Installation
 
 ### Prerequisites
 
@@ -431,7 +443,7 @@ We welcome contributions to Crystal DBA! Contributor guidelines are under develo
 
 Crystal DBA is developed by the engineers and database experts at  [Crystal DBA](https://www.crystaldba.ai/).
 Our mission is to make it easy for you to run your database well, so you can focus on building better software.
-CrystalDB also offers commercial support for Crystal DBA and PostgreSQL.
+Crystal DBA also offers commercial support for Crystal DBA and PostgreSQL.
 
 
 ## 📖 Frequently Asked Questions
@@ -456,7 +468,7 @@ They will be better able to make high-level design decisions and to analyze trad
 ### Do I still need to hire a DBA if I use Crystal DBA?
 
 If you do not already have a DBA on staff, then chances are good that Crystal DBA can allow you to postpone hiring one, particularly if you have platform engineers or site reliability engineers who are interested in applying its recommendations.
-CrystalDB and others also offer commercial support for PostgreSQL.
+Crystal DBA and others also offer commercial support for PostgreSQL.
 
 
 ### Which PostgreSQL versions are supported?
@@ -503,7 +515,7 @@ You should keep the web interface secure to avoid exposing this data to others.
 
 ### How can I get support for Crystal DBA?
 
-CrystalDB offers commercial support for Crystal DBA and PostgreSQL.
+Crystal DBA offers commercial support for Crystal DBA and PostgreSQL.
 For more information or to discuss your needs, please contact us at [support@crystaldba.ai](mailto:support@crystaldba.ai).
 
 

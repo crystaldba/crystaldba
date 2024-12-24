@@ -145,7 +145,7 @@ func run(webappPath string) error {
 	metrics_repo := prometheus.New(config.PrometheusServer)
 	metrics_service := metrics.CreateService(metrics_repo)
 
-	dbPath := filepath.Join(dataPath, "crystaldb-collector.db")
+	dbPath := filepath.Join(dataPath, "crystaldba-collector.db")
 	queryRepo, err := query_storage.NewSQLiteQueryStorage(dbPath)
 	if err != nil {
 		return fmt.Errorf("Failed to create query storage: %s", err)

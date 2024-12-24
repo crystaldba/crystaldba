@@ -4,7 +4,7 @@
 DIRECTORY="${AUTODBA_STORAGE_DIR:-/usr/local/autodba/share/collector_api_server/storage}"
 
 # GCS bucket name
-BUCKET="${AUTODBA_GCS_BUCKET:-gs://crystaldb-production}"
+BUCKET="${AUTODBA_GCS_BUCKET:-gs://crystaldba-production}"
 
 # Cron job command - run every hour, process files older than 1 hour
 CRON_JOB="0 * * * * /usr/bin/find $DIRECTORY ! -name '*.db' -mmin +60 -type f -exec sh -c 'gcloud storage cp \"{}\" $BUCKET/\$(basename \"{}\") && sudo rm \"{}\"' \;"

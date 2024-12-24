@@ -74,7 +74,7 @@ fi
 # Install Crystal DBA Agent
 log_info "Installing Crystal DBA Agent..."
 cd ${CURRENT_DIR}
-wget "https://github.com/crystaldb/crystaldba/releases/latest/download/crystaldba-${VERSION}-${ARCH}.tar.gz"
+wget "https://github.com/crystaldba/crystaldba/releases/download/v${VERSION}/crystaldba-${VERSION}-${ARCH}.tar.gz"
 tar -xzvf "crystaldba-${VERSION}-${ARCH}.tar.gz"
 cd "crystaldba-${VERSION}"
 ./install.sh --system
@@ -89,7 +89,7 @@ log_info "Crystal DBA Agent installed successfully"
 # Install Crystal DBA Collector
 log_info "Installing Crystal DBA Collector..."
 cd ${CURRENT_DIR}
-wget "https://github.com/crystaldb/crystaldba/releases/latest/download/collector-${VERSION}-${ARCH}.tar.gz"
+wget "https://github.com/crystaldba/crystaldba/releases/download/v${VERSION}/collector-${VERSION}-${ARCH}.tar.gz"
 tar -xzvf "collector-${VERSION}-${ARCH}.tar.gz"
 cd "collector-${VERSION}"
 ./install.sh --config "$CONFIG_PATH" --system

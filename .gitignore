@@ -176,7 +176,7 @@ devenv.local.nix
 .pre-commit-config.yaml
 bff/main
 build_output/
-crystaldb-collector.db
+crystaldba-collector.db
 crystaldba-collector.conf
 :memory:
 prometheus_data
