@@ -41,7 +41,7 @@ However, the following temporary limitations are presently in place:
 
 ## Quick Installation
 
-First, you need to apply the prerequisites from the [Prerequisites](#rerequisites) section below.
+First, you need to apply the prerequisites from the [Prerequisites](#prerequisites) section below.
 
 Then, you need to create a `crystaldba.conf` file from the [Crystal DBA Collector Installation](#crystal-dba-collector-installation) section below.
 
