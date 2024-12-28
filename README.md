@@ -41,15 +41,42 @@ However, the following temporary limitations are presently in place:
 
 ## 🚀 Quick Installation
 
-First, you need to apply the prerequisites from the [Prerequisites](#prerequisites) section below.
+1. Run these SQL commands to enable `pg_stat_statements` and create a monitoring user (replace `'YOUR_CRYSTALDBA_PASSWORD'` with your desired password for that user):
+```sql
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+SELECT * FROM pg_stat_statements LIMIT 1;
 
-Then, you need to create a `crystaldba.conf` file from the [Crystal DBA Collector Installation](#crystal-dba-collector-installation) section below.
+CREATE USER crystaldba WITH PASSWORD 'YOUR_CRYSTALDBA_PASSWORD' CONNECTION LIMIT 5;
+GRANT pg_monitor TO crystaldba;
+GRANT USAGE ON SCHEMA public TO crystaldba;
+```
 
-Then, you can install the latest agent and collector via:
+2. Create a `crystaldba.conf` file with your database connection details:
+```conf
+[crystaldba]
+api_key = DEFAULT-API-KEY
+api_base_url = http://localhost:7080
 
+[server1]
+db_host = <YOUR_PG_DATABASE_HOST>
+db_name = <YOUR_PG_DATABASE_NAME>
+db_username = crystaldba
+db_password = <YOUR_CRYSTALDBA_PASSWORD>
+db_port = 5432
+# For AWS RDS:
+aws_db_instance_id = <YOUR_AWS_RDS_INSTANCE_ID>
+aws_region = <YOUR_AWS_REGION>
+# For Google Cloud SQL:
+# gcp_project_id = <YOUR_GCP_PROJECT_ID>
+# gcp_cloudsql_instance_id = <YOUR_GCP_CLOUDSQL_INSTANCE_ID>
+```
+
+3. Install the latest agent and collector:
 ```bash
 sudo /bin/bash -c "$(curl https://raw.githubusercontent.com/crystaldba/crystaldba/refs/heads/main/scripts/install_release.sh)"
 ```
+
+For detailed installation instructions, including cloud provider setup and additional configuration options, see the [Detailed Installation](#detailed-installation) section below.
 
 ## 💻 Detailed Installation
 
