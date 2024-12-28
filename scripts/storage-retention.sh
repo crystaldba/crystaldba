@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Directory to scan
-DIRECTORY="${AUTODBA_STORAGE_DIR:-/usr/local/autodba/share/collector_api_server/storage}"
+DIRECTORY="${CRYSTALDBA_STORAGE_DIR:-/usr/local/crystaldba/share/collector_api_server/storage}"
 
 # GCS bucket name
-BUCKET="${AUTODBA_GCS_BUCKET:-gs://crystaldba-production}"
+BUCKET="${CRYSTALDBA_GCS_BUCKET:-gs://crystaldba-production}"
 
 # Cron job command - run every hour, process files older than 1 hour
 CRON_JOB="0 * * * * /usr/bin/find $DIRECTORY ! -name '*.db' -mmin +60 -type f -exec sh -c 'gcloud storage cp \"{}\" $BUCKET/\$(basename \"{}\") && sudo rm \"{}\"' \;"
@@ -25,4 +25,4 @@ create_cron_job() {
 remove_cron_job
 create_cron_job
 
-echo "Cron job set to backup files to GCS bucket and delete local files older than 3 days."
+echo "Cron job set to backup files to GCS bucket and delete local files older than 1 hour."
