@@ -39,7 +39,46 @@ However, the following temporary limitations are presently in place:
 - Only works with Google Cloud SQL and AWS RDS PostgreSQL.
 
 
-## 🚀 Installation
+## 🚀 Quick Installation
+
+1. Run these SQL commands to enable `pg_stat_statements` and create a monitoring user (replace `'YOUR_CRYSTALDBA_PASSWORD'` with your desired password for that user):
+```sql
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+SELECT * FROM pg_stat_statements LIMIT 1;
+
+CREATE USER crystaldba WITH PASSWORD 'YOUR_CRYSTALDBA_PASSWORD' CONNECTION LIMIT 5;
+GRANT pg_monitor TO crystaldba;
+GRANT USAGE ON SCHEMA public TO crystaldba;
+```
+
+2. Create a `crystaldba.conf` file with your database connection details:
+```conf
+[crystaldba]
+api_key = DEFAULT-API-KEY
+api_base_url = http://localhost:7080
+
+[server1]
+db_host = <YOUR_PG_DATABASE_HOST>
+db_name = <YOUR_PG_DATABASE_NAME>
+db_username = crystaldba
+db_password = <YOUR_CRYSTALDBA_PASSWORD>
+db_port = 5432
+# For AWS RDS:
+aws_db_instance_id = <YOUR_AWS_RDS_INSTANCE_ID>
+aws_region = <YOUR_AWS_REGION>
+# For Google Cloud SQL:
+# gcp_project_id = <YOUR_GCP_PROJECT_ID>
+# gcp_cloudsql_instance_id = <YOUR_GCP_CLOUDSQL_INSTANCE_ID>
+```
+
+3. Install the latest agent and collector:
+```bash
+sudo /bin/bash -c "$(curl https://raw.githubusercontent.com/crystaldba/crystaldba/refs/heads/main/scripts/install_release.sh)"
+```
+
+For detailed installation instructions, including cloud provider setup and additional configuration options, see the [Detailed Installation](#detailed-installation) section below.
+
+## 💻 Detailed Installation
 
 ### Prerequisites
 
@@ -431,7 +470,7 @@ We welcome contributions to Crystal DBA! Contributor guidelines are under develo
 
 Crystal DBA is developed by the engineers and database experts at  [Crystal DBA](https://www.crystaldba.ai/).
 Our mission is to make it easy for you to run your database well, so you can focus on building better software.
-CrystalDB also offers commercial support for Crystal DBA and PostgreSQL.
+Crystal DBA also offers commercial support for Crystal DBA and PostgreSQL.
 
 
 ## 📖 Frequently Asked Questions
@@ -456,7 +495,7 @@ They will be better able to make high-level design decisions and to analyze trad
 ### Do I still need to hire a DBA if I use Crystal DBA?
 
 If you do not already have a DBA on staff, then chances are good that Crystal DBA can allow you to postpone hiring one, particularly if you have platform engineers or site reliability engineers who are interested in applying its recommendations.
-CrystalDB and others also offer commercial support for PostgreSQL.
+Crystal DBA and others also offer commercial support for PostgreSQL.
 
 
 ### Which PostgreSQL versions are supported?
@@ -503,7 +542,7 @@ You should keep the web interface secure to avoid exposing this data to others.
 
 ### How can I get support for Crystal DBA?
 
-CrystalDB offers commercial support for Crystal DBA and PostgreSQL.
+Crystal DBA offers commercial support for Crystal DBA and PostgreSQL.
 For more information or to discuss your needs, please contact us at [support@crystaldba.ai](mailto:support@crystaldba.ai).
 
 

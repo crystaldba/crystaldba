@@ -937,7 +937,7 @@ func snapshots_handler(dataPath string) http.HandlerFunc {
 	}
 
 	openDatabase := func(dataPath string) (*sql.DB, error) {
-		dbPath := filepath.Join(dataPath, "crystaldb-collector.db")
+		dbPath := filepath.Join(dataPath, "crystaldba-collector.db")
 		db, err := sql.Open("sqlite3", dbPath+"?mode=ro")
 		if err != nil {
 			return nil, fmt.Errorf("failed to open database: %v", err)

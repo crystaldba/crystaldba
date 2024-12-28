@@ -22,7 +22,7 @@ ENV PATH="/usr/lib/go/bin:${PATH}" \
     GOROOT="/usr/lib/go"
 
 RUN mkdir -p /usr/local/crystaldba/share/collector && \
-    git clone --recurse-submodules https://github.com/crystaldb/collector.git /usr/local/crystaldba/share/collector && \
+    git clone --recurse-submodules https://github.com/crystaldba/collector.git /usr/local/crystaldba/share/collector && \
     cd /usr/local/crystaldba/share/collector && \
     git checkout 95ce04683c90bc99e0e9b17a2254764c30ffc289 && \
     wget https://github.com/protocolbuffers/protobuf/releases/download/v28.2/protoc-28.2-linux-x86_64.zip && unzip protoc-28.2-linux-x86_64.zip -d protoc && \
