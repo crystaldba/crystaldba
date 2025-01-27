@@ -60,13 +60,13 @@ jobs:
           mkdir -p ./package/linux_arm64
           cp -r ./build/linux_arm64/main.dist ./package/linux_arm64/crystal_client_linux_arm64
           cd ./package/linux_arm64
-          zip -r ../../crystal_client_linux_arm64.zip crystal_client_linux_arm64
+          zip -r ../../crystal_client_linux_arm64_${{ needs.prepare.outputs.release_tag }}.zip crystal_client_linux_arm64
 
       - name: Upload Linux ARM64 Executable
         uses: actions/upload-artifact@v4
         with:
           name: crystal-client-linux-arm64
-          path: ./agent/crystal_client_linux_arm64.zip
+          path: ./agent/crystal_client_linux_arm64_${{ needs.prepare.outputs.release_tag }}.zip
 
   build_macos_arm64:
     needs: prepare
@@ -100,13 +100,13 @@ jobs:
           mkdir -p ./package/macos_arm64
           cp -r ./build/macos_arm64/main.dist ./package/macos_arm64/crystal_client_macos_arm64
           cd ./package/macos_arm64
-          zip -r ../../crystal_client_macos_arm64.zip crystal_client_macos_arm64
+          zip -r ../../crystal_client_macos_arm64_${{ needs.prepare.outputs.release_tag }}.zip crystal_client_macos_arm64
 
       - name: Upload macOS ARM64 Executable
         uses: actions/upload-artifact@v4
         with:
           name: crystal-client-macos-arm64
-          path: ./agent/crystal_client_macos_arm64.zip
+          path: ./agent/crystal_client_macos_arm64_${{ needs.prepare.outputs.release_tag }}.zip
 
   build_linux_amd64:
     needs: prepare
@@ -145,13 +145,13 @@ jobs:
           mkdir -p ./package/linux_amd64
           cp -r ./build/linux_amd64/main.dist ./package/linux_amd64/crystal_client_linux_amd64
           cd ./package/linux_amd64
-          zip -r ../../crystal_client_linux_amd64.zip crystal_client_linux_amd64
+          zip -r ../../crystal_client_linux_amd64_${{ needs.prepare.outputs.release_tag }}.zip crystal_client_linux_amd64
 
       - name: Upload Linux AMD64 Executable
         uses: actions/upload-artifact@v4
         with:
           name: crystal-client-linux-amd64
-          path: ./agent/crystal_client_linux_amd64.zip
+          path: ./agent/crystal_client_linux_amd64_${{ needs.prepare.outputs.release_tag }}.zip
 
   release_client:
     needs: [build_linux_arm64, build_macos_arm64, build_linux_amd64]
@@ -172,9 +172,9 @@ jobs:
         with:
           tag_name: ${{ needs.prepare.outputs.release_tag }}
           files: |
-            ./artifacts/crystal-client-linux-arm64/crystal_client_linux_arm64.zip
-            ./artifacts/crystal-client-macos-arm64/crystal_client_macos_arm64.zip
-            ./artifacts/crystal-client-linux-amd64/crystal_client_linux_amd64.zip
+            ./artifacts/crystal-client-linux-arm64/crystal_client_linux_arm64_${{ needs.prepare.outputs.release_tag }}.zip
+            ./artifacts/crystal-client-macos-arm64/crystal_client_macos_arm64_${{ needs.prepare.outputs.release_tag }}.zip
+            ./artifacts/crystal-client-linux-amd64/crystal_client_linux_amd64_${{ needs.prepare.outputs.release_tag }}.zip
           append: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
