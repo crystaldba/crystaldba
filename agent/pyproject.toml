@@ -22,36 +22,18 @@ package_macos = "scripts:build_macos_arm64"
 
 [tool.poetry.dependencies]
 python = "~3.12"
-fastapi = {extras = ["standard"], version = "^0.115.6"}
 griptape = {extras = ["all"], version = "^1.0.1"}
-http-message-signatures = "^0.5.0"
-prompt-toolkit = "^3.0.48"
-psycopg2-binary = "^2.9.10"
-python-dotenv = "^1.0.1"
-requests-http-signature = "^0.7.1"
-sseclient = "^0.0.27"
-sse-starlette = "^2.2.1"
-sqlalchemy = "^2.0.36"
-uvicorn = "^0.32.1"
-langfuse = "^2.57.1"
-pytest-mock = "^3.14.0"
-pglast = "^7.2"
-asyncpg = "^0.30.0"
-rich = "^13.9.4"
+prompt-toolkit = "^3.0.48"  # For CLI interface
+rich = "^13.9.4"  # For CLI formatting
+sqlalchemy = "^2.0.36"  # If you're using it for database operations
+python-dotenv = "^1.0.1"  # For environment variables
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.8.2"
-pyright = "^1.1.390"
-pytest = "^8.3.4"
-pytest-asyncio = "^0.25.0"
-aiosqlite = "^0.20.0"
-pexpect = "^4.9.0"
-docker = "^7.1.0"
-requests = "^2.32.3"
-
-
-[tool.poetry.group.build.dependencies]
-nuitka = "^2.5.9"
+ruff = "^0.8.2"  # For linting
+pyright = "^1.1.390"  # For type checking
+pytest = "^8.3.4"  # For testing
+pytest-asyncio = "^0.25.0"  # For async tests
+pytest-mock = "^3.14.0"  # For mocking in tests
 
 [build-system]
 requires = ["poetry-core"]
@@ -71,9 +53,7 @@ lint.select = [
     "I",   # isort
     "B",   # flake8-bugbear
     "W",   # pycodestyle warnings
-    # "C90", # mccabe complexity
     "N",   # pep8-naming
-    # "D",   # pydocstyle
     "UP",  # pyupgrade
     "RUF"  # ruff-specific rules
 ]
@@ -82,9 +62,6 @@ lint.select = [
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
 
 [tool.ruff.lint.isort]
 force-single-line = true
@@ -96,13 +73,8 @@ typeCheckingMode = "standard"
 pythonVersion = "3.12"
 strictParameterNullChecking = true
 reportMissingTypeStubs = false
-# reportUnknownMemberType = true
-# reportUnknownParameterType = true
-# reportUnknownVariableType = true
-# reportUnknownArgumentType = true
 reportPrivateUsage = true
 reportUntypedFunctionDecorator = true
 reportMissingTypeArgument = true
 reportInvalidTypeVarUse = true
 reportUnnecessaryCast = true
-# reportUnnecessaryComparison = true
