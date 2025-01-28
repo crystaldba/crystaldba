@@ -43,7 +43,4 @@ jobs:
         run: poetry run check
 
       - name: Run Tests
-        env:
-          DATABASE_URL: "test"
-          CRYSTAL_BACKEND_DATABASE_URL: "test"
         run: poetry run test
