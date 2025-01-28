@@ -44,6 +44,10 @@ def parse_args():
 
 
 def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str]) -> URL:
+    # Keep track of whether the host was provided. If not we will raise an error
+    # rather than prompting for a password.
+    conn_info_provided = False
+
     def find_param(arg_name: str | None, env_name: str, defaults: list[str | None] | None = None) -> str | None:
         result = (getattr(args, arg_name) if arg_name else None) or os.environ.get(env_name)
         if result is None:
@@ -53,6 +57,8 @@ def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str
                         return default_value
             return None
         else:
+            nonlocal conn_info_provided
+            conn_info_provided = True
             return result.strip()
 
     conn_username = None
@@ -100,7 +106,10 @@ def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str
     conn_qs = find_param(None, "PGOPTIONS", [conn_qs])
 
     if conn_password is None:
-        conn_password = password_prompt()
+        if conn_info_provided:
+            conn_password = password_prompt()
+        else:
+            raise ValueError("Must provide database connection credentials.")
 
     # Check required parameters and raise appropriate errors
     if not conn_username:

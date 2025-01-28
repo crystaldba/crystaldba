@@ -266,7 +266,7 @@ class TestArgumentParsing:
         """Test rejection of non-numeric port"""
         mocker.patch(
             "sys.argv",
-            ["crystaldba", "--port", "abc123"],
+            ["crystaldba", "--host", "localhost", "--port", "abc123"],
         )
         args, _ = parse_args()
 
@@ -407,10 +407,10 @@ class TestLogLevel:
         assert "usage:" in captured.out
         assert "Connection options:" in captured.out
 
-    def test_no_database_exits_with_defaults(self, capsys, mocker: MockerFixture):
+    def test_no_database_with_defaults(self, mocker: MockerFixture):
         """Test program uses default values when no database is specified"""
         mocker.patch.dict(os.environ, {}, clear=True)
-        mocker.patch("sys.argv", ["crystaldba"])
+        mocker.patch("sys.argv", ["crystaldba", "mydatabase"])
         args, _ = parse_args()
 
         db_url = get_database_url(args, lambda: "test_password")
@@ -419,7 +419,21 @@ class TestLogLevel:
         assert db_url.password == "test_password"  # Prompted password
         assert db_url.host == "localhost"  # Default host
         assert db_url.port == 5432  # Default port
-        assert db_url.database == "postgres"  # Default database
+        assert db_url.database == "mydatabase"
+
+    def test_no_database_with_defaults_and_host(self, mocker: MockerFixture):
+        """Test program uses default values when no database is specified"""
+        mocker.patch.dict(os.environ, {}, clear=True)
+        mocker.patch("sys.argv", ["crystaldba", "--host", "myhost"])
+        args, _ = parse_args()
+
+        db_url = get_database_url(args, lambda: "test_password")
+        assert db_url.drivername == "postgresql"
+        assert db_url.username == "postgres"  # Default username
+        assert db_url.password == "test_password"  # Prompted password
+        assert db_url.host == "myhost"  # Default host
+        assert db_url.port == 5432  # Default port
+        assert db_url.database == "postgres"
 
     def test_conflicting_connection_parameters(self, mocker: MockerFixture):
         """Test that command line parameters override URI parameters when both are provided"""
@@ -437,6 +451,14 @@ class TestLogLevel:
         assert db_url.database == "otherdb"
         # Password from URI should be preserved since no password flag exists
         assert db_url.password == "pass"
+
+    def test_no_parameters_raises_error(self, mocker: MockerFixture):
+        """Test that no parameters raises an error"""
+        mocker.patch("sys.argv", ["crystaldba"])
+        args, _ = parse_args()
+
+        with raises(ValueError, match="Must provide database connection credentials."):
+            _ = get_database_url(args, lambda: "INVALID")
 
 
 class TestDatabaseConnection:
