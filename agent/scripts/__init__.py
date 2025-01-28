@@ -54,7 +54,6 @@ if __name__ == "__main__":
     commands = {
         "lint": lint,
         "check": check,
-        "build": build,
         "test": test,
         "list": list_commands,
     }

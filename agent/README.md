@@ -40,7 +40,7 @@ See `agent/shared/constants.py` for current details.
 ## Running the Application
 
 ```bash
-poetry run python -m client.main
+poetry run crystaldba
 ```
 
 You can add `-v` or `-vv` in order to increase verbosity.

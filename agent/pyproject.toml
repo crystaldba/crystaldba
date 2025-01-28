@@ -30,8 +30,7 @@ documentation = "https://www.crystaldba.ai/docs"
 
 [tool.poetry]
 packages = [
-    { include = "shared", from = "." },
-    { include = "client", from = "." },
+    { include = "crystaldba", from = "." },
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -48,7 +47,7 @@ requires = ["poetry-core>=1.9.0"]
 build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
-crystaldba = "client.main:main"
+crystaldba = "crystaldba.cli.main:main"
 
 [tool.poetry.scripts]
 lint = "scripts:lint"
@@ -88,7 +87,7 @@ force-single-line = true
 known-first-party = ["crystal"]
 
 [tool.pyright]
-include = ["client", "shared"]
+include = ["crystaldba/cli", "crystaldba/shared"]
 typeCheckingMode = "standard"
 pythonVersion = "3.12"
 strictParameterNullChecking = true

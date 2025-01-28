@@ -2,12 +2,13 @@ import logging
 import os
 
 import pytest
-from client.main import main
-from client.parse_args import get_database_url
-from client.parse_args import get_log_level
-from client.parse_args import parse_args
 from pytest import raises
 from pytest_mock import MockerFixture
+
+from crystaldba.cli.main import main
+from crystaldba.cli.parse_args import get_database_url
+from crystaldba.cli.parse_args import get_log_level
+from crystaldba.cli.parse_args import parse_args
 
 
 class TestArgumentParsing:
@@ -391,9 +392,9 @@ class TestLogLevel:
 
     def test_failed_database_connection(self, capsys, mocker: MockerFixture):
         """Test handling of failed database connection"""
-        mocker.patch("client.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
+        mocker.patch("crystaldba.cli.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
         mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
-        mocker.patch("client.main.Console")
+        mocker.patch("crystaldba.cli.main.Console")
         mocker.patch("sys.argv", ["crystaldba"])
         with pytest.raises(SystemExit) as exc_info:
             main()
@@ -463,7 +464,7 @@ class TestLogLevel:
 class TestDatabaseConnection:
     def test_failed_connection(self, capsys, mocker: MockerFixture):
         """Test failed database connection"""
-        mocker.patch("client.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
+        mocker.patch("crystaldba.cli.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
         mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
         mocker.patch(
             "sys.argv",
@@ -494,8 +495,8 @@ class TestCommandLineArgs:
                 "sys.argv",
                 args,
             )
-            mocker.patch("client.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
-            mock_session = mocker.patch("client.main.PromptSession")
+            mocker.patch("crystaldba.cli.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
+            mock_session = mocker.patch("crystaldba.cli.main.PromptSession")
             mock_session.return_value.prompt.side_effect = KeyboardInterrupt
             with raises(SystemExit) as exc_info:
                 main()

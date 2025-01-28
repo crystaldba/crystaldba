@@ -1,12 +1,12 @@
 import pytest
 import sqlalchemy
-from client.chat_requester import ChatRequester
-from client.chat_response_followup import ChatResponseFollowup
-from client.sql_tool import LocalSqlDriver
 from prompt_toolkit import PromptSession
 from pytest_mock import MockerFixture
 from rich.console import Console
 
+from crystaldba.cli.chat_requester import ChatRequester
+from crystaldba.cli.chat_response_followup import ChatResponseFollowup
+from crystaldba.cli.sql_tool import LocalSqlDriver
 from crystaldba.shared.api import ChatMessage
 from crystaldba.shared.api import ChatRequest
 from crystaldba.shared.api import ChatResponse
