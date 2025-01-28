@@ -74,7 +74,7 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.0.1"
 
       - name: Build Python Wheel
         run: poetry build
@@ -108,7 +108,7 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.0.1"
 
       - name: Build
         run: poetry run build
@@ -148,7 +148,7 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.0.1"
 
       - name: Build
         run: poetry run build
@@ -193,7 +193,7 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.0.1"
 
       - name: Build
         run: poetry run build
