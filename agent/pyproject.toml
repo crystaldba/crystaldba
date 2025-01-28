@@ -28,9 +28,6 @@ homepage = "https://www.crystaldba.ai"
 repository = "https://github.com/crystaldba/crystaldba"
 documentation = "https://www.crystaldba.ai/docs"
 
-[project.entry-points]
-crystaldba = "client.main:main"
-
 [tool.poetry]
 packages = [
     { include = "shared", from = "." },
@@ -51,6 +48,9 @@ requires = ["poetry-core>=1.9.0"]
 build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
+crystaldba = "client.main:main"
+
+[tool.poetry.scripts]
 lint = "scripts:lint"
 check = "scripts:check"
 build = "scripts:build"
