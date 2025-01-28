@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "agent"
+name = "crystadba"
 version = "0.1.0"
-description = "Crystal DBA Agent"
+description = "Crystal DBA Agent CLI"
 authors = ["Crystal DBA Developers <info@crystaldba.ai>"]
 readme = "README.md"
 
@@ -19,9 +19,10 @@ list = "scripts:list_commands"
 package_arm64 = "scripts:build_linux_arm64"
 package_amd64 = "scripts:build_linux_amd64"
 package_macos = "scripts:build_macos_arm64"
+crystaldba = "client.main:main"
 
 [tool.poetry.dependencies]
-python = "~3.12"
+python = "^3.10"
 prompt-toolkit = "^3.0.48"  # For CLI interface
 rich = "^13.9.4"  # For CLI formatting
 sqlalchemy = "^2.0.36"  # If you're using it for database operations
