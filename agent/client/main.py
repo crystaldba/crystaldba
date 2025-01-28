@@ -8,6 +8,7 @@ from rich import print
 from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
+from rich.spinner import Spinner
 
 from client.chat_loop import ChatLoop
 from client.chat_requester import ChatRequester
@@ -112,7 +113,12 @@ def main():
                     screen_console.print("Goodbye! I'm always available, if you need any further assistance.")
                     sys.exit(0)
                 if message_input:
-                    with Live("", console=screen_console, refresh_per_second=10, vertical_overflow="visible") as live:
+                    with Live(
+                        Spinner("dots", text="Thinking..."),
+                        console=screen_console,
+                        refresh_per_second=10,
+                        vertical_overflow="visible",
+                    ) as live:
                         buffer = ""
                         for chunk in chatloop.run_to_completion(message_input):
                             buffer += chunk
