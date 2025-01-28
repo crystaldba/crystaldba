@@ -239,7 +239,7 @@ jobs:
       - name: Update README
         uses: MathieuSoysal/file-updater-for-release@v1.0.3
         with:
-          files: README.md scripts/install_release.sh
+          files: README.md scripts/install_release.sh agent/pyproject.toml
           version: ${{ needs.prepare.outputs.release_tag }}
           old-version: ${{ needs.prepare.outputs.prev_release_tag }}
           with-checkout: false
@@ -276,5 +276,5 @@ jobs:
         with:
           committer_name: GitHub Actions
           committer_email: actions@github.com
-          add: README.md scripts/install_release.sh
+          add: README.md scripts/install_release.sh agent/pyproject.toml
           message: 'Updated README.md for the new release.'
