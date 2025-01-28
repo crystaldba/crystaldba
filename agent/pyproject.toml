@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crystadba"
-version = "0.1.0"
+version = "0.8.0"
 description = "Crystal DBA Agent CLI"
 authors = ["Crystal DBA Developers <info@crystaldba.ai>"]
 readme = "README.md"
