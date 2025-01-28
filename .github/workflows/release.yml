@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: crystaldba-cli-linux-arm64
-          path: ./agent/crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+          path: ./agent/crystaldba-cli-*
 
   build_macos_arm64:
     needs: prepare
@@ -139,7 +139,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: crystaldba-cli-macos-arm64
-          path: ./agent/crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+          path: ./agent/crystaldba-cli-*
 
   build_linux_amd64:
     needs: prepare
@@ -184,29 +184,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: crystaldba-cli-linux-amd64
-          path: ./agent/crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz
-
-  prepare_release:
-    needs: [prepare, build_server, build_linux_arm64, build_macos_arm64, build_linux_amd64]
-    runs-on: ubuntu-20.04
-    outputs:
-      changelog: ${{ steps.extract_changelog.outputs.content }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Extract changelog for current release
-        id: extract_changelog
-        run: |
-          # Strip the 'v' prefix from the tag
-          TAG=${{ needs.prepare.outputs.release_tag }}
-          # Extract everything between the current tag and the next tag or end of file
-          sed -n "/## \[$TAG\]/,/## \[[0-9]\+\.[0-9]\+\.[0-9]\+\]/p" CHANGELOG.md | sed '$d' | sed '1d' > release_notes.md
-          # If the release_notes.md file is empty, write a default message
-          if [ ! -s release_notes.md ]; then
-            echo "Automated release for tag ${{ github.ref }}" > release_notes.md
-          fi
-          echo "content=$(cat release_notes.md)" >> $GITHUB_OUTPUT
+          path: ./agent/crystaldba-cli-*
 
   create_release:
     needs: [build_server, build_linux_arm64, build_macos_arm64, build_linux_amd64]
@@ -240,6 +218,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
+      
+      - name: Display structure of downloaded files
+        run: ls -R ./artifacts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -248,9 +229,9 @@ jobs:
           body: ${{ needs.prepare_release.outputs.changelog }}
           files: |
             ./artifacts/server-artifacts/*
-            ./artifacts/crystal-client-linux-arm64/crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
-            ./artifacts/crystal-client-macos-arm64/crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
-            ./artifacts/crystal-client-linux-amd64/crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+            ./artifacts/crystaldba-cli-linux-arm64/crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+            ./artifacts/crystaldba-cli-macos-arm64/crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+            ./artifacts/crystaldba-cli-linux-amd64/crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
