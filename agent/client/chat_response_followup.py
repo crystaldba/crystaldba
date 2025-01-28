@@ -3,7 +3,6 @@ import time
 from typing import Protocol
 
 import sqlalchemy.exc
-from griptape.drivers.sql.base_sql_driver import BaseSqlDriver
 from rich.console import Console
 
 from client.sql_tool import LocalSqlDriver
@@ -16,6 +15,7 @@ from shared.api import SQLToolErrorResponse
 from shared.api import SQLToolExecuteRequest
 from shared.api import SQLToolSchemaRequest
 from shared.api import SQLToolSchemaResponse
+from shared.base_sql_driver import BaseSqlDriver
 from shared.sql_serialization import to_sql_tool_response
 
 

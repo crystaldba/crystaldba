@@ -1,6 +1,5 @@
 import pytest
 import sqlalchemy
-from griptape.drivers.sql.base_sql_driver import BaseSqlDriver
 from prompt_toolkit import PromptSession
 from pytest_mock import MockerFixture
 from rich.console import Console
@@ -16,6 +15,7 @@ from shared.api import SQLToolExecuteRequest
 from shared.api import SQLToolExecuteResponse
 from shared.api import SQLToolSchemaRequest
 from shared.api import SQLToolSchemaResponse
+from shared.base_sql_driver import BaseSqlDriver
 
 
 @pytest.fixture

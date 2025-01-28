@@ -7,7 +7,8 @@ from typing import Any
 import sqlalchemy
 from attrs import define
 from attrs import field
-from griptape.drivers.sql.base_sql_driver import BaseSqlDriver
+
+from shared.base_sql_driver import BaseSqlDriver
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine

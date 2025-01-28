@@ -22,7 +22,6 @@ package_macos = "scripts:build_macos_arm64"
 
 [tool.poetry.dependencies]
 python = "~3.12"
-griptape = {extras = ["all"], version = "^1.0.1"}
 prompt-toolkit = "^3.0.48"  # For CLI interface
 rich = "^13.9.4"  # For CLI formatting
 sqlalchemy = "^2.0.36"  # If you're using it for database operations

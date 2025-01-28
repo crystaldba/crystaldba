@@ -9,10 +9,10 @@ from decimal import InvalidOperation
 from typing import Any
 from uuid import UUID
 
-from griptape.drivers.sql.base_sql_driver import BaseSqlDriver
 from pydantic import JsonValue
 
 from shared.api import SQLToolExecuteResponse
+from shared.base_sql_driver import BaseSqlDriver
 
 
 def to_json_serializable_value(value: Any) -> JsonValue:
