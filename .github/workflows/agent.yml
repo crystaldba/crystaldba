@@ -1,0 +1,49 @@
+name: Agent CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'agent/**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'agent/**'
+
+jobs:
+  agent-ci:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./agent
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.2"
+
+      - name: Build
+        run: poetry run build
+
+      - name: Run Lint
+        run: poetry run lint
+
+      - name: Run Check
+        run: poetry run check
+
+      - name: Run Tests
+        env:
+          DATABASE_URL: "test"
+          CRYSTAL_BACKEND_DATABASE_URL: "test"
+        run: poetry run test

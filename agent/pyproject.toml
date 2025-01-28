@@ -1,0 +1,88 @@
+[tool.poetry]
+name = "agent"
+version = "0.1.0"
+description = "Crystal DBA Agent"
+authors = ["Crystal DBA Developers <info@crystaldba.ai>"]
+readme = "README.md"
+
+packages = [
+    { include = "shared", from = "." },
+    { include = "client", from = "." },
+]
+
+[tool.poetry.scripts]
+lint = "scripts:lint"
+check = "scripts:check"
+build = "scripts:build"
+test = "scripts:test"
+list = "scripts:list_commands"
+package_arm64 = "scripts:build_linux_arm64"
+package_amd64 = "scripts:build_linux_amd64"
+package_macos = "scripts:build_macos_arm64"
+
+[tool.poetry.dependencies]
+python = "~3.12"
+prompt-toolkit = "^3.0.48"  # For CLI interface
+rich = "^13.9.4"  # For CLI formatting
+sqlalchemy = "^2.0.36"  # If you're using it for database operations
+python-dotenv = "^1.0.1"  # For environment variables
+sseclient = "^0.0.27"
+email-validator = "^2.2.0"
+http-message-signatures = "^0.5.0"
+requests-http-signature = "^0.7.1"
+attrs = "^25.1.0"
+pydantic = "^2.10.6"
+pyyaml = "^6.0.2"
+psycopg2-binary = "^2.9.10"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.2"  # For linting
+pyright = "^1.1.390"  # For type checking
+pytest = "^8.3.4"  # For testing
+pytest-asyncio = "^0.25.0"  # For async tests
+pytest-mock = "^3.14.0"  # For mocking in tests
+docker = "^7.1.0"  # For building docker images
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 150
+
+[tool.ruff]
+line-length = 150
+target-version = "py38"
+exclude = [".venv*"]
+
+lint.select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "W",   # pycodestyle warnings
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "RUF"  # ruff-specific rules
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+force-single-line = true
+known-first-party = ["crystal"]
+
+[tool.pyright]
+include = ["client", "shared"]
+typeCheckingMode = "standard"
+pythonVersion = "3.12"
+strictParameterNullChecking = true
+reportMissingTypeStubs = false
+reportPrivateUsage = true
+reportUntypedFunctionDecorator = true
+reportMissingTypeArgument = true
+reportInvalidTypeVarUse = true
+reportUnnecessaryCast = true
