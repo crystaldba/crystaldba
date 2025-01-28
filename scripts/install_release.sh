@@ -74,9 +74,9 @@ fi
 # Install Crystal DBA Agent
 log_info "Installing Crystal DBA Agent..."
 cd ${CURRENT_DIR}
-wget "https://github.com/crystaldba/crystaldba/releases/download/v${VERSION}/crystaldba-${VERSION}-${ARCH}.tar.gz"
-tar -xzvf "crystaldba-${VERSION}-${ARCH}.tar.gz"
-cd "crystaldba-${VERSION}"
+wget "https://github.com/crystaldba/crystaldba/releases/download/v${VERSION}/crystaldba-svc-${VERSION}-${ARCH}.tar.gz"
+tar -xzvf "crystaldba-svc-${VERSION}-${ARCH}.tar.gz"
+cd "crystaldba-svc-${VERSION}"
 ./install.sh --system
 
 # Verify Crystal DBA Agent installation
@@ -103,7 +103,7 @@ log_info "Crystal DBA Collector installed successfully"
 
 # Clean up downloaded files
 cd ${CURRENT_DIR}
-rm -rf "crystaldba-${VERSION}" "collector-${VERSION}" "crystaldba-${VERSION}-${ARCH}.tar.gz" "collector-${VERSION}-${ARCH}.tar.gz"
+rm -rf "crystaldba-svc-${VERSION}" "collector-${VERSION}" "crystaldba-svc-${VERSION}-${ARCH}.tar.gz" "collector-${VERSION}-${ARCH}.tar.gz"
 
 log_info "Installation completed successfully!"
 log_info "You can access the Crystal DBA web portal at http://localhost:4000"

@@ -56,7 +56,7 @@ TMP_DIR="/tmp"
 
 for arch in amd64 arm64; do
     # Define paths relative to PARENT_DIR
-    PARENT_DIR="${TAR_GZ_DIR}/crystaldba-${VERSION}-${arch}/crystaldba-${VERSION}"
+    PARENT_DIR="${TAR_GZ_DIR}/crystaldba-svc-${VERSION}-${arch}/crystaldba-svc-${VERSION}"
     INSTALL_DIR="$PARENT_DIR/bin"
     WEBAPP_DIR="$PARENT_DIR/share/webapp"
     PROMETHEUS_CONFIG_DIR="$PARENT_DIR/config/prometheus"
@@ -148,7 +148,7 @@ create_tar_gz() {
     for arch in amd64 arm64; do
         echo "Creating tar.gz packages for ${arch}..."
         # Create crystaldba package
-        tar -czvf "${TAR_GZ_DIR}/crystaldba-${VERSION}-${arch}.tar.gz" -C "${TAR_GZ_DIR}/crystaldba-${VERSION}-${arch}" .
+        tar -czvf "${TAR_GZ_DIR}/crystaldba-svc-${VERSION}-${arch}.tar.gz" -C "${TAR_GZ_DIR}/crystaldba-svc-${VERSION}-${arch}" .
         # Create collector package
         tar -czvf "${TAR_GZ_DIR}/collector-${VERSION}-${arch}.tar.gz" -C "${TAR_GZ_DIR}/collector-${VERSION}-${arch}" .
     done

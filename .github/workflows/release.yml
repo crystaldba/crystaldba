@@ -53,14 +53,6 @@ jobs:
         run: |
           docker run --rm -v ./release_output:/release_output crystaldbarelease /bin/bash -c "cp /home/crystaldba/release_output/* /release_output"
 
-      - name: Rename server artifacts
-        run: |
-          cd ./release_output
-          for file in crystaldba-*; do
-            if [ -f "$file" ]; then
-              mv "$file" "${file/crystaldba-/crystaldba-svc-}"
-            fi
-          done
       - name: Extract changelog for current release
         id: extract_changelog
         run: |
