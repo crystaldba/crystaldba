@@ -10,8 +10,8 @@
 1. Clone the repository:
 
    ```bash
-   git clone git@github.com:crystaldba/crystaldba-demo.git
-   cd crystaldba-demo
+   git clone git@github.com:crystaldba/crystaldba.git
+   cd crystaldba/agent
    ```
 
 2. Install dependencies using Poetry:
