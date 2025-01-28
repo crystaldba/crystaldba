@@ -367,6 +367,14 @@ class TestArgumentParsing:
         with raises(ValueError, match="Query parameter bad!key contains invalid characters"):
             get_database_url(args, lambda: "INVALID")
 
+    def test_no_parameters_raises_error(self, mocker: MockerFixture):
+        """Test that no parameters raises an error"""
+        mocker.patch("sys.argv", ["crystaldba"])
+        args, _ = parse_args()
+
+        with raises(ValueError, match="Must provide database connection credentials."):
+            _ = get_database_url(args, lambda: "INVALID")
+
 
 class TestLogLevel:
     @pytest.mark.parametrize(
@@ -451,14 +459,6 @@ class TestLogLevel:
         assert db_url.database == "otherdb"
         # Password from URI should be preserved since no password flag exists
         assert db_url.password == "pass"
-
-    def test_no_parameters_raises_error(self, mocker: MockerFixture):
-        """Test that no parameters raises an error"""
-        mocker.patch("sys.argv", ["crystaldba"])
-        args, _ = parse_args()
-
-        with raises(ValueError, match="Must provide database connection credentials."):
-            _ = get_database_url(args, lambda: "INVALID")
 
 
 class TestDatabaseConnection:
