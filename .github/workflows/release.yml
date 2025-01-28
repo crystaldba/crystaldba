@@ -277,4 +277,4 @@ jobs:
           committer_name: GitHub Actions
           committer_email: actions@github.com
           add: README.md scripts/install_release.sh agent/pyproject.toml
-          message: 'Updated README.md for the new release.'
+          message: 'Updated the current version for the new release.'
