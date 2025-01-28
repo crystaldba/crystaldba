@@ -111,7 +111,7 @@ jobs:
           poetry-version: "2.0.1"
 
       - name: Build
-        run: poetry run build
+        run: poetry install
 
       - name: Build with Nuitka (Linux ARM64)
         run: |
@@ -151,7 +151,7 @@ jobs:
           poetry-version: "2.0.1"
 
       - name: Build
-        run: poetry run build
+        run: poetry install
 
       - name: Build with Nuitka (macOS ARM64)
         run: |
@@ -196,7 +196,7 @@ jobs:
           poetry-version: "2.0.1"
 
       - name: Build
-        run: poetry run build
+        run: poetry install
 
       - name: Build with Nuitka (Linux AMD64)
         run: |

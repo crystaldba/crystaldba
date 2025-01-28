@@ -34,7 +34,7 @@ jobs:
           poetry-version: "2.0.1"
 
       - name: Build
-        run: poetry run build
+        run: poetry install
 
       - name: Run Lint
         run: poetry run lint
