@@ -63,7 +63,7 @@ class ChatResponseFollowup(ChatResponseFollowupProtocol):
             case SQLToolExecuteRequest():
                 self.logger.debug(f"CLIENT_LOOP: Executing query: {chat_response.payload.query}")
                 try:
-                    print(f"Executing query: {chat_response.payload.query}")
+                    print(f"Executing query: {chat_response.payload.query}\n")
                     result = self._execute_sql_query_with_retry(chat_response.payload.query)
                     json_serializable_result = to_sql_tool_response(result)
                     self.logger.debug(f"CLIENT_LOOP: Executed successfully. Returning SQLToolExecuteResponse: {json_serializable_result}")
