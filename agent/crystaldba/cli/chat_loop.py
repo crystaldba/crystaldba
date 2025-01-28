@@ -4,8 +4,8 @@ from typing import Iterator
 from prompt_toolkit import PromptSession
 from rich.console import Console
 
-from client.chat_response_followup import ChatResponseFollowupProtocol
-from shared.api import DbaChatSyncProtocol
+from crystaldba.cli.chat_response_followup import ChatResponseFollowupProtocol
+from crystaldba.shared.api import DbaChatSyncProtocol
 
 
 class ChatLoop:

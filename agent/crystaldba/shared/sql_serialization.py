@@ -11,8 +11,8 @@ from uuid import UUID
 
 from pydantic import JsonValue
 
-from shared.api import SQLToolExecuteResponse
-from shared.base_sql_driver import BaseSqlDriver
+from crystaldba.shared.api import SQLToolExecuteResponse
+from crystaldba.shared.base_sql_driver import BaseSqlDriver
 
 
 def to_json_serializable_value(value: Any) -> JsonValue:

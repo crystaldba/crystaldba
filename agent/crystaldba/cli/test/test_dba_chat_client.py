@@ -3,14 +3,14 @@ import requests
 from pytest_mock import MockerFixture
 from pytest_mock import MockFixture
 
-from client.chat_requester import ChatRequester
-from client.dba_chat_client import DbaChatClient
-from shared.api import ChatMessage
-from shared.api import ChatMessageFragment
-from shared.api import ChatRequest
-from shared.api import ChatResponse
-from shared.constants import API_ENDPOINTS
-from shared.constants import CRYSTAL_API_URL
+from crystaldba.cli.chat_requester import ChatRequester
+from crystaldba.cli.dba_chat_client import DbaChatClient
+from crystaldba.shared.api import ChatMessage
+from crystaldba.shared.api import ChatMessageFragment
+from crystaldba.shared.api import ChatRequest
+from crystaldba.shared.api import ChatResponse
+from crystaldba.shared.constants import API_ENDPOINTS
+from crystaldba.shared.constants import CRYSTAL_API_URL
 
 
 @pytest.fixture

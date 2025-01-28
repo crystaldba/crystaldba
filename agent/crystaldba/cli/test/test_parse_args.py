@@ -2,13 +2,12 @@ import logging
 import os
 
 import pytest
-from pytest import raises
-from pytest_mock import MockerFixture
-
 from client.main import main
 from client.parse_args import get_database_url
 from client.parse_args import get_log_level
 from client.parse_args import parse_args
+from pytest import raises
+from pytest_mock import MockerFixture
 
 
 class TestArgumentParsing:

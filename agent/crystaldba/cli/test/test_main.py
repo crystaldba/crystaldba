@@ -2,9 +2,8 @@ import os
 from pathlib import Path
 
 import pytest
-from pytest_mock import MockerFixture
-
 from client.main import main
+from pytest_mock import MockerFixture
 
 
 class TestMainProgram:

@@ -8,7 +8,7 @@ import sqlalchemy
 from attrs import define
 from attrs import field
 
-from shared.base_sql_driver import BaseSqlDriver
+from crystaldba.shared.base_sql_driver import BaseSqlDriver
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine

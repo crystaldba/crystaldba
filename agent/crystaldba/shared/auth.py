@@ -18,8 +18,8 @@ import requests
 from http_message_signatures.algorithms import ECDSA_P256_SHA256  # pyright: ignore[reportPrivateImportUsage]
 from requests_http_signature import HTTPSignatureAuth
 
-from shared.base64id import generate_b64id
-from shared.constants import HTTP_SIGNATURE_MAX_AGE_SECONDS
+from crystaldba.shared.base64id import generate_b64id
+from crystaldba.shared.constants import HTTP_SIGNATURE_MAX_AGE_SECONDS
 
 
 class ModelDumpProtocol(Protocol):
