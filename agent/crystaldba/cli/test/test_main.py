@@ -17,7 +17,7 @@ class TestMainProgram:
 
         # Mock all required dependencies
         mocker.patch("crystaldba.cli.main.LocalSqlDriver", return_value=mock_sql_driver)
-        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
+        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"}, clear=True)
         mocker.patch("crystaldba.cli.main.Console")
         mock_session = mocker.patch("crystaldba.cli.main.PromptSession")
         mocker.patch("crystaldba.cli.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
@@ -30,7 +30,7 @@ class TestMainProgram:
     def test_failed_database_connection(self, capsys, mocker: MockerFixture):
         """Test handling of failed database connection"""
         mocker.patch("crystaldba.cli.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
-        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
+        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"}, clear=True)
         mocker.patch("crystaldba.cli.main.Console")
 
         with pytest.raises(SystemExit) as exc_info:
@@ -55,7 +55,7 @@ class TestMainProgram:
         mock_profile.config_dir = Path("/tmp")
 
         # Set up environment and mocks
-        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
+        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"}, clear=True)
         mocker.patch("crystaldba.cli.main.PromptSession", return_value=mock_prompt)
         mocker.patch("crystaldba.cli.main.Console", return_value=mock_console)
         mocker.patch("crystaldba.cli.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
@@ -83,7 +83,7 @@ class TestMainProgram:
         mock_chat_loop.run_to_completion.return_value = iter(["Response to test query"])
 
         # Set up all required mocks
-        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
+        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"}, clear=True)
         mocker.patch("crystaldba.cli.main.Live")
         mocker.patch("crystaldba.cli.main.PromptSession", return_value=mock_prompt)
         mocker.patch("crystaldba.cli.main.Console", return_value=mock_console)

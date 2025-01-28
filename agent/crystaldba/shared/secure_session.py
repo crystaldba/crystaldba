@@ -1,4 +1,6 @@
 import hashlib
+import importlib.metadata
+import platform
 import sys
 import time
 from typing import Any
@@ -20,6 +22,8 @@ from requests_http_signature import HTTPSignatureAuth
 
 from crystaldba.shared.base64id import generate_b64id
 from crystaldba.shared.constants import HTTP_SIGNATURE_MAX_AGE_SECONDS
+
+__version__ = importlib.metadata.version("crystaldba")
 
 
 class ModelDumpProtocol(Protocol):
@@ -59,6 +63,7 @@ class SecureSession(requests.Session):
                 "created": str(current_time),
                 "expires": str(current_time + HTTP_SIGNATURE_MAX_AGE_SECONDS),
                 "nonce": generate_b64id(),
+                "User-Agent": f"crystaldba-cli/{__version__} (Python/{platform.python_version()}; {platform.system()}/{platform.release()})",
             }
         )
 
