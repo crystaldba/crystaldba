@@ -1,41 +1,41 @@
-[tool.poetry]
-name = "crystadba-cli"
-version = "0.8.0"
+[project]
+name = "crystaldba"
+version = "0.8.0-rc1"
 description = "Crystal DBA Agent CLI"
-authors = ["Crystal DBA Developers <info@crystaldba.ai>"]
+license = { text = "Apache 2.0" }
+authors = [
+    {name = "Crystal DBA Developers", email = "info@crystaldba.ai"}
+]
 readme = "README.md"
-repository = "https://github.com/crystaldba/crystaldba"
+requires-python = ">=3.10"
+dependencies = [
+    "prompt-toolkit>=3.0.48",  # For CLI interface
+    "rich>=13.9.4",  # For CLI formatting
+    "sqlalchemy>=2.0.36",  # If you're using it for database operations
+    "python-dotenv>=1.0.1",  # For environment variables
+    "sseclient>=0.0.27",
+    "email-validator>=2.2.0",
+    "http-message-signatures>=0.5.0",
+    "requests-http-signature>=0.7.1",
+    "attrs>=25.1.0",
+    "pydantic>=2.10.6",
+    "pyyaml>=6.0.2",
+    "psycopg2-binary>=2.9.10",
+]
 
+[project.urls]
+homepage = "https://www.crystaldba.ai"
+repository = "https://github.com/crystaldba/crystaldba"
+documentation = "https://www.crystaldba.ai/docs"
+
+[project.entry-points]
+crystaldba = "client.main:main"
+
+[tool.poetry]
 packages = [
     { include = "shared", from = "." },
     { include = "client", from = "." },
 ]
-
-[tool.poetry.scripts]
-lint = "scripts:lint"
-check = "scripts:check"
-build = "scripts:build"
-test = "scripts:test"
-list = "scripts:list_commands"
-package_arm64 = "scripts:build_linux_arm64"
-package_amd64 = "scripts:build_linux_amd64"
-package_macos = "scripts:build_macos_arm64"
-crystaldba = "client.main:main"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-prompt-toolkit = "^3.0.48"  # For CLI interface
-rich = "^13.9.4"  # For CLI formatting
-sqlalchemy = "^2.0.36"  # If you're using it for database operations
-python-dotenv = "^1.0.1"  # For environment variables
-sseclient = "^0.0.27"
-email-validator = "^2.2.0"
-http-message-signatures = "^0.5.0"
-requests-http-signature = "^0.7.1"
-attrs = "^25.1.0"
-pydantic = "^2.10.6"
-pyyaml = "^6.0.2"
-psycopg2-binary = "^2.9.10"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.8.2"  # For linting
@@ -47,8 +47,18 @@ docker = "^7.1.0"  # For building docker images
 nuitka = "^2.6.1"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.9.0"]
 build-backend = "poetry.core.masonry.api"
+
+[project.scripts]
+lint = "scripts:lint"
+check = "scripts:check"
+build = "scripts:build"
+test = "scripts:test"
+list = "scripts:list_commands"
+package_arm64 = "scripts:build_linux_arm64"
+package_amd64 = "scripts:build_linux_amd64"
+package_macos = "scripts:build_macos_arm64"
 
 [tool.black]
 line-length = 150
