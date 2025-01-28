@@ -27,6 +27,10 @@ prompt-toolkit = "^3.0.48"  # For CLI interface
 rich = "^13.9.4"  # For CLI formatting
 sqlalchemy = "^2.0.36"  # If you're using it for database operations
 python-dotenv = "^1.0.1"  # For environment variables
+sseclient = "^0.0.27"
+email-validator = "^2.2.0"
+http-message-signatures = "^0.5.0"
+requests-http-signature = "^0.7.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.8.2"  # For linting
@@ -34,6 +38,7 @@ pyright = "^1.1.390"  # For type checking
 pytest = "^8.3.4"  # For testing
 pytest-asyncio = "^0.25.0"  # For async tests
 pytest-mock = "^3.14.0"  # For mocking in tests
+docker = "^7.1.0"  # For building docker images
 
 [build-system]
 requires = ["poetry-core"]
