@@ -97,7 +97,7 @@ def build_linux_arm64():
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/linux_arm64",
-        "--output-filename=crystal-client-linux-arm64",
+        "--output-filename=crystaldba",
         "client/main.py",
     ]
     subprocess.run(command, check=True)
@@ -120,7 +120,7 @@ def build_macos_arm64():
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/macos_arm64",
-        "--output-filename=crystal-client-macos-arm64",
+        "--output-filename=crystaldba",
         "client/main.py",
     ]
     subprocess.run(command, check=True)
@@ -154,7 +154,7 @@ def build_linux_amd64():
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/linux_amd64",
-        "--output-filename=crystal-client-linux-amd64",
+        "--output-filename=crystaldba",
         "client/main.py",
     ]
     subprocess.run(command, check=True, env={**cross_compile_env, **dict(os.environ)})
