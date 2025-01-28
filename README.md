@@ -111,13 +111,13 @@ Choose the version appropriate to your architecture and operating system.
 For example:
 
 ```bash
-wget https://github.com/crystaldba/crystaldba/releases/latest/download/crystaldba-0.8.0-rc0-amd64.tar.gz
+wget https://github.com/crystaldba/crystaldba/releases/latest/download/crystaldba-svc-0.8.0-rc0-amd64.tar.gz
 ```
 
 2. Extract the downloaded tar.gz file:
 ```bash
-tar -xzvf crystaldba-0.8.0-rc0-amd64.tar.gz
-cd crystaldba-0.8.0-rc0
+tar -xzvf crystaldba-svc-0.8.0-rc0-amd64.tar.gz
+cd crystaldba-svc-0.8.0-rc0
 ```
 
 3. Run the `install.sh` script to install Crystal DBA Agent.
