@@ -4,9 +4,13 @@ on:
   create
 
 jobs:
-  build_and_release:
-    runs-on: ubuntu-24.04
+  prepare:
+    runs-on: ubuntu-20.04
     if: ${{ startsWith(github.ref, 'refs/tags') }}
+
+    outputs:
+      release_tag: ${{ steps.get_tag.outputs.RELEASE_TAG }}
+      changelog: ${{ steps.extract_changelog.outputs.content }}
 
     permissions:
       contents: write
@@ -21,6 +25,7 @@ jobs:
           TAG=${GITHUB_REF##*/}
           STRIPPED_TAG=${TAG#v}
           echo "RELEASE_TAG=${STRIPPED_TAG}" >> $GITHUB_ENV
+          echo "RELEASE_TAG=${STRIPPED_TAG}" >> $GITHUB_OUTPUT
 
       - name: Get previous tag
         id: get_prev_tag
@@ -48,6 +53,14 @@ jobs:
         run: |
           docker run --rm -v ./release_output:/release_output crystaldbarelease /bin/bash -c "cp /home/crystaldba/release_output/* /release_output"
 
+      - name: Rename server artifacts
+        run: |
+          cd ./release_output
+          for file in crystaldba-*; do
+            if [ -f "$file" ]; then
+              mv "$file" "${file/crystaldba-/crystaldba-svc-}"
+            fi
+          done
       - name: Extract changelog for current release
         id: extract_changelog
         run: |
@@ -59,15 +72,13 @@ jobs:
           if [ ! -s release_notes.md ]; then
             echo "Automated release for tag ${{ github.ref }}" > release_notes.md
           fi
+          echo "content=$(cat release_notes.md)" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+      - name: Upload server artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: ./release_output/*
-          body_path: ./release_notes.md
-          make_latest: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: server-artifacts
+          path: ./release_output/*
 
       - name: Switch to main
         id: switch_main
@@ -82,3 +93,159 @@ jobs:
           committer_email: actions@github.com
           add: README.md scripts/install_release.sh
           message: 'Updated README.md for the new release.'
+
+  # Client build jobs
+  build_linux_arm64:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./agent
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y patchelf gcc g++
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.2"
+
+      - name: Build
+        run: poetry run build
+
+      - name: Build with Nuitka (Linux ARM64)
+        run: |
+          poetry run package_arm64
+
+      - name: Prepare Tar Archive
+        run: |
+          mkdir -p ./package/linux_arm64
+          cp -r ./build/linux_arm64/main.dist ./package/linux_arm64/crystaldba-cli-linux-arm64
+          cd ./package/linux_arm64
+          tar -czf ../../crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz crystaldba-cli-linux-arm64
+
+      - name: Upload Linux ARM64 Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: crystaldba-cli-linux-arm64
+          path: ./agent/crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+
+  build_macos_arm64:
+    needs: prepare
+    runs-on: macos-13
+    defaults:
+      run:
+        working-directory: ./agent
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.2"
+
+      - name: Build
+        run: poetry run build
+
+      - name: Build with Nuitka (macOS ARM64)
+        run: |
+          poetry run package_macos
+
+      - name: Prepare Tar Archive
+        run: |
+          mkdir -p ./package/macos_arm64
+          cp -r ./build/macos_arm64/main.dist ./package/macos_arm64/crystaldba_cli_macos_arm64
+          cd ./package/macos_arm64
+          tar -czf ../../crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz crystaldba_cli_macos_arm64
+
+      - name: Upload macOS ARM64 Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: crystaldba-cli-macos-arm64
+          path: ./agent/crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+
+  build_linux_amd64:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./agent
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies for cross-compilation
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y patchelf gcc-multilib g++-multilib binutils-x86-64-linux-gnu
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.2"
+
+      - name: Build
+        run: poetry run build
+
+      - name: Build with Nuitka (Linux AMD64)
+        run: |
+          poetry run package_amd64
+
+      - name: Prepare Tar Archive
+        run: |
+          mkdir -p ./package/linux_amd64
+          cp -r ./build/linux_amd64/main.dist ./package/linux_amd64/crystaldba-cli-linux-amd64
+          cd ./package/linux_amd64
+          tar -czf ../../crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz crystaldba-cli-linux-amd64
+
+      - name: Upload Linux AMD64 Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: crystaldba-cli-linux-amd64
+          path: ./agent/crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+
+  create_release:
+    needs: [prepare, build_linux_arm64, build_macos_arm64, build_linux_amd64]
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.prepare.outputs.release_tag }}
+          body: ${{ needs.prepare.outputs.changelog }}
+          files: |
+            ./artifacts/server-artifacts/*
+            ./artifacts/crystaldba-cli-linux-arm64/crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+            ./artifacts/crystaldba-cli-macos-arm64/crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+            ./artifacts/crystaldba-cli-linux-amd64/crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
