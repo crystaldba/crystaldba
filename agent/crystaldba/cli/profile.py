@@ -27,13 +27,13 @@ from crystaldba.cli.ui import make_clickable
 from crystaldba.cli.ui import wrap_text_to_terminal
 from crystaldba.shared.api import Registration
 from crystaldba.shared.api import SystemPreferences
-from crystaldba.shared.auth import DefaultSecureSessionFactory
-from crystaldba.shared.auth import SecureSession
-from crystaldba.shared.auth import SecureSessionFactory
 from crystaldba.shared.base64id import Base64Id
 from crystaldba.shared.base64id import generate_b64id
 from crystaldba.shared.constants import API_ENDPOINTS
 from crystaldba.shared.constants import CRYSTAL_API_URL
+from crystaldba.shared.secure_session import DefaultSecureSessionFactory
+from crystaldba.shared.secure_session import SecureSession
+from crystaldba.shared.secure_session import SecureSessionFactory
 
 VALID_PROFILE_CHARS = set(string.ascii_letters + string.digits + "_-")
 

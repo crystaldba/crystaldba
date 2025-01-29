@@ -16,7 +16,7 @@ __all__ = [
 ]
 
 # Network settings
-CRYSTAL_API_URL: Final[str] = os.getenv("CRYSTAL_API_URL", "https://api.crystaldba.net").rstrip("/")
+CRYSTAL_API_URL: Final[str] = os.environ.get("CRYSTAL_API_URL", "https://api.crystaldba.net").rstrip("/")
 
 # API Endpoints
 API_ENDPOINTS: Final[Dict[str, str]] = {

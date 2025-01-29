@@ -11,7 +11,7 @@ from crystaldba.cli.profile import Profile
 from crystaldba.cli.profile import ProfilesConfig
 from crystaldba.cli.profile import _create_new_profile  # pyright: ignore[reportPrivateUsage]
 from crystaldba.cli.profile import _update_profile  # pyright: ignore[reportPrivateUsage]
-from crystaldba.shared.auth import SecureSession
+from crystaldba.shared.secure_session import SecureSession
 
 
 @pytest.fixture

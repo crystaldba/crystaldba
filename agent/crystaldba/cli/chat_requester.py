@@ -17,7 +17,7 @@ from rich.console import Console
 from sseclient import SSEClient
 
 from crystaldba.shared.api import ChatRequest
-from crystaldba.shared.auth import SecureSession
+from crystaldba.shared.secure_session import SecureSession
 
 
 class PostOverrideSession(requests.Session):

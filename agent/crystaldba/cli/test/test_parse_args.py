@@ -369,10 +369,12 @@ class TestArgumentParsing:
 
     def test_no_parameters_raises_error(self, mocker: MockerFixture):
         """Test that no parameters raises an error"""
+
+        mocker.patch.dict(os.environ, clear=True)
         mocker.patch("sys.argv", ["crystaldba"])
         args, _ = parse_args()
 
-        with raises(ValueError, match="Must provide database connection credentials."):
+        with raises(ValueError, match=r"Must provide database connection credentials."):
             _ = get_database_url(args, lambda: "INVALID")
 
 
@@ -393,7 +395,7 @@ class TestLogLevel:
     def test_failed_database_connection(self, capsys, mocker: MockerFixture):
         """Test handling of failed database connection"""
         mocker.patch("crystaldba.cli.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
-        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
+        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"}, clear=True)
         mocker.patch("crystaldba.cli.main.Console")
         mocker.patch("sys.argv", ["crystaldba"])
         with pytest.raises(SystemExit) as exc_info:
@@ -465,7 +467,7 @@ class TestDatabaseConnection:
     def test_failed_connection(self, capsys, mocker: MockerFixture):
         """Test failed database connection"""
         mocker.patch("crystaldba.cli.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
-        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
+        mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"}, clear=True)
         mocker.patch(
             "sys.argv",
             ["crystaldba"],
@@ -490,7 +492,7 @@ class TestCommandLineArgs:
 
         for args, expected_level in test_cases:
             mock_log_config = mocker.patch("logging.basicConfig")
-            mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@nowhere/test"})
+            mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@nowhere/test"}, clear=True)
             mocker.patch(
                 "sys.argv",
                 args,
