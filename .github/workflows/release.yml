@@ -77,13 +77,13 @@ jobs:
           poetry-version: "2.0.1"
 
       - name: Build Python Wheel
-        run: poetry build
+        run: cd agent && poetry build
 
       - name: Upload Python Wheel Artifact
         uses: actions/upload-artifact@v4
         with:
           name: crystaldba_cli-artifacts
-          path: ./dist/*
+          path: ./agent/dist/*
 
   create_release:
     needs: [prepare, build_server, build_python]
