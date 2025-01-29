@@ -31,6 +31,7 @@ We focus on these first, to provide a solid foundation for delivering trustworth
 Crystal DBA is designed to give you advice on how to improve your database, but it will not take actions automatically without your review and consent.
 
 
+
 ## 🧑‍💻 About the Authors
 
 Crystal DBA is developed by the engineers and database experts at [Crystal DBA](https://www.crystaldba.ai/).
