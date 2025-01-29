@@ -1,108 +1,81 @@
 import pytest
-from prompt_toolkit import PromptSession
 from pytest_mock import MockerFixture
 from rich.console import Console
 
 from crystaldba.cli.chat_loop import ChatLoop
-from crystaldba.cli.chat_response_followup import ChatResponseFollowupProtocol
-from crystaldba.shared.api import DbaChatSyncProtocol
-
-
-@pytest.fixture
-def mock_user_input(mocker: MockerFixture):
-    return mocker.Mock(spec=PromptSession)
-
-
-@pytest.fixture
-def mock_console(mocker: MockerFixture):
-    console = mocker.Mock(spec=Console)
-    # Mock the context manager protocol for console.status()
-    status_context = mocker.Mock()
-    status_context.__enter__ = mocker.Mock(return_value=None)
-    status_context.__exit__ = mocker.Mock(return_value=None)
-    console.status.return_value = status_context
-    return console
-
-
-@pytest.fixture
-def mock_chat_response_followup(mocker: MockerFixture):
-    return mocker.Mock(spec=ChatResponseFollowupProtocol)
-
-
-@pytest.fixture
-def mock_dba_chat_client(mocker: MockerFixture):
-    return mocker.Mock(spec=DbaChatSyncProtocol)
-
-
-@pytest.fixture
-def chat_loop(mock_user_input, mock_console, mock_chat_response_followup, mock_dba_chat_client):
-    return ChatLoop(
-        mock_user_input,
-        mock_console,
-        mock_dba_chat_client,
-        mock_chat_response_followup,
-    )
+from crystaldba.cli.chat_turn import ChatTurn
 
 
 class TestChatLoop:
-    def test_run_to_completion_empty_input(self, chat_loop):
-        """Test handling of empty input"""
-        result = list(chat_loop.run_to_completion(""))
-        assert result == []
-        chat_loop.chat_response_followup.create_chatrequest.assert_not_called()
-        chat_loop.dba_chat_client.turn.assert_not_called()
+    @pytest.fixture
+    def mock_chat_turn(self, mocker: MockerFixture) -> ChatTurn:
+        return mocker.Mock(spec=ChatTurn)
 
-    def test_run_to_completion_normal_flow(self, chat_loop, mocker: MockerFixture):
-        """Test normal message flow with direct string response"""
-        chat_request = mocker.Mock()
-        chat_response = mocker.Mock()
-        expected_result = "Response message"
+    @pytest.fixture
+    def mock_prompt_fn(self, mocker: MockerFixture):
+        return mocker.Mock()
 
-        chat_loop.chat_response_followup.create_chatrequest.return_value = chat_request
-        chat_loop.dba_chat_client.turn.return_value = iter([chat_response])
-        chat_loop.chat_response_followup.from_chatresponse_to_possible_new_chatrequest.return_value = expected_result
+    @pytest.fixture
+    def mock_console(self, mocker: MockerFixture) -> Console:
+        return mocker.Mock()
 
-        result = list(chat_loop.run_to_completion("test message"))
-        assert result == [expected_result]
-        chat_loop.chat_response_followup.create_chatrequest.assert_called_once_with("test message")
-        chat_loop.dba_chat_client.turn.assert_called_once_with(chat_request)
-
-    def test_run_to_completion_with_multiple_continuations(self, chat_loop, mocker: MockerFixture):
-        """Test handling multiple continuation messages"""
-        initial_request = mocker.Mock()
-        continuation_request1 = mocker.Mock()
-        continuation_request2 = mocker.Mock()
-        response1 = mocker.Mock()
-        response2 = mocker.Mock()
-        response3 = mocker.Mock()
-        expected_result = "Final response"
-
-        chat_loop.chat_response_followup.create_chatrequest.return_value = initial_request
-        chat_loop.dba_chat_client.turn.side_effect = [iter([response1]), iter([response2]), iter([response3])]
-        chat_loop.chat_response_followup.from_chatresponse_to_possible_new_chatrequest.side_effect = [
-            continuation_request1,
-            continuation_request2,
-            expected_result,
-        ]
-
-        result = list(chat_loop.run_to_completion("test message"))
-        assert result == [expected_result]
-        assert chat_loop.dba_chat_client.turn.call_count == 3
-        chat_loop.dba_chat_client.turn.assert_has_calls(
-            [
-                mocker.call(initial_request),
-                mocker.call(continuation_request1),
-                mocker.call(continuation_request2),
-            ]
+    @pytest.fixture
+    def chat_loop(self, mock_chat_turn, mock_prompt_fn, mock_console):
+        return ChatLoop(
+            chat_turn=mock_chat_turn,
+            prompt_fn=mock_prompt_fn,
+            screen_console=mock_console,
+            initial_messages=[],
         )
 
-    def test_run_to_completion_keyboard_interrupt(self, chat_loop, mocker: MockerFixture):
-        """Test handling of keyboard interrupt"""
-        chat_request = mocker.Mock()
-        chat_loop.chat_response_followup.create_chatrequest.return_value = chat_request
-        chat_loop.dba_chat_client.turn.side_effect = KeyboardInterrupt()
+    def test_displays_initial_help_text(self, chat_loop, mock_console, mock_prompt_fn):
+        """Test that the initial help text is displayed"""
+        mock_prompt_fn.side_effect = KeyboardInterrupt
+        chat_loop.chat_loop()
 
-        with pytest.raises(KeyboardInterrupt):
-            # Need to iterate the generator to trigger the exception
-            list(chat_loop.run_to_completion("test message"))
-            chat_loop.run_to_completion("test message")
+        # Verify help text was printed
+        assert mock_console.print.call_args[0][0].startswith("What can I help you with?")
+
+    @pytest.mark.parametrize(
+        "exit_command",
+        ["bye", "quit", "exit", "BYE", "QUIT", "EXIT", "Bye", "Quit", "Exit"],
+    )
+    def test_exit_commands(self, exit_command, chat_loop, mock_console, mock_prompt_fn):
+        """Test that exit commands trigger program exit with correct message"""
+        mock_prompt_fn.return_value = exit_command
+
+        with pytest.raises(SystemExit) as exc_info:
+            chat_loop.chat_loop()
+
+        assert exc_info.value.code == 0
+        assert "Goodbye" in mock_console.print.call_args[0][0]
+
+    def test_empty_input_continues_loop(self, chat_loop, mock_prompt_fn, mock_chat_turn):
+        """Test that empty input continues the loop without processing"""
+        mock_prompt_fn.side_effect = ["", "exit"]
+
+        with pytest.raises(SystemExit):
+            chat_loop.chat_loop()
+
+        # Verify chat turn wasn't called for empty input
+        mock_chat_turn.run_to_completion.assert_not_called()
+
+    def test_processes_valid_input(self, chat_loop, mock_prompt_fn, mock_chat_turn, mocker: MockerFixture):
+        """Test that valid input is processed correctly"""
+        test_input = "test query"
+        test_response = "Response to test query"
+        mock_prompt_fn.side_effect = [test_input, "exit"]
+        mock_chat_turn.run_to_completion.return_value = iter([test_response])
+        mocker.patch("crystaldba.cli.chat_loop.Live")
+
+        with pytest.raises(SystemExit):
+            chat_loop.chat_loop()
+
+        mock_chat_turn.run_to_completion.assert_called_once_with(test_input)
+
+    def test_handles_keyboard_interrupt(self, chat_loop, mock_prompt_fn):
+        """Test that KeyboardInterrupt exits gracefully"""
+        mock_prompt_fn.side_effect = KeyboardInterrupt
+
+        # Should complete without raising
+        chat_loop.chat_loop()

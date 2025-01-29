@@ -10,13 +10,18 @@ load_dotenv()
 
 __all__ = [
     "API_ENDPOINTS",
-    "CRYSTAL_API_URL",
     "HTTP_SIGNATURE_MAX_AGE_SECONDS",
     "MAX_PROFILE_NAME_LENGTH",
+    "get_crystal_api_url",
 ]
 
 # Network settings
-CRYSTAL_API_URL: Final[str] = os.environ.get("CRYSTAL_API_URL", "https://api.crystaldba.net").rstrip("/")
+CRYSTAL_API_URL: str = os.environ.get("CRYSTAL_API_URL", "https://api.crystaldba.net").rstrip("/")
+
+
+def get_crystal_api_url():
+    return CRYSTAL_API_URL
+
 
 # API Endpoints
 API_ENDPOINTS: Final[Dict[str, str]] = {
