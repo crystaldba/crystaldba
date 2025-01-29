@@ -33,7 +33,7 @@ Crystal DBA is designed to give you advice on how to improve your database, but 
 
 ## 🧑‍💻 About the Authors
 
-Crystal DBA is developed by the engineers and database experts at  [Crystal DBA](https://www.crystaldba.ai/).
+Crystal DBA is developed by the engineers and database experts at [Crystal DBA](https://www.crystaldba.ai/).
 Our mission is to make it easy for you to run your database well, so you can focus on building better software.
 Crystal DBA also offers commercial support for Crystal DBA and PostgreSQL.
 
