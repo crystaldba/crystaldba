@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from pytest_mock import MockerFixture
 
-from client.main import main
+from crystaldba.cli.main import main
 
 
 class TestMainProgram:
@@ -16,22 +16,22 @@ class TestMainProgram:
         mock_profile.config_dir = Path("/tmp")
 
         # Mock all required dependencies
-        mocker.patch("client.main.LocalSqlDriver", return_value=mock_sql_driver)
+        mocker.patch("crystaldba.cli.main.LocalSqlDriver", return_value=mock_sql_driver)
         mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
-        mocker.patch("client.main.Console")
-        mock_session = mocker.patch("client.main.PromptSession")
-        mocker.patch("client.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
+        mocker.patch("crystaldba.cli.main.Console")
+        mock_session = mocker.patch("crystaldba.cli.main.PromptSession")
+        mocker.patch("crystaldba.cli.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
         mock_chat_client = mocker.Mock()
-        mocker.patch("client.main.DbaChatClient", return_value=mock_chat_client)
+        mocker.patch("crystaldba.cli.main.DbaChatClient", return_value=mock_chat_client)
 
         mock_session.return_value.prompt.side_effect = KeyboardInterrupt
         main()
 
     def test_failed_database_connection(self, capsys, mocker: MockerFixture):
         """Test handling of failed database connection"""
-        mocker.patch("client.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
+        mocker.patch("crystaldba.cli.main.LocalSqlDriver", side_effect=Exception("Connection failed"))
         mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
-        mocker.patch("client.main.Console")
+        mocker.patch("crystaldba.cli.main.Console")
 
         with pytest.raises(SystemExit) as exc_info:
             main()
@@ -56,11 +56,11 @@ class TestMainProgram:
 
         # Set up environment and mocks
         mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
-        mocker.patch("client.main.PromptSession", return_value=mock_prompt)
-        mocker.patch("client.main.Console", return_value=mock_console)
-        mocker.patch("client.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
-        mocker.patch("client.main.LocalSqlDriver")
-        mocker.patch("client.main.DbaChatClient")
+        mocker.patch("crystaldba.cli.main.PromptSession", return_value=mock_prompt)
+        mocker.patch("crystaldba.cli.main.Console", return_value=mock_console)
+        mocker.patch("crystaldba.cli.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
+        mocker.patch("crystaldba.cli.main.LocalSqlDriver")
+        mocker.patch("crystaldba.cli.main.DbaChatClient")
 
         with pytest.raises(SystemExit) as exc_info:
             main()
@@ -84,13 +84,13 @@ class TestMainProgram:
 
         # Set up all required mocks
         mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"})
-        mocker.patch("client.main.Live")
-        mocker.patch("client.main.PromptSession", return_value=mock_prompt)
-        mocker.patch("client.main.Console", return_value=mock_console)
-        mocker.patch("client.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
-        mocker.patch("client.main.LocalSqlDriver")
-        mocker.patch("client.main.ChatLoop", return_value=mock_chat_loop)
-        mocker.patch("client.main.DbaChatClient")
+        mocker.patch("crystaldba.cli.main.Live")
+        mocker.patch("crystaldba.cli.main.PromptSession", return_value=mock_prompt)
+        mocker.patch("crystaldba.cli.main.Console", return_value=mock_console)
+        mocker.patch("crystaldba.cli.main.get_or_create_profile", return_value=(mock_profile, mocker.Mock()))
+        mocker.patch("crystaldba.cli.main.LocalSqlDriver")
+        mocker.patch("crystaldba.cli.main.ChatLoop", return_value=mock_chat_loop)
+        mocker.patch("crystaldba.cli.main.DbaChatClient")
 
         with pytest.raises(SystemExit) as exc_info:
             main()

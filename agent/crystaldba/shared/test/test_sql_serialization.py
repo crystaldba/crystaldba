@@ -9,11 +9,11 @@ import pytest
 import sqlalchemy.exc
 from sqlalchemy import text
 
-from client.sql_tool import LocalSqlDriver
-from shared.sql_serialization import from_json_serializable_value
-from shared.sql_serialization import from_sql_tool_response
-from shared.sql_serialization import to_json_serializable_value
-from shared.sql_serialization import to_sql_tool_response
+from crystaldba.cli.sql_tool import LocalSqlDriver
+from crystaldba.shared.sql_serialization import from_json_serializable_value
+from crystaldba.shared.sql_serialization import from_sql_tool_response
+from crystaldba.shared.sql_serialization import to_json_serializable_value
+from crystaldba.shared.sql_serialization import to_sql_tool_response
 
 
 @pytest.fixture

@@ -10,16 +10,16 @@ from rich.live import Live
 from rich.markdown import Markdown
 from rich.spinner import Spinner
 
-from client.chat_loop import ChatLoop
-from client.chat_requester import ChatRequester
-from client.chat_response_followup import ChatResponseFollowup
-from client.dba_chat_client import DbaChatClient
-from client.parse_args import get_database_url
-from client.parse_args import get_log_level
-from client.parse_args import parse_args
-from client.profile import get_or_create_profile
-from client.sql_tool import LocalSqlDriver
-from shared.constants import CRYSTAL_API_URL
+from crystaldba.cli.chat_loop import ChatLoop
+from crystaldba.cli.chat_requester import ChatRequester
+from crystaldba.cli.chat_response_followup import ChatResponseFollowup
+from crystaldba.cli.dba_chat_client import DbaChatClient
+from crystaldba.cli.parse_args import get_database_url
+from crystaldba.cli.parse_args import get_log_level
+from crystaldba.cli.parse_args import parse_args
+from crystaldba.cli.profile import get_or_create_profile
+from crystaldba.cli.sql_tool import LocalSqlDriver
+from crystaldba.shared.constants import CRYSTAL_API_URL
 
 
 def password_prompt() -> str:

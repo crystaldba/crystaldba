@@ -5,7 +5,7 @@ from datetime import timedelta
 from decimal import Decimal
 from uuid import UUID
 
-from shared.sql_serialization import to_json_serializable_value
+from crystaldba.shared.sql_serialization import to_json_serializable_value
 
 
 def test_none_value():

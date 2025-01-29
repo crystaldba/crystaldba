@@ -5,18 +5,18 @@ from typing import Protocol
 import sqlalchemy.exc
 from rich.console import Console
 
-from client.sql_tool import LocalSqlDriver
-from shared.api import ChatMessage
-from shared.api import ChatMessageDone
-from shared.api import ChatMessageFragment
-from shared.api import ChatRequest
-from shared.api import ChatResponse
-from shared.api import SQLToolErrorResponse
-from shared.api import SQLToolExecuteRequest
-from shared.api import SQLToolSchemaRequest
-from shared.api import SQLToolSchemaResponse
-from shared.base_sql_driver import BaseSqlDriver
-from shared.sql_serialization import to_sql_tool_response
+from crystaldba.cli.sql_tool import LocalSqlDriver
+from crystaldba.shared.api import ChatMessage
+from crystaldba.shared.api import ChatMessageDone
+from crystaldba.shared.api import ChatMessageFragment
+from crystaldba.shared.api import ChatRequest
+from crystaldba.shared.api import ChatResponse
+from crystaldba.shared.api import SQLToolErrorResponse
+from crystaldba.shared.api import SQLToolExecuteRequest
+from crystaldba.shared.api import SQLToolSchemaRequest
+from crystaldba.shared.api import SQLToolSchemaResponse
+from crystaldba.shared.base_sql_driver import BaseSqlDriver
+from crystaldba.shared.sql_serialization import to_sql_tool_response
 
 
 class ChatResponseFollowupProtocol(Protocol):
@@ -63,7 +63,7 @@ class ChatResponseFollowup(ChatResponseFollowupProtocol):
             case SQLToolExecuteRequest():
                 self.logger.debug(f"CLIENT_LOOP: Executing query: {chat_response.payload.query}")
                 try:
-                    print(f"Executing query: {chat_response.payload.query}")
+                    print(f"Executing query: {chat_response.payload.query}\n")
                     result = self._execute_sql_query_with_retry(chat_response.payload.query)
                     json_serializable_result = to_sql_tool_response(result)
                     self.logger.debug(f"CLIENT_LOOP: Executed successfully. Returning SQLToolExecuteResponse: {json_serializable_result}")

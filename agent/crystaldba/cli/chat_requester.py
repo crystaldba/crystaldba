@@ -1,14 +1,23 @@
 import json
+import sys
+from typing import Callable
 from typing import Iterator
 from typing import Optional
-from typing import override
+
+if sys.version_info >= (3, 12):
+    from typing import override
+else:
+    # Define a no-op decorator
+    def override(method: Callable) -> Callable:
+        return method
+
 
 import requests
 from rich.console import Console
 from sseclient import SSEClient
 
-from shared.api import ChatRequest
-from shared.auth import SecureSession
+from crystaldba.shared.api import ChatRequest
+from crystaldba.shared.auth import SecureSession
 
 
 class PostOverrideSession(requests.Session):

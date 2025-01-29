@@ -27,19 +27,6 @@ def check():
         sys.exit("Pyright check failed!")
 
 
-def build():
-    """Build the project."""
-    print("Installing dependencies...")
-    try:
-        subprocess.run(["poetry", "install"], check=True)
-    except subprocess.CalledProcessError:
-        sys.exit("Dependency installation failed!")
-
-    lint()
-    check()
-    print("Build complete.")
-
-
 def test():
     """Run tests."""
     print("Running pytest...")
@@ -67,7 +54,6 @@ if __name__ == "__main__":
     commands = {
         "lint": lint,
         "check": check,
-        "build": build,
         "test": test,
         "list": list_commands,
     }

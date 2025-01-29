@@ -30,8 +30,7 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
-COPY client/ /app/client/
-COPY shared/ /app/shared/
+COPY crystaldba/ /app/crystaldba/
 
 # Set environment variables
 ENV PYTHONPATH=/app
@@ -40,4 +39,4 @@ ENV PYTHONPATH=/app
 EXPOSE ${PORT}
 
 # Run the client application
-CMD ["/usr/local/bin/python3", "-m", "client.main"]
+CMD ["/usr/local/bin/python3", "-m", "crystaldba.cli.main"]

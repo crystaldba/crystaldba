@@ -3,9 +3,9 @@ from prompt_toolkit import PromptSession
 from pytest_mock import MockerFixture
 from rich.console import Console
 
-from client.chat_loop import ChatLoop
-from client.chat_loop import ChatResponseFollowupProtocol
-from shared.api import DbaChatSyncProtocol
+from crystaldba.cli.chat_loop import ChatLoop
+from crystaldba.cli.chat_response_followup import ChatResponseFollowupProtocol
+from crystaldba.shared.api import DbaChatSyncProtocol
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 import pytest
 
-from shared.test.utils import create_postgres_container
+from crystaldba.shared.test.utils import create_postgres_container
 
 
 @pytest.fixture(scope="session", params=["postgres:15"])

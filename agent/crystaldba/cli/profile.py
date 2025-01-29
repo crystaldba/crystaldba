@@ -20,20 +20,20 @@ from email_validator import validate_email
 from prompt_toolkit import prompt
 from prompt_toolkit.shortcuts import confirm
 
-from client.constants import CRYSTAL_CONFIG_DIRECTORY
-from client.constants import MAX_PROFILE_NAME_LENGTH
-from client.keypair import generate_keypair
-from client.ui import make_clickable
-from client.ui import wrap_text_to_terminal
-from shared.api import Registration
-from shared.api import SystemPreferences
-from shared.auth import DefaultSecureSessionFactory
-from shared.auth import SecureSession
-from shared.auth import SecureSessionFactory
-from shared.base64id import Base64Id
-from shared.base64id import generate_b64id
-from shared.constants import API_ENDPOINTS
-from shared.constants import CRYSTAL_API_URL
+from crystaldba.cli.constants import CRYSTAL_CONFIG_DIRECTORY
+from crystaldba.cli.constants import MAX_PROFILE_NAME_LENGTH
+from crystaldba.cli.keypair import generate_keypair
+from crystaldba.cli.ui import make_clickable
+from crystaldba.cli.ui import wrap_text_to_terminal
+from crystaldba.shared.api import Registration
+from crystaldba.shared.api import SystemPreferences
+from crystaldba.shared.auth import DefaultSecureSessionFactory
+from crystaldba.shared.auth import SecureSession
+from crystaldba.shared.auth import SecureSessionFactory
+from crystaldba.shared.base64id import Base64Id
+from crystaldba.shared.base64id import generate_b64id
+from crystaldba.shared.constants import API_ENDPOINTS
+from crystaldba.shared.constants import CRYSTAL_API_URL
 
 VALID_PROFILE_CHARS = set(string.ascii_letters + string.digits + "_-")
 

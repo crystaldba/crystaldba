@@ -3,12 +3,12 @@ from typing import Iterator
 
 import requests
 
-from client.chat_requester import ChatRequester
-from shared.api import ChatRequest
-from shared.api import ChatResponse
-from shared.api import DbaChatSyncProtocol
-from shared.constants import API_ENDPOINTS
-from shared.constants import CRYSTAL_API_URL
+from crystaldba.cli.chat_requester import ChatRequester
+from crystaldba.shared.api import ChatRequest
+from crystaldba.shared.api import ChatResponse
+from crystaldba.shared.api import DbaChatSyncProtocol
+from crystaldba.shared.constants import API_ENDPOINTS
+from crystaldba.shared.constants import CRYSTAL_API_URL
 
 
 class DbaChatClient(DbaChatSyncProtocol):

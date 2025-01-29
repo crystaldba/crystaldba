@@ -56,6 +56,35 @@ jobs:
           path: ./release_output/*
 
   # Client build jobs
+  build-python:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./agent
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "2.0.1"
+
+      - name: Build Python Wheel
+        run: poetry build
+
+      - name: Upload Python Wheel Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: crystaldba_cli.whi
+          path: ./dist/crystaldba_cli-*.whl
+
   build_linux_arm64:
     needs: prepare
     runs-on: ubuntu-20.04
@@ -79,10 +108,10 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.0.1"
 
       - name: Build
-        run: poetry run build
+        run: poetry install
 
       - name: Build with Nuitka (Linux ARM64)
         run: |
@@ -119,10 +148,10 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.0.1"
 
       - name: Build
-        run: poetry run build
+        run: poetry install
 
       - name: Build with Nuitka (macOS ARM64)
         run: |
@@ -164,10 +193,10 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.0.1"
 
       - name: Build
-        run: poetry run build
+        run: poetry install
 
       - name: Build with Nuitka (Linux AMD64)
         run: |
@@ -210,7 +239,7 @@ jobs:
       - name: Update README
         uses: MathieuSoysal/file-updater-for-release@v1.0.3
         with:
-          files: README.md scripts/install_release.sh
+          files: README.md scripts/install_release.sh agent/pyproject.toml
           version: ${{ needs.prepare.outputs.release_tag }}
           old-version: ${{ needs.prepare.outputs.prev_release_tag }}
           with-checkout: false
@@ -230,8 +259,8 @@ jobs:
           files: |
             ./artifacts/server-artifacts/*
             ./artifacts/crystaldba-cli-linux-arm64/crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
-            ./artifacts/crystaldba-cli-macos-arm64/crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
             ./artifacts/crystaldba-cli-linux-amd64/crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz
+            ./artifacts/crystaldba_cli.whi
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -247,5 +276,5 @@ jobs:
         with:
           committer_name: GitHub Actions
           committer_email: actions@github.com
-          add: README.md scripts/install_release.sh
-          message: 'Updated README.md for the new release.'
+          add: README.md scripts/install_release.sh agent/pyproject.toml
+          message: 'Updated the current version for the new release.'

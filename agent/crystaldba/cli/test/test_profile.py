@@ -5,13 +5,13 @@ import pytest
 import yaml
 from pytest_mock import MockerFixture
 
-from client.profile import MAX_PROFILE_NAME_LENGTH
-from client.profile import ConfigUpdateError
-from client.profile import Profile
-from client.profile import ProfilesConfig
-from client.profile import _create_new_profile  # pyright: ignore[reportPrivateUsage]
-from client.profile import _update_profile  # pyright: ignore[reportPrivateUsage]
-from shared.auth import SecureSession
+from crystaldba.cli.profile import MAX_PROFILE_NAME_LENGTH
+from crystaldba.cli.profile import ConfigUpdateError
+from crystaldba.cli.profile import Profile
+from crystaldba.cli.profile import ProfilesConfig
+from crystaldba.cli.profile import _create_new_profile  # pyright: ignore[reportPrivateUsage]
+from crystaldba.cli.profile import _update_profile  # pyright: ignore[reportPrivateUsage]
+from crystaldba.shared.auth import SecureSession
 
 
 @pytest.fixture

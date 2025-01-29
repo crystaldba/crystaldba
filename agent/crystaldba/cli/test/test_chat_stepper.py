@@ -4,18 +4,18 @@ from prompt_toolkit import PromptSession
 from pytest_mock import MockerFixture
 from rich.console import Console
 
-from client.chat_requester import ChatRequester
-from client.chat_response_followup import ChatResponseFollowup
-from client.sql_tool import LocalSqlDriver
-from shared.api import ChatMessage
-from shared.api import ChatRequest
-from shared.api import ChatResponse
-from shared.api import SQLToolErrorResponse
-from shared.api import SQLToolExecuteRequest
-from shared.api import SQLToolExecuteResponse
-from shared.api import SQLToolSchemaRequest
-from shared.api import SQLToolSchemaResponse
-from shared.base_sql_driver import BaseSqlDriver
+from crystaldba.cli.chat_requester import ChatRequester
+from crystaldba.cli.chat_response_followup import ChatResponseFollowup
+from crystaldba.cli.sql_tool import LocalSqlDriver
+from crystaldba.shared.api import ChatMessage
+from crystaldba.shared.api import ChatRequest
+from crystaldba.shared.api import ChatResponse
+from crystaldba.shared.api import SQLToolErrorResponse
+from crystaldba.shared.api import SQLToolExecuteRequest
+from crystaldba.shared.api import SQLToolExecuteResponse
+from crystaldba.shared.api import SQLToolSchemaRequest
+from crystaldba.shared.api import SQLToolSchemaResponse
+from crystaldba.shared.base_sql_driver import BaseSqlDriver
 
 
 @pytest.fixture
