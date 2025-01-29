@@ -1,82 +1,45 @@
-# CrystalDBA Agent
+# Crystal DBA Agent Command Line Interface
 
-## Prerequisites
 
-- Python 3.12 exactly. It is possible later versions will work, but in the past some of our dependencies were not compatible with them.
-- Poetry (Python package manager)
+[Crystal DBA](https://www.crystaldba.ai) is an AI teammate for PostgreSQL database administration.
+For more information, see the [documentation](https://www.crystaldba.ai/docs).
 
-## Development Setup
+Installation:
 
-1. Clone the repository:
-
-   ```bash
-   git clone git@github.com:crystaldba/crystaldba.git
-   cd crystaldba/agent
-   ```
-
-2. Install dependencies using Poetry:
-
-   ```bash
-   poetry install
-   ```
-
-3. Copy the environment example file:
-
-   ```bash
-   cp env.example .env
-   ```
-
-4. Edit the `.env` file with your configuration:
-
-## Environment Variables
-
-See `agent/shared/constants.py` for current details.
-
-#### Database to Monitor
-
-- `DATABASE_URL`: PostgreSQL connection string (required)
-  Example: `postgresql://user:password@localhost:5432/dbname`
-
-## Running the Application
-
-```bash
-poetry run crystaldba
+```
+pipx install crystaldba
 ```
 
-You can add `-v` or `-vv` in order to increase verbosity.
+See the [website installation instructions](https://www.crystaldba.ai/docs/installation) for further details.
 
-## Development Tools
+Usage:
 
-- Code formatting and linting:
+```
+usage: crystaldba [-h HOSTNAME] [-p PORT] [-U USERNAME] [-d DBNAME] [-v] [--help] [DBNAME | URI]
 
-  ```bash
-  poetry run ruff format .
-  poetry run ruff check .
-  ```
+Crystal DBA is an AI-powered postgreSQL expert.
 
-- Type checking:
-  ```bash
-  poetry run pyright
-  ```
+Examples:
+  crystaldba dbname
+  crystaldba postgres://<username>:<password>@<host>:<port>/<dbname>
+  crystaldba -d dbname -u dbuser
 
-## Running Tests
+Connection options:
+  DBNAME | URI          database name or URI to connect to
+  -h HOSTNAME, --host HOSTNAME
+                        database server host or socket directory (default: "localhost")
+  -p PORT, --port PORT  database server port (default: "5432")
+  -U USERNAME, -u USERNAME, --username USERNAME
+                        database user name (default: "postgres")
+  -d DBNAME, --dbname DBNAME
+                        database name (default: "postgres")
 
-Install test dependencies:
+Other options:
+  -v, --verbose         increase verbosity level (-v: INFO, -vv: DEBUG)
+  --help                show this help message and exit
 
-```bash
-poetry install --with dev
+Contact us:
+  Email support@crystaldba.ai if you have questions.
 ```
 
-Apply the required changes to the `.env` file.
 
-Run unit tests:
-
-```bash
-poetry run pytest
-```
-
-Run unit tests with increased verbosity:
-
-```bash
-poetry run pytest -v
-```
