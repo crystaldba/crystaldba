@@ -83,7 +83,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: crystaldba_cli-artifacts
-          path: ./dist/crystaldba-*
+          path: ./dist/crystaldba_cli-*
 
   create_release:
     needs: [prepare, build_server, build_python]
