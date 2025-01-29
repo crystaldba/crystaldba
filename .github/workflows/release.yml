@@ -26,7 +26,7 @@ jobs:
       - name: Get previous tag
         id: get_prev_tag
         run: |
-          PREV_VERSION=$(grep -oP 'crystaldba-svc-\K[0-9]+\.[0-9]+\.[0-9]+(-rc\d+)?$' "README.md")
+          PREV_VERSION=$(grep -oP 'crystaldba-svc-\K[0-9]+\.[0-9]+\.[0-9]+(rc\d+)?$' "README.md")
           echo "PREV_VERSION is \"$PREV_VERSION\""
           echo "PREV_RELEASE_TAG=${PREV_VERSION}" >> $GITHUB_ENV
           echo "PREV_RELEASE_TAG=${PREV_VERSION}" >> $GITHUB_OUTPUT
@@ -109,7 +109,7 @@ jobs:
       - name: Update README
         uses: MathieuSoysal/file-updater-for-release@v1.0.3
         with:
-          files: README.md scripts/install_release.sh agent/pyproject.toml
+          files: README.md scripts/install_release.sh agent/pyproject.toml INSTALL-TEAM.md
           version: ${{ needs.prepare.outputs.release_tag }}
           old-version: ${{ needs.prepare.outputs.prev_release_tag }}
           with-checkout: false
@@ -144,5 +144,5 @@ jobs:
         with:
           committer_name: GitHub Actions
           committer_email: actions@github.com
-          add: README.md scripts/install_release.sh agent/pyproject.toml
+          add: README.md scripts/install_release.sh agent/pyproject.toml INSTALL-TEAM.md
           message: 'Updated the current version for the new release.'
