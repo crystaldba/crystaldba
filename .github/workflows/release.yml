@@ -82,8 +82,8 @@ jobs:
       - name: Upload Python Wheel Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: crystaldba_cli.whi
-          path: ./dist/crystaldba_cli-*.whl
+          name: crystaldba_cli-artifacts
+          path: ./dist/crystaldba-*
 
   create_release:
     needs: [prepare, build_server, build_python]
@@ -128,7 +128,7 @@ jobs:
           body_path: ./release_notes.md
           files: |
             ./artifacts/server-artifacts/*
-            ./artifacts/crystaldba_cli.whi
+            ./artifacts/crystaldba_cli-artifacts/*
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

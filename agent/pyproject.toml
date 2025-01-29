@@ -1,5 +1,5 @@
 [project]
-name = "crystaldba"
+name = "crystaldba_cli"
 version = "0.8.0rc1"
 description = "Crystal DBA Agent CLI"
 license = { text = "Apache 2.0" }
