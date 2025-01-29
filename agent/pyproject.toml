@@ -2,9 +2,9 @@
 name = "crystaldba"
 version = "0.8.0-rc1"
 description = "Crystal DBA Agent CLI"
-license = { text = "Apache 2.0" }
+license = { text = "Apache-2.0" }
 authors = [
-    {name = "Crystal DBA Developers", email = "info@crystaldba.ai"}
+    {name = "Crystal DBA Developers", email = "support@crystaldba.ai"}
 ]
 readme = "README.md"
 requires-python = ">=3.10"
