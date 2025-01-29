@@ -1,6 +1,6 @@
 [project]
 name = "crystaldba_cli"
-version = "0.8.0rc2"
+version = "0.8.0rc6"
 description = "Crystal DBA Agent CLI"
 license = { text = "Apache-2.0" }
 authors = [
