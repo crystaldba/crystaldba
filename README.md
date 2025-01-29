@@ -5,16 +5,16 @@
 Crystal DBA is an AI teammate for PostgreSQL database administration.
 We aim to ensure that everyone who runs PostgreSQL has access to a AI-powered database expertise at all times.
 
-Quick install:
+**Quick install**
 
 ```
 pipx install crystaldba
 ```
 
-Useful links:
+**Useful links**
 
 - [Installation instructions](https://www.crystaldba.ai/docs/installation)
-- [Getting started](https://www.crystaldba.ai/docs/getting-started)
+- [Getting started guide](https://www.crystaldba.ai/docs/getting-started)
 - [Full documentation](https://www.crystaldba.ai/docs/)
 
 ## 💡 Motivation
