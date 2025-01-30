@@ -8,6 +8,7 @@ from rich import print
 from rich.console import Console
 
 from crystaldba.cli.chat_loop import ChatLoop
+from crystaldba.cli.chat_loop import ChatLoopExit
 from crystaldba.cli.chat_requester import ChatRequester
 from crystaldba.cli.chat_response_followup import ChatResponseFollowup
 from crystaldba.cli.chat_turn import ChatTurn
@@ -81,37 +82,35 @@ def main():
         sys.exit(1)
     screen_console.print("Database connection test successful\n")
 
-    screen_console.print(
-        "What can I help you with?  A few ideas:\n\n"
-        "• Give an overview of the schema\n"
-        "• Find the slowest queries\n"
-        "• Report on database health\n"
-        "• Explain a query plan\n"
-        "• Optimize indexes and queries\n"
-        "• Generate queries to answer questions"
-    )
-
     try:
-        chat_turn = ChatTurn(
-            user_input,
-            screen_console,
-            DbaChatClient(chat_requester),
-            ChatResponseFollowup(
-                screen_console,
-                sql_driver,
-            ),
-        )
 
         def prompt_fn(prompt: str) -> str:
             return user_input.prompt(prompt)
 
         chat_loop = ChatLoop(
-            chat_turn=chat_turn,
+            chat_turn=ChatTurn(
+                user_input,
+                screen_console,
+                DbaChatClient(chat_requester),
+                ChatResponseFollowup(
+                    screen_console,
+                    sql_driver,
+                ),
+            ),
             prompt_fn=prompt_fn,
             screen_console=screen_console,
-            initial_messages=["SYSTEM: start a thread"],
+            initial_messages=["SYSTEM: thread started"],
         )
-        chat_loop.chat_loop()
+        exit_state = chat_loop.chat_loop()
+
+        if exit_state == ChatLoopExit.UNKNOWN_EXCEPTION:
+            sys.exit(1)
+        elif exit_state == ChatLoopExit.BYE:
+            return
+        elif exit_state == ChatLoopExit.KEYBOARD_INTERRUPT:
+            return
+        else:
+            return
     except Exception as e:
         logger.critical(f"Error running chat loop: {e!r}", exc_info=True)
         print(f"CRITICAL: Error running chat loop: {e!s}")

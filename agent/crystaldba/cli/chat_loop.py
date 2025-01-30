@@ -1,5 +1,6 @@
 import logging
-import sys
+from enum import Enum
+from enum import auto
 from typing import Iterator
 from typing import List
 from typing import Protocol
@@ -19,6 +20,12 @@ class PromptProtocol(Protocol):
     def __call__(self, prompt: str) -> str: ...
 
 
+class ChatLoopExit(Enum):
+    UNKNOWN_EXCEPTION = auto()
+    KEYBOARD_INTERRUPT = auto()
+    BYE = auto()
+
+
 class ChatLoop:
     def __init__(
         self,
@@ -32,7 +39,7 @@ class ChatLoop:
         self.prompt_fn = prompt_fn
         self.screen_console = screen_console
 
-    def chat_loop(self):
+    def chat_loop(self) -> ChatLoopExit:
         logger = logging.getLogger(__name__)
         screen_console = self.screen_console
 
@@ -46,23 +53,21 @@ class ChatLoop:
             "• Generate queries to answer questions"
         )
 
-        loop_count = 0
         try:
             while True:
                 try:
-                    loop_count += 1
-                    if loop_count <= 0:
-                        message_input = "SYSTEM: start a thread"
-                        # TODO, pull messages from self.initial_messages instead of hardcoding one here.
+                    if self.initial_messages:
+                        message_input = self.initial_messages.pop(0)
+                        logger.debug(f"CLIENT_Main_loop_once: initial_input: start: {message_input}")
                     else:
                         logger.debug("CLIENT_Main_loop_once: start")
                         message_input = self.prompt_fn("\n> ").strip()
                         screen_console.print()
                         if not message_input:
                             continue
-                        if message_input.lower() in ["bye", "quit", "exit"]:
-                            screen_console.print("Goodbye! I'm always available, if you need any further assistance.")
-                            sys.exit(0)
+                    if message_input.lower() in ["bye", "quit", "exit"]:
+                        screen_console.print("Goodbye! I'm always available, if you need any further assistance.")
+                        return ChatLoopExit.BYE
 
                     with Live(
                         Spinner("dots", text="Thinking..."),
@@ -78,7 +83,7 @@ class ChatLoop:
                         live.update(Markdown(buffer))
 
                 except (KeyboardInterrupt, EOFError):
-                    break
+                    return ChatLoopExit.KEYBOARD_INTERRUPT
         except Exception as e:
             logger.critical(f"Error running chat loop: {e!r}", exc_info=True)
             print(f"CRITICAL: Error running chat loop: {e!s}")
@@ -86,4 +91,4 @@ class ChatLoop:
             import traceback
 
             print("".join(traceback.format_exception(type(e), e, e.__traceback__)))
-            sys.exit(1)
+            return ChatLoopExit.UNKNOWN_EXCEPTION
