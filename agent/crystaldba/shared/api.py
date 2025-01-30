@@ -1,4 +1,5 @@
 from typing import Any
+from typing import AsyncGenerator
 from typing import Iterator
 from typing import Optional
 from typing import Protocol
@@ -110,5 +111,20 @@ class DbaChatSyncProtocol(Protocol):
 
         Returns:
             A ChatResponse (sync)
+        """
+        ...
+
+
+class DbaChatAsyncProtocol(Protocol):
+    """Protocol defining the DbaChat interface for Server, Remote, and Client"""
+
+    def turn(self, request: ChatRequest) -> AsyncGenerator[ChatResponse, None]:
+        """Execute 1 turn in the conversation.
+
+        Args:
+            request: The incoming chat request
+
+        Yields:
+            ChatResponse objects as they become available
         """
         ...
