@@ -5,7 +5,9 @@ from prompt_toolkit import PromptSession
 from rich.console import Console
 
 from crystaldba.cli.chat_response_followup import ChatResponseFollowupProtocol
-from crystaldba.shared.api import ChatMessage, DbaChatSyncProtocol, StartupMessage
+from crystaldba.shared.api import ChatMessage
+from crystaldba.shared.api import DbaChatSyncProtocol
+from crystaldba.shared.api import StartupMessage
 
 
 class ChatTurn:

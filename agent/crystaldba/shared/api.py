@@ -1,5 +1,4 @@
 from typing import Any
-from typing import AsyncGenerator
 from typing import Iterator
 from typing import Optional
 from typing import Protocol

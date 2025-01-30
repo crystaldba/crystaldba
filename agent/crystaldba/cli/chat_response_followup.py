@@ -6,7 +6,7 @@ import sqlalchemy.exc
 from rich.console import Console
 
 from crystaldba.cli.sql_tool import LocalSqlDriver
-from crystaldba.shared.api import ChatMessage, StartupMessage
+from crystaldba.shared.api import ChatMessage
 from crystaldba.shared.api import ChatMessageDone
 from crystaldba.shared.api import ChatMessageFragment
 from crystaldba.shared.api import ChatRequest
@@ -15,6 +15,7 @@ from crystaldba.shared.api import SQLToolErrorResponse
 from crystaldba.shared.api import SQLToolExecuteRequest
 from crystaldba.shared.api import SQLToolSchemaRequest
 from crystaldba.shared.api import SQLToolSchemaResponse
+from crystaldba.shared.api import StartupMessage
 from crystaldba.shared.base_sql_driver import BaseSqlDriver
 from crystaldba.shared.sql_serialization import to_sql_tool_response
 

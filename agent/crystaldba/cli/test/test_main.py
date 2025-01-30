@@ -20,15 +20,15 @@ class TestMainProgram:
 
     def test_successful_startup(self, mocker: MockerFixture, mock_console):
         """Test successful program startup and initialization"""
-        return  # TODO fix
-
         mock_sql_driver = mocker.Mock()
+        mock_dba_chat_client = mocker.Mock()
         mock_profile = mocker.Mock()
         mock_profile.system_id = "test-system-id"
         mock_profile.config_dir = Path("/tmp")
 
         # Mock all required dependencies
         mocker.patch("crystaldba.cli.main.LocalSqlDriver", return_value=mock_sql_driver)
+        mocker.patch("crystaldba.cli.main.DbaChatClient", return_value=mock_dba_chat_client)
         mocker.patch.dict(os.environ, {"DATABASE_URL": "postgresql://test:test@localhost/test"}, clear=True)
         mocker.patch("crystaldba.cli.main.Console", return_value=mock_console)
         mock_session = mocker.patch("crystaldba.cli.main.PromptSession")

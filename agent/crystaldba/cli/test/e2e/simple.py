@@ -61,6 +61,16 @@ def test_client_server_interaction(test_postgres_connection_string):
             logger.error(f"Client failed to start: {e!s}")
             raise
 
+        logger.info("Initial communication start query")
+        try:
+            client.expect("Executing query", timeout=30)
+            logger.info("Initial communication turn")
+        except (pexpect.TIMEOUT, pexpect.EOF) as e:
+            logger.error(f"Client output: {client.before} :: {client.after}")
+            logger.error(f"Database version query failed: {e!s}")
+            print(str(client))
+            raise
+
         # Test database version query
         logger.info("Testing database version query...")
         client.sendline("what version is my database?")
