@@ -23,7 +23,7 @@ from requests_http_signature import HTTPSignatureAuth
 from crystaldba.shared.base64id import generate_b64id
 from crystaldba.shared.constants import HTTP_SIGNATURE_MAX_AGE_SECONDS
 
-__version__ = importlib.metadata.version("crystaldba_cli")
+__version__ = importlib.metadata.version("crystaldba")
 
 
 class ModelDumpProtocol(Protocol):

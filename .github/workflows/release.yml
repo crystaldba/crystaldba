@@ -84,6 +84,10 @@ jobs:
         with:
           name: crystaldba_cli-artifacts
           path: ./agent/dist/*
+      - name: Rename Artifacts
+        run: |
+          mv ./agent/dist/crystaldba-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl ./agent/dist/crystaldba-cli-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl
+          mv ./agent/dist/crystaldba-${{ needs.prepare.outputs.release_tag }}.tar.gz ./agent/dist/crystaldba-cli-${{ needs.prepare.outputs.release_tag }}.tar.gz
 
   create_release:
     needs: [prepare, build_server, build_python]
