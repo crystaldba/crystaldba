@@ -26,7 +26,7 @@ jobs:
       - name: Get previous tag
         id: get_prev_tag
         run: |
-          PREV_VERSION=$(grep -oP 'crystaldba-svc-\K[0-9]+\.[0-9]+\.[0-9]+(-rc\d+)?$' "README.md")
+          PREV_VERSION=$(grep -oP 'crystaldba-svc-\K[0-9]+\.[0-9]+\.[0-9]+(rc\d+)?$' "INSTALL-TEAM.md")
           echo "PREV_VERSION is \"$PREV_VERSION\""
           echo "PREV_RELEASE_TAG=${PREV_VERSION}" >> $GITHUB_ENV
           echo "PREV_RELEASE_TAG=${PREV_VERSION}" >> $GITHUB_OUTPUT
@@ -56,7 +56,7 @@ jobs:
           path: ./release_output/*
 
   # Client build jobs
-  build-python:
+  build_python:
     needs: prepare
     runs-on: ubuntu-20.04
     defaults:
@@ -65,6 +65,14 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Update README
+        uses: MathieuSoysal/file-updater-for-release@v1.0.3
+        with:
+          files: README.md scripts/install_release.sh agent/pyproject.toml INSTALL-TEAM.md
+          version: ${{ needs.prepare.outputs.release_tag }}
+          old-version: ${{ needs.prepare.outputs.prev_release_tag }}
+          with-checkout: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -79,144 +87,19 @@ jobs:
       - name: Build Python Wheel
         run: poetry build
 
+      - name: Rename Artifacts
+        run: |
+          mv ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl ./dist/crystaldba-cli-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl
+          mv ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}.tar.gz ./dist/crystaldba-cli-${{ needs.prepare.outputs.release_tag }}.tar.gz
+
       - name: Upload Python Wheel Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: crystaldba_cli.whi
-          path: ./dist/crystaldba_cli-*.whl
-
-  build_linux_arm64:
-    needs: prepare
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: ./agent
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y patchelf gcc g++
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: "2.0.1"
-
-      - name: Build
-        run: poetry install
-
-      - name: Build with Nuitka (Linux ARM64)
-        run: |
-          poetry run package_arm64
-
-      - name: Prepare Tar Archive
-        run: |
-          mkdir -p ./package/linux_arm64
-          cp -r ./build/linux_arm64/main.dist ./package/linux_arm64/crystaldba-cli-linux-arm64
-          cd ./package/linux_arm64
-          tar -czf ../../crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz crystaldba-cli-linux-arm64
-
-      - name: Upload Linux ARM64 Executable
-        uses: actions/upload-artifact@v4
-        with:
-          name: crystaldba-cli-linux-arm64
-          path: ./agent/crystaldba-cli-*
-
-  build_macos_arm64:
-    needs: prepare
-    runs-on: macos-13
-    defaults:
-      run:
-        working-directory: ./agent
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: "2.0.1"
-
-      - name: Build
-        run: poetry install
-
-      - name: Build with Nuitka (macOS ARM64)
-        run: |
-          poetry run package_macos
-
-      - name: Prepare Tar Archive
-        run: |
-          mkdir -p ./package/macos_arm64
-          cp -r ./build/macos_arm64/main.dist ./package/macos_arm64/crystaldba_cli_macos_arm64
-          cd ./package/macos_arm64
-          tar -czf ../../crystaldba-cli-macos-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz crystaldba_cli_macos_arm64
-
-      - name: Upload macOS ARM64 Executable
-        uses: actions/upload-artifact@v4
-        with:
-          name: crystaldba-cli-macos-arm64
-          path: ./agent/crystaldba-cli-*
-
-  build_linux_amd64:
-    needs: prepare
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: ./agent
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install system dependencies for cross-compilation
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y patchelf gcc-multilib g++-multilib binutils-x86-64-linux-gnu
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: "2.0.1"
-
-      - name: Build
-        run: poetry install
-
-      - name: Build with Nuitka (Linux AMD64)
-        run: |
-          poetry run package_amd64
-
-      - name: Prepare Tar Archive
-        run: |
-          mkdir -p ./package/linux_amd64
-          cp -r ./build/linux_amd64/main.dist ./package/linux_amd64/crystaldba-cli-linux-amd64
-          cd ./package/linux_amd64
-          tar -czf ../../crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz crystaldba-cli-linux-amd64
-
-      - name: Upload Linux AMD64 Executable
-        uses: actions/upload-artifact@v4
-        with:
-          name: crystaldba-cli-linux-amd64
-          path: ./agent/crystaldba-cli-*
+          name: crystaldba_cli-artifacts
+          path: ./agent/dist/*
 
   create_release:
-    needs: [prepare, build_server, build_linux_arm64, build_macos_arm64, build_linux_amd64]
+    needs: [prepare, build_server, build_python]
     runs-on: ubuntu-20.04
     permissions:
       contents: write
@@ -239,7 +122,7 @@ jobs:
       - name: Update README
         uses: MathieuSoysal/file-updater-for-release@v1.0.3
         with:
-          files: README.md scripts/install_release.sh agent/pyproject.toml
+          files: README.md scripts/install_release.sh agent/pyproject.toml INSTALL-TEAM.md
           version: ${{ needs.prepare.outputs.release_tag }}
           old-version: ${{ needs.prepare.outputs.prev_release_tag }}
           with-checkout: false
@@ -255,12 +138,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.prepare.outputs.release_tag }}
-          body: ${{ needs.prepare_release.outputs.changelog }}
+          body_path: ./release_notes.md
           files: |
             ./artifacts/server-artifacts/*
-            ./artifacts/crystaldba-cli-linux-arm64/crystaldba-cli-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz
-            ./artifacts/crystaldba-cli-linux-amd64/crystaldba-cli-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz
-            ./artifacts/crystaldba_cli.whi
+            ./artifacts/crystaldba_cli-artifacts/*
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -276,5 +157,5 @@ jobs:
         with:
           committer_name: GitHub Actions
           committer_email: actions@github.com
-          add: README.md scripts/install_release.sh agent/pyproject.toml
+          add: README.md scripts/install_release.sh agent/pyproject.toml INSTALL-TEAM.md
           message: 'Updated the current version for the new release.'

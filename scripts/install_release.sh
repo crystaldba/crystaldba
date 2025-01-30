@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Default values
-VERSION="0.8.0-rc1"
+VERSION="0.8.0rc10"
 ARCH="amd64"
 CONFIG_PATH="${CURRENT_DIR}/crystaldba.conf"
 
@@ -34,7 +34,7 @@ show_usage() {
 Usage: $0 [OPTIONS]
 Options:
     --config PATH          Path to crystaldba.conf file (default: ./crystaldba.conf)
-    --version VERSION      Crystal DBA version (default: 0.8.0-rc1)
+    --version VERSION      Crystal DBA version (default: 0.8.0rc10)
     --help                Show this help message
 EOF
     exit 1
