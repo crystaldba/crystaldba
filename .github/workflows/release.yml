@@ -66,6 +66,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Update README
+        uses: MathieuSoysal/file-updater-for-release@v1.0.3
+        with:
+          files: README.md scripts/install_release.sh agent/pyproject.toml INSTALL-TEAM.md
+          version: ${{ needs.prepare.outputs.release_tag }}
+          old-version: ${{ needs.prepare.outputs.prev_release_tag }}
+          with-checkout: false
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -78,9 +86,6 @@ jobs:
 
       - name: Build Python Wheel
         run: poetry build
-
-      - name: Display structure of dist directory
-        run: ls -R ./dist
 
       - name: Rename Artifacts
         run: |
