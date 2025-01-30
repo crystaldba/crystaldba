@@ -6,7 +6,7 @@ import sqlalchemy.exc
 from rich.console import Console
 
 from crystaldba.cli.sql_tool import LocalSqlDriver
-from crystaldba.shared.api import ChatMessage
+from crystaldba.shared.api import ChatMessage, StartupMessage
 from crystaldba.shared.api import ChatMessageDone
 from crystaldba.shared.api import ChatMessageFragment
 from crystaldba.shared.api import ChatRequest
@@ -22,7 +22,7 @@ from crystaldba.shared.sql_serialization import to_sql_tool_response
 class ChatResponseFollowupProtocol(Protocol):
     """Protocol defining the interface for chat stepping functionality."""
 
-    def create_chatrequest(self, message: str) -> ChatRequest:
+    def create_chatrequest(self, message: ChatMessage | StartupMessage) -> ChatRequest:
         """Create a new chat request from a message."""
         ...
 
@@ -42,11 +42,11 @@ class ChatResponseFollowup(ChatResponseFollowupProtocol):
         self.console = console
         self.message_counter = 0
 
-    def create_chatrequest(self, message: str) -> ChatRequest:
+    def create_chatrequest(self, message: ChatMessage | StartupMessage) -> ChatRequest:
         return ChatRequest(
             sequence_id=self.message_counter,
             continuation_token=None,
-            payload=ChatMessage(message=message),
+            payload=message,
         )
 
     def from_chatresponse_to_possible_new_chatrequest(self, chat_response: ChatResponse) -> str | ChatRequest | None:

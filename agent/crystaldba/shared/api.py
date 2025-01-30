@@ -45,6 +45,10 @@ class SystemPreferences(BaseModel):
     share_data: bool
 
 
+class StartupMessage(BaseModel):
+    pass
+
+
 class ChatMessage(BaseModel):
     message: str
 
@@ -80,16 +84,20 @@ class SQLToolSchemaResponse(BaseModel):
     table_schema: Optional[str]
 
 
+class RegistrationDoneMessage(BaseModel):
+    pass
+
+
 class ChatRequest(BaseModel):
     sequence_id: int
     continuation_token: Optional[str]
-    payload: Union[ChatMessage, SQLToolExecuteResponse, SQLToolErrorResponse, SQLToolSchemaResponse]
+    payload: Union[StartupMessage, ChatMessage, SQLToolExecuteResponse, SQLToolErrorResponse, SQLToolSchemaResponse]
 
 
 class ChatResponse(BaseModel):
     sequence_id: int
     continuation_token: Optional[str]
-    payload: Union[ChatMessage, ChatMessageFragment, SQLToolExecuteRequest, SQLToolSchemaRequest, ChatMessageDone]
+    payload: Union[ChatMessage, ChatMessageFragment, SQLToolExecuteRequest, SQLToolSchemaRequest, ChatMessageDone, RegistrationDoneMessage]
 
 
 class DbaChatSyncProtocol(Protocol):
@@ -103,20 +111,5 @@ class DbaChatSyncProtocol(Protocol):
 
         Returns:
             A ChatResponse (sync)
-        """
-        ...
-
-
-class DbaChatAsyncProtocol(Protocol):
-    """Protocol defining the DbaChat interface for Server, Remote, and Client"""
-
-    def turn(self, request: ChatRequest) -> AsyncGenerator[ChatResponse, None]:
-        """Execute 1 turn in the conversation.
-
-        Args:
-            request: The incoming chat request
-
-        Yields:
-            ChatResponse objects as they become available
         """
         ...

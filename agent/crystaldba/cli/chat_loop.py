@@ -11,6 +11,8 @@ from rich.markdown import Markdown
 from rich.spinner import Spinner
 
 
+logger = logging.getLogger(__name__)
+
 class ChatTurnProtocol(Protocol):
     def run_to_completion(self, message: str) -> Iterator[str]: ...
 
@@ -33,40 +35,26 @@ class ChatLoop:
         self.screen_console = screen_console
 
     def chat_loop(self):
-        logger = logging.getLogger(__name__)
-        screen_console = self.screen_console
-
-        screen_console.print(
-            "What can I help you with?  A few ideas:\n\n"
-            "• Give an overview of the schema\n"
-            "• Find the slowest queries\n"
-            "• Report on database health\n"
-            "• Explain a query plan\n"
-            "• Optimize indexes and queries\n"
-            "• Generate queries to answer questions"
-        )
-
-        loop_count = 0
         try:
+            loop_count = 0
             while True:
                 try:
-                    loop_count += 1
-                    if loop_count <= 0:
+                    if loop_count == 0:
                         message_input = "SYSTEM: start a thread"
                         # TODO, pull messages from self.initial_messages instead of hardcoding one here.
                     else:
                         logger.debug("CLIENT_Main_loop_once: start")
                         message_input = self.prompt_fn("\n> ").strip()
-                        screen_console.print()
+                        self.screen_console.print()
                         if not message_input:
                             continue
-                        if message_input.lower() in ["bye", "quit", "exit"]:
-                            screen_console.print("Goodbye! I'm always available, if you need any further assistance.")
+                        if message_input.lower().strip() in ["bye", "quit", "exit"]:
+                            self.screen_console.print("Goodbye! I'm always available, if you need any further assistance.")
                             sys.exit(0)
 
                     with Live(
                         Spinner("dots", text="Thinking..."),
-                        console=screen_console,
+                        console=self.screen_console,
                         refresh_per_second=10,
                         vertical_overflow="visible",
                     ) as live:
@@ -79,6 +67,7 @@ class ChatLoop:
 
                 except (KeyboardInterrupt, EOFError):
                     break
+                loop_count += 1
         except Exception as e:
             logger.critical(f"Error running chat loop: {e!r}", exc_info=True)
             print(f"CRITICAL: Error running chat loop: {e!s}")

@@ -5,7 +5,7 @@ from prompt_toolkit import PromptSession
 from rich.console import Console
 
 from crystaldba.cli.chat_response_followup import ChatResponseFollowupProtocol
-from crystaldba.shared.api import DbaChatSyncProtocol
+from crystaldba.shared.api import ChatMessage, DbaChatSyncProtocol, StartupMessage
 
 
 class ChatTurn:
@@ -22,7 +22,7 @@ class ChatTurn:
         self.logger = logging.getLogger(__name__)
         self.console = console
 
-    def run_to_completion(self, message: str) -> Iterator[str]:
+    def run_to_completion(self, message: ChatMessage | StartupMessage) -> Iterator[str]:
         if not message.strip():
             yield from ()
             return
