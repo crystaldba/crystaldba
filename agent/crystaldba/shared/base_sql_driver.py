@@ -1,3 +1,4 @@
+# Note: this file is a copy of the one in https://github.com/griptape-ai/griptape/
 from __future__ import annotations
 
 from abc import ABC
