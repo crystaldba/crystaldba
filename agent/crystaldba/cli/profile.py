@@ -30,7 +30,7 @@ from crystaldba.shared.api import SystemPreferences
 from crystaldba.shared.base64id import Base64Id
 from crystaldba.shared.base64id import generate_b64id
 from crystaldba.shared.constants import API_ENDPOINTS
-from crystaldba.shared.constants import CRYSTAL_API_URL
+from crystaldba.shared.constants import get_crystal_api_url
 from crystaldba.shared.secure_session import DefaultSecureSessionFactory
 from crystaldba.shared.secure_session import SecureSession
 from crystaldba.shared.secure_session import SecureSessionFactory
@@ -320,7 +320,7 @@ def _create_new_profile(
         prepared_request = session.prepare_request(
             requests.Request(
                 method="POST",
-                url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['REGISTER']}",
+                url=f"{get_crystal_api_url()}{API_ENDPOINTS['REGISTER']}",
                 data=json.dumps(registration.model_dump()),
             )
         )
@@ -346,7 +346,7 @@ def _create_new_profile(
             prepared_request = session.prepare_request(
                 requests.Request(
                     method="POST",
-                    url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
+                    url=f"{get_crystal_api_url()}{API_ENDPOINTS['PREFERENCES']}",
                     data=json.dumps(SystemPreferences(share_data=True).model_dump()),
                 )
             )

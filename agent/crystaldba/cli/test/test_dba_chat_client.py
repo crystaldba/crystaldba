@@ -10,7 +10,7 @@ from crystaldba.shared.api import ChatMessageFragment
 from crystaldba.shared.api import ChatRequest
 from crystaldba.shared.api import ChatResponse
 from crystaldba.shared.constants import API_ENDPOINTS
-from crystaldba.shared.constants import CRYSTAL_API_URL
+from crystaldba.shared.constants import get_crystal_api_url
 
 
 @pytest.fixture
@@ -91,7 +91,7 @@ class TestDbaChatClient:
 
         assert "Server error" in str(exc_info.value)
         mock_chat_requester.request_stream.assert_called_once_with(
-            f"{CRYSTAL_API_URL}{API_ENDPOINTS['CHAT_CONTINUE'].format(thread_id=dba_chat_client.thread_id)}", test_request
+            f"{get_crystal_api_url()}{API_ENDPOINTS['CHAT_CONTINUE'].format(thread_id=dba_chat_client.thread_id)}", test_request
         )
 
     def test_turn_with_empty_message(self, dba_chat_client, mock_chat_requester):
