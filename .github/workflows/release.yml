@@ -89,8 +89,9 @@ jobs:
 
       - name: Rename Artifacts
         run: |
-          mv ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl ./dist/crystaldba-cli-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl
-          mv ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}.tar.gz ./dist/crystaldba-cli-${{ needs.prepare.outputs.release_tag }}.tar.gz
+          # This is currently a no-op, but we'll keep it here for future use (e.g., if we want to rename the artifact to 'crystaldba-cli')
+          mv ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl
+          mv ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}.tar.gz ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}.tar.gz
 
       - name: Upload Python Wheel Artifact
         uses: actions/upload-artifact@v4
