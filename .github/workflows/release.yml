@@ -79,6 +79,9 @@ jobs:
       - name: Build Python Wheel
         run: poetry build
 
+      - name: Display structure of dist directory
+        run: ls -R ./dist
+
       - name: Rename Artifacts
         run: |
           mv ./dist/crystaldba-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl ./dist/crystaldba-cli-${{ needs.prepare.outputs.release_tag }}-py3-none-any.whl
