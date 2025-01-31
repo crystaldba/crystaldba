@@ -2,7 +2,6 @@ import pytest
 import sqlalchemy
 from prompt_toolkit import PromptSession
 from pytest_mock import MockerFixture
-from rich.console import Console
 
 from crystaldba.cli.chat_requester import ChatRequester
 from crystaldba.cli.chat_response_followup import ChatResponseFollowup
@@ -24,11 +23,6 @@ def mock_user_input(mocker: MockerFixture):
 
 
 @pytest.fixture
-def mock_console(mocker: MockerFixture):
-    return mocker.Mock(spec=Console)
-
-
-@pytest.fixture
 def mock_chat_requester(mocker: MockerFixture):
     return mocker.Mock(spec=ChatRequester)
 
@@ -39,22 +33,21 @@ def mock_sql_driver(mocker: MockerFixture):
 
 
 @pytest.fixture
-def chat_response_followup(mock_console, mock_sql_driver):
+def chat_response_followup(mock_sql_driver):
     return ChatResponseFollowup(
-        mock_console,
         mock_sql_driver,
     )
 
 
 class TestChatResponseFollowup:
-    def test_initialization(self, mock_console, mock_sql_driver):
+    def test_initialization(self, mock_sql_driver):
         """Test successful initialization of ChatResponseFollowup"""
-        response_followup = ChatResponseFollowup(mock_console, mock_sql_driver)
+        response_followup = ChatResponseFollowup(mock_sql_driver)
         assert response_followup.sequence_id == 0
 
     def test_create_chatrequest(self, chat_response_followup):
         """Test creating a chat request"""
-        request = chat_response_followup.create_chatrequest("test message")
+        request = chat_response_followup.create_chatrequest(ChatMessage(message="test message"))
         assert isinstance(request, ChatRequest)
         assert request.sequence_id == 0
         assert request.continuation_token is None
