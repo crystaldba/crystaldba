@@ -36,7 +36,7 @@ class ChatLoop:
         chat_turn: ChatTurnProtocol,
         prompt_fn: PromptProtocol,
         screen_console: Console,
-        startup_message: StartupMessage,
+        startup_message: StartupMessage | None,
     ):
         self.chat_turn = chat_turn
         self.startup_message = startup_message

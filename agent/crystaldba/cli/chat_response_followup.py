@@ -3,7 +3,6 @@ import time
 from typing import Protocol
 
 import sqlalchemy.exc
-from rich.console import Console
 
 from crystaldba.cli.sql_tool import LocalSqlDriver
 from crystaldba.shared.api import ChatMessage
@@ -35,12 +34,10 @@ class ChatResponseFollowupProtocol(Protocol):
 class ChatResponseFollowup(ChatResponseFollowupProtocol):
     def __init__(
         self,
-        console: Console,
         sql_driver: LocalSqlDriver,
     ):
         self.sql_driver = sql_driver
         self.logger = logging.getLogger(__name__)
-        self.console = console
         self.message_counter = 0
 
     def create_chatrequest(self, message: ChatMessage | StartupMessage) -> ChatRequest:

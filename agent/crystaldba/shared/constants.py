@@ -26,6 +26,7 @@ def get_crystal_api_url():
 # API Endpoints
 API_ENDPOINTS: Final[Dict[str, str]] = {
     "REGISTER": "/system/register",
+    "REGISTER_CHAT": "/system/register/chat",
     "PREFERENCES": "/system/preferences",
     "CHAT_START": "/chat/start",
     "CHAT_CONTINUE": "/chat/{thread_id}",  # TODO - append here?

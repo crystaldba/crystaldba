@@ -1,9 +1,6 @@
 import logging
 from typing import Iterator
 
-from prompt_toolkit import PromptSession
-from rich.console import Console
-
 from crystaldba.cli.chat_response_followup import ChatResponseFollowupProtocol
 from crystaldba.shared.api import ChatMessage
 from crystaldba.shared.api import DbaChatSyncProtocol
@@ -13,16 +10,12 @@ from crystaldba.shared.api import StartupMessage
 class ChatTurn:
     def __init__(
         self,
-        user_input: PromptSession[str],
-        console: Console,
         dba_chat_client: DbaChatSyncProtocol,
         chat_response_followup: ChatResponseFollowupProtocol,
     ):
-        self.user_input = user_input
         self.dba_chat_client = dba_chat_client
         self.chat_response_followup = chat_response_followup
         self.logger = logging.getLogger(__name__)
-        self.console = console
 
     def run_to_completion(self, message: ChatMessage | StartupMessage) -> Iterator[str]:
         if isinstance(message, ChatMessage) and not message.message.strip():

@@ -78,9 +78,9 @@ class Profile:
         )
 
 
-def get_or_create_profile(
+def load_profile(
     profile_name: str,
-) -> Tuple[Profile, SecureSession]:
+) -> Tuple[Profile, SecureSession] | None:
     profiles_config = ProfilesConfig()
     profile = profiles_config.get_profile(profile_name)
     if profile:
@@ -90,8 +90,8 @@ def get_or_create_profile(
             system_id=profile.system_id,
             private_key=profile.private_key,
         )
-
-    return _create_new_profile(profile_name, profiles_config)
+    else:
+        return None
 
 
 class ProfilesConfig:
@@ -111,7 +111,7 @@ class ProfilesConfig:
     def get_profile(self, profile_name: str) -> Optional[Profile]:
         return self.profiles.get(profile_name)
 
-    def create_profile(self, profile: Profile) -> None:
+    def save_profile(self, profile: Profile) -> None:
         # Create profile directory and save keys
         profile_dir = self.config_dir / str(profile.system_id)
         profile_dir.mkdir(parents=True, exist_ok=True)
