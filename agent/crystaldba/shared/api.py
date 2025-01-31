@@ -118,7 +118,7 @@ class DbaChatSyncProtocol(Protocol):
 class DbaChatAsyncProtocol(Protocol):
     """Protocol defining the DbaChat interface for Server, Remote, and Client"""
 
-    def turn(self, request: ChatRequest) -> AsyncGenerator[ChatResponse, None]:
+    def handle(self, request: ChatRequest) -> AsyncGenerator[ChatResponse, None]:
         """Execute 1 turn in the conversation.
 
         Args:
