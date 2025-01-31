@@ -91,7 +91,7 @@ class RegistrationDoneMessage(BaseModel):
 class ChatRequest(BaseModel):
     sequence_id: int
     continuation_token: Optional[str]
-    payload: Union[StartupMessage, ChatMessage, SQLToolExecuteResponse, SQLToolErrorResponse, SQLToolSchemaResponse]
+    payload: Union[ChatMessage, SQLToolExecuteResponse, SQLToolErrorResponse, SQLToolSchemaResponse, StartupMessage]
 
 
 class ChatResponse(BaseModel):

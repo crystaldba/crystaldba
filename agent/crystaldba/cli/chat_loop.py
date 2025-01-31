@@ -48,7 +48,7 @@ class ChatLoop:
             loop_count = 0
             while True:
                 try:
-                    if loop_count == 0:
+                    if loop_count == 0 and self.startup_message:
                         message = self.startup_message
                     else:
                         logger.debug("CLIENT_Main_loop_once: start")
