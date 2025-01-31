@@ -11,6 +11,8 @@ from urllib.parse import urlparse
 
 from sqlalchemy import URL
 
+from crystaldba.shared import constants
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -37,10 +39,14 @@ def parse_args():
     # Other options group
     other_group = parser.add_argument_group("Other options")
     other_group.add_argument("--profile", default="default", help=argparse.SUPPRESS)
+    other_group.add_argument("--api", metavar="URL", help=argparse.SUPPRESS)
     other_group.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity level (-v: INFO, -vv: DEBUG)")
     other_group.add_argument("--help", action="help", default=argparse.SUPPRESS, help="show this help message and exit")
 
-    return parser.parse_args(), parser
+    args = parser.parse_args()
+    if args.api:
+        constants.CRYSTAL_API_URL = args.api
+    return args, parser
 
 
 def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str]) -> URL:

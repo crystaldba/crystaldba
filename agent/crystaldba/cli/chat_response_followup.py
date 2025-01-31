@@ -3,7 +3,6 @@ import time
 from typing import Protocol
 
 import sqlalchemy.exc
-from rich.console import Console
 
 from crystaldba.cli.sql_tool import LocalSqlDriver
 from crystaldba.shared.api import ChatMessage
@@ -15,6 +14,7 @@ from crystaldba.shared.api import SQLToolErrorResponse
 from crystaldba.shared.api import SQLToolExecuteRequest
 from crystaldba.shared.api import SQLToolSchemaRequest
 from crystaldba.shared.api import SQLToolSchemaResponse
+from crystaldba.shared.api import StartupMessage
 from crystaldba.shared.base_sql_driver import BaseSqlDriver
 from crystaldba.shared.sql_serialization import to_sql_tool_response
 
@@ -22,7 +22,7 @@ from crystaldba.shared.sql_serialization import to_sql_tool_response
 class ChatResponseFollowupProtocol(Protocol):
     """Protocol defining the interface for chat stepping functionality."""
 
-    def create_chatrequest(self, message: str) -> ChatRequest:
+    def create_chatrequest(self, message: ChatMessage | StartupMessage) -> ChatRequest:
         """Create a new chat request from a message."""
         ...
 
@@ -34,33 +34,36 @@ class ChatResponseFollowupProtocol(Protocol):
 class ChatResponseFollowup(ChatResponseFollowupProtocol):
     def __init__(
         self,
-        console: Console,
         sql_driver: LocalSqlDriver,
     ):
         self.sql_driver = sql_driver
         self.logger = logging.getLogger(__name__)
-        self.console = console
-        self.message_counter = 0
+        self.sequence_id = 0
+        self.continuation_token: str | None = None
 
-    def create_chatrequest(self, message: str) -> ChatRequest:
+    def create_chatrequest(self, message: ChatMessage | StartupMessage) -> ChatRequest:
         return ChatRequest(
-            sequence_id=self.message_counter,
-            continuation_token=None,
-            payload=ChatMessage(message=message),
+            sequence_id=self.sequence_id,
+            continuation_token=self.continuation_token,
+            payload=message,
         )
 
     def from_chatresponse_to_possible_new_chatrequest(self, chat_response: ChatResponse) -> str | ChatRequest | None:
         self.logger.debug("chat_response_followup: from_chatresponse_to_possible_new_chatrequest: begin")
+        self.continuation_token = chat_response.continuation_token
         match chat_response.payload:
             case ChatMessage():
-                self.message_counter += 1
+                self.sequence_id += 1
                 return chat_response.payload.message
             case ChatMessageFragment():
+                # Skip incrementing the message counter for fragments
+                # TODO - increment logic should be based on end of stream, not on message type.
                 return chat_response.payload.message_fragment
             case ChatMessageDone():
-                self.message_counter += 1
+                self.sequence_id += 1
                 return None
             case SQLToolExecuteRequest():
+                self.sequence_id += 1
                 self.logger.debug(f"CLIENT_LOOP: Executing query: {chat_response.payload.query}")
                 try:
                     print(f"Executing query: {chat_response.payload.query}\n")
@@ -68,27 +71,28 @@ class ChatResponseFollowup(ChatResponseFollowupProtocol):
                     json_serializable_result = to_sql_tool_response(result)
                     self.logger.debug(f"CLIENT_LOOP: Executed successfully. Returning SQLToolExecuteResponse: {json_serializable_result}")
                     return ChatRequest(
-                        sequence_id=chat_response.sequence_id,
-                        continuation_token=chat_response.continuation_token,
+                        sequence_id=self.sequence_id,
+                        continuation_token=self.continuation_token,
                         payload=json_serializable_result,
                     )
                 except Exception as e:
                     self.logger.debug("CLIENT_LOOP: SQLToolExecuteRequest exception")
                     return ChatRequest(
-                        sequence_id=chat_response.sequence_id,
-                        continuation_token=chat_response.continuation_token,
+                        sequence_id=self.sequence_id,
+                        continuation_token=self.continuation_token,
                         payload=SQLToolErrorResponse(error_string=f"{type(e).__name__}: {e!s}"),
                     )
 
             case SQLToolSchemaRequest():
+                self.sequence_id += 1
                 self.logger.debug(
                     f"CLIENT_LOOP: Getting schema for table {chat_response.payload.table_name} in schema {chat_response.payload.db_schema}"
                 )
                 try:
                     schema = self.sql_driver.get_table_schema(table_name=chat_response.payload.table_name, schema=chat_response.payload.db_schema)
                     return ChatRequest(
-                        sequence_id=chat_response.sequence_id,
-                        continuation_token=chat_response.continuation_token,
+                        sequence_id=self.sequence_id,
+                        continuation_token=self.continuation_token,
                         payload=SQLToolSchemaResponse(
                             table_schema=schema,
                         ),
@@ -96,8 +100,8 @@ class ChatResponseFollowup(ChatResponseFollowupProtocol):
                 except Exception as e:
                     self.logger.debug("CLIENT_LOOP: exception: SQLToolSchemaRequest")
                     return ChatRequest(
-                        sequence_id=chat_response.sequence_id,
-                        continuation_token=chat_response.continuation_token,
+                        sequence_id=self.sequence_id,
+                        continuation_token=self.continuation_token,
                         payload=SQLToolErrorResponse(error_string=f"{e}"),
                     )
             case _:

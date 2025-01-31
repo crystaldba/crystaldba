@@ -50,7 +50,7 @@ class TestChatResponseFollowup:
     def test_initialization(self, mock_console, mock_sql_driver):
         """Test successful initialization of ChatResponseFollowup"""
         response_followup = ChatResponseFollowup(mock_console, mock_sql_driver)
-        assert response_followup.message_counter == 0
+        assert response_followup.sequence_id == 0
 
     def test_create_chatrequest(self, chat_response_followup):
         """Test creating a chat request"""
