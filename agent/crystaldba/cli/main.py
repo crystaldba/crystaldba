@@ -16,7 +16,7 @@ from crystaldba.cli.dba_chat_client import DbaChatClient
 from crystaldba.cli.parse_args import get_database_url
 from crystaldba.cli.parse_args import get_log_level
 from crystaldba.cli.parse_args import parse_args
-from crystaldba.cli.profile import load_profile
+from crystaldba.cli.profile import get_or_create_profile
 from crystaldba.cli.sql_tool import LocalSqlDriver
 from crystaldba.shared.api import StartupMessage
 from crystaldba.shared.constants import get_crystal_api_url
@@ -57,30 +57,7 @@ def main():
         sys.exit(1)
 
     try:
-        profile_session_tuple = load_profile(args.profile)
-        if profile_session_tuple:
-            profile_obj, http_session = profile_session_tuple
-        else:
-            raise ValueError("No profile found")
-            # registration_input = PromptSession(
-            #     enable_suspend=False,
-            #     wrap_lines=True,  # Wrap long lines
-            # )
-
-            # new_profile = Profile.new()
-            # http_session = SecureSession(
-            #     system_id=new_profile.system_id,
-            #     private_key=new_profile.private_key,
-            # )
-            # chat_loop = ChatLoop(
-            #     chat_turn=ChatTurn(
-            #         dba_chat_client=DbaChatClient(ChatRequester(http_session, screen_console)),
-            #         chat_response_followup=RegistrationResponseFollowup(new_profile),
-            #     ),
-            #     prompt_fn=lambda prompt: registration_input.prompt(prompt),
-            #     screen_console=screen_console,
-            #     startup_message=None,
-            # )
+        profile_obj, http_session = get_or_create_profile(args.profile)
         logger.info(f"Using profile: {args.profile}")
     except Exception as e:
         logger.critical(f"Error getting or creating profile: {e!r}")
