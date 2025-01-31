@@ -25,7 +25,7 @@ class ChatTurn:
         self.console = console
 
     def run_to_completion(self, message: ChatMessage | StartupMessage) -> Iterator[str]:
-        if not message.strip():
+        if isinstance(message, ChatMessage) and not message.message.strip():
             yield from ()
             return
 

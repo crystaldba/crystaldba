@@ -56,11 +56,10 @@ class ChatLoop:
                         self.screen_console.print()
                         if not message_input:
                             continue
+                        if message_input.lower().strip() in ["bye", "quit", "exit"]:
+                            self.screen_console.print("Goodbye! I'm always available, if you need any further assistance.")
+                            return ChatLoopExit.BYE
                         message = ChatMessage(message=message_input)
-                    if message_input.lower().strip() in ["bye", "quit", "exit"]:
-                        self.screen_console.print("Goodbye! I'm always available, if you need any further assistance.")
-                        return ChatLoopExit.BYE
-
                     with Live(
                         Spinner("dots", text="Thinking..."),
                         console=self.screen_console,
