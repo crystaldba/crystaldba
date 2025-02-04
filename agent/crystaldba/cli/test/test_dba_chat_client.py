@@ -58,7 +58,7 @@ class TestDbaChatClient:
         test_request = ChatRequest(sequence_id=1, continuation_token=None, payload=ChatMessage(message="Test message"))
 
         # Execute turn
-        response_generator = dba_chat_client.turn(test_request)
+        response_generator = dba_chat_client.handle(test_request)
         responses = list(response_generator)
 
         # Verify response
@@ -83,7 +83,7 @@ class TestDbaChatClient:
         )
 
         # Get the generator
-        response_generator = dba_chat_client.turn(test_request)
+        response_generator = dba_chat_client.handle(test_request)
 
         # Verify error handling
         with pytest.raises(requests.HTTPError) as exc_info:
@@ -111,7 +111,7 @@ class TestDbaChatClient:
         mock_chat_requester.request_stream.return_value = iter([mock_response])
 
         # Execute turn
-        response_generator = dba_chat_client.turn(test_request)
+        response_generator = dba_chat_client.handle(test_request)
         responses = list(response_generator)
 
         # Verify response
