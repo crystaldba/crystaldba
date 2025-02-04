@@ -26,7 +26,7 @@ class DbaChatClient(DbaChatSyncProtocol):
             self.logger.critical(f"Error creating chat thread: {e!r}")
             raise ValueError(f"Error creating chat thread: {e!s}") from e
 
-    def turn(self, request: ChatRequest) -> Iterator[ChatResponse]:
+    def handle(self, request: ChatRequest) -> Iterator[ChatResponse]:
         self.logger.debug("Client_response_followup: turn : begin")
         try:
             self.logger.debug(f"CLIENT_LOOP: Sending request {request} to server")
