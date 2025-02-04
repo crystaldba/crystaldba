@@ -8,7 +8,7 @@ from crystaldba.shared.api import ChatRequest
 from crystaldba.shared.api import ChatResponse
 from crystaldba.shared.api import DbaChatSyncProtocol
 from crystaldba.shared.constants import API_ENDPOINTS
-from crystaldba.shared.constants import CRYSTAL_API_URL
+from crystaldba.shared.constants import get_crystal_api_url
 
 
 class DbaChatClient(DbaChatSyncProtocol):
@@ -20,7 +20,7 @@ class DbaChatClient(DbaChatSyncProtocol):
         self.logger = logging.getLogger(__name__)
 
         try:
-            self.thread_id = self.chat_requester.request(f"{CRYSTAL_API_URL}{API_ENDPOINTS['CHAT_START']}")["thread_id"]
+            self.thread_id = self.chat_requester.request(f"{get_crystal_api_url()}{API_ENDPOINTS['CHAT_START']}")["thread_id"]
             self.logger.info(f"Created chat thread: {self.thread_id}")
         except requests.HTTPError as e:
             self.logger.critical(f"Error creating chat thread: {e!r}")
@@ -31,7 +31,7 @@ class DbaChatClient(DbaChatSyncProtocol):
         try:
             self.logger.debug(f"CLIENT_LOOP: Sending request {request} to server")
             for response in self.chat_requester.request_stream(
-                f"{CRYSTAL_API_URL}{API_ENDPOINTS['CHAT_CONTINUE'].format(thread_id=self.thread_id)}",
+                f"{get_crystal_api_url()}{API_ENDPOINTS['CHAT_CONTINUE'].format(thread_id=self.thread_id)}",
                 request,
             ):
                 if response is not None and response != "":

@@ -21,6 +21,7 @@ dependencies = [
     "pydantic>=2.10.6",
     "pyyaml>=6.0.2",
     "psycopg2-binary>=2.9.10",
+    "pexpect (>=4.9.0,<5.0.0)",
 ]
 
 [project.urls]
