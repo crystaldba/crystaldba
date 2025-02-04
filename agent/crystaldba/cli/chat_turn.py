@@ -25,7 +25,7 @@ class ChatTurn:
         next_chatrequest_to_send = self.chat_response_followup.create_chatrequest(message)
         while next_chatrequest_to_send is not None:
             try:
-                for chat_response in self.dba_chat_client.turn(next_chatrequest_to_send):
+                for chat_response in self.dba_chat_client.handle(next_chatrequest_to_send):
                     str_or_next_chatrequest_to_send = self.chat_response_followup.from_chatresponse_to_possible_new_chatrequest(chat_response)
                     if str_or_next_chatrequest_to_send is None:
                         self.logger.debug("CLIENT_LOOP: All done with this turn")
