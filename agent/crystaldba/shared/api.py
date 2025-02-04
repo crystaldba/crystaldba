@@ -84,10 +84,6 @@ class SQLToolSchemaResponse(BaseModel):
     table_schema: Optional[str]
 
 
-class RegistrationDoneMessage(BaseModel):
-    pass
-
-
 class ChatRequest(BaseModel):
     sequence_id: int
     continuation_token: Optional[str]
@@ -97,13 +93,13 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     sequence_id: int
     continuation_token: Optional[str]
-    payload: Union[ChatMessage, ChatMessageFragment, SQLToolExecuteRequest, SQLToolSchemaRequest, ChatMessageDone, RegistrationDoneMessage]
+    payload: Union[ChatMessage, ChatMessageFragment, SQLToolExecuteRequest, SQLToolSchemaRequest, ChatMessageDone]
 
 
 class DbaChatSyncProtocol(Protocol):
     """Protocol defining the DbaChat interface for Server, Remote, and Client"""
 
-    def turn(self, request: ChatRequest) -> Iterator[ChatResponse]:
+    def handle(self, request: ChatRequest) -> Iterator[ChatResponse]:
         """Execute 1 turn in the conversation.
 
         Args:
