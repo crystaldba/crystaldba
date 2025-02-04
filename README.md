@@ -16,6 +16,7 @@ pipx install crystaldba
 - [Installation instructions](https://www.crystaldba.ai/docs/installation)
 - [Getting started guide](https://www.crystaldba.ai/docs/getting-started)
 - [Full documentation](https://www.crystaldba.ai/docs/)
+- [FAQ](https://www.crystaldba.ai/docs/frequently-asked-questions)
 
 ## 💡 Motivation
 
