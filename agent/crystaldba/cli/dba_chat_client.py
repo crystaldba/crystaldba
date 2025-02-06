@@ -26,13 +26,13 @@ class DbaChatClient(DbaChatSyncProtocol):
             self.logger.critical(f"Error creating chat thread: {e!r}")
             raise ValueError(f"Error creating chat thread: {e!s}") from e
 
-    def handle(self, request: ChatRequest) -> Iterator[ChatResponse]:
+    def handle(self, chat_request: ChatRequest) -> Iterator[ChatResponse]:
         self.logger.debug("Client_response_followup: turn : begin")
         try:
-            self.logger.debug(f"CLIENT_LOOP: Sending request {request} to server")
+            self.logger.debug(f"CLIENT_LOOP: Sending request {chat_request} to server")
             for response in self.chat_requester.request_stream(
                 f"{get_crystal_api_url()}{API_ENDPOINTS['CHAT_CONTINUE'].format(thread_id=self.thread_id)}",
-                request,
+                chat_request,
             ):
                 if response is not None and response != "":
                     chat_response = ChatResponse.model_validate_json(json_data=response)

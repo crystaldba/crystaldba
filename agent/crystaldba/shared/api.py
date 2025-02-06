@@ -99,11 +99,11 @@ class ChatResponse(BaseModel):
 class DbaChatSyncProtocol(Protocol):
     """Protocol defining the DbaChat interface for Server, Remote, and Client"""
 
-    def handle(self, request: ChatRequest) -> Iterator[ChatResponse]:
+    def handle(self, chat_request: ChatRequest) -> Iterator[ChatResponse]:
         """Execute 1 turn in the conversation.
 
         Args:
-            request: The incoming chat request
+            chat_request: The incoming chat request
 
         Returns:
             A ChatResponse (sync)
@@ -114,11 +114,11 @@ class DbaChatSyncProtocol(Protocol):
 class DbaChatAsyncProtocol(Protocol):
     """Protocol defining the DbaChat interface for Server, Remote, and Client"""
 
-    def handle(self, request: ChatRequest) -> AsyncGenerator[ChatResponse, None]:
+    def handle(self, chat_request: ChatRequest) -> AsyncGenerator[ChatResponse, None]:
         """Execute 1 turn in the conversation.
 
         Args:
-            request: The incoming chat request
+            chat_request: The incoming chat request
 
         Yields:
             ChatResponse objects as they become available
