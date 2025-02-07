@@ -32,17 +32,17 @@ in
   # example: processes.cargo-watch.exec = "cargo-watch";
 
   # Enable PostgreSQL service
-  #   services.postgres = {
-  #     enable = true; # to delete: set to false, then rm .devenv/state/postgres
-  #     port = 5444;
-  #     listen_addresses = "127.0.0.1";
-  #     initialScript = "
-  # CREATE USER postgres SUPERUSER;
-  # ALTER USER postgres WITH PASSWORD 'mysecretpassword';
-  # CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
-  #     ";
-  #     settings.shared_preload_libraries = "pg_stat_statements";
-  #   };
+  services.postgres = {
+    enable = true; # to delete: set to false, then rm .devenv/state/postgres
+    port = 5444;
+    listen_addresses = "127.0.0.1";
+    initialScript = "
+  CREATE USER postgres SUPERUSER;
+  ALTER USER postgres WITH PASSWORD 'mysecretpassword';
+  CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+      ";
+    settings.shared_preload_libraries = "pg_stat_statements";
+  };
 
   # Auto-start development environment
   enterShell = ''
