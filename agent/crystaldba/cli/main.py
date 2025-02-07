@@ -50,7 +50,14 @@ def main():
     screen_console = Console()
 
     try:
-        sql_driver = LocalSqlDriver(engine_url=database_url)
+        sql_driver = LocalSqlDriver(
+            engine_url=database_url,
+            create_engine_params={
+                "connect_args": {
+                    "options": "-c statement_timeout=10000",  # 10-seconds
+                },
+            },
+        )
         logger.info(f"Connected to database: {database_url}")
     except Exception:
         print(f"Oops! I was unable to connect to the database:\n{database_url}")
