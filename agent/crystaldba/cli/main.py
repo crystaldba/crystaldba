@@ -54,7 +54,7 @@ def main():
             engine_url=database_url,
             create_engine_params={
                 "connect_args": {
-                    "options": "-c statement_timeout=2000",
+                    "options": "-c statement_timeout=10000",  # 10-seconds
                 },
             },
         )
