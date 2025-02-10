@@ -44,7 +44,13 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    logging.basicConfig(level=get_log_level(args.verbose), stream=sys.stderr)
+    logging.basicConfig(
+        level=get_log_level(args.verbose),
+        filename="agent/elia_chat/log.txt",
+        filemode="a",
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     logger = logging.getLogger(__name__)
 
     screen_console = Console()
