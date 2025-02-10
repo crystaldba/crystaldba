@@ -1,4 +1,4 @@
-"""Constants specific to the CrystalDBA client."""
+"""Constants specific to the Crystal DBA client."""
 
 import os
 from pathlib import Path

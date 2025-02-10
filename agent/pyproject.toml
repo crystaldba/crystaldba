@@ -1,14 +1,15 @@
 [project]
 name = "crystaldba"
 version = "0.9.0rc1"
-description = "Crystal DBA Agent CLI"
+description = "Crystal DBA Agent CLI with Elia Chat integration"
 license = { text = "Apache-2.0" }
 authors = [
     {name = "Crystal DBA Developers", email = "support@crystaldba.ai"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<4.0.0"
 dependencies = [
+    # Original crystalldba deps
     "prompt-toolkit>=3.0.48",  # For CLI interface
     "rich>=13.9.4",  # For CLI formatting
     "sqlalchemy>=2.0.36",  # If you're using it for database operations
@@ -22,6 +23,20 @@ dependencies = [
     "pyyaml>=6.0.2",
     "psycopg2-binary>=2.9.10",
     "pexpect (>=4.9.0,<5.0.0)",
+    
+    # Added Elia dependencies
+    "textual[syntax]==0.79.1",
+    "sqlmodel>=0.0.9",
+    "humanize>=4.6.0",
+    "click>=8.1.6",
+    "xdg-base-dirs>=6.0.1",
+    "aiosqlite>=0.20.0",
+    "click-default-group>=1.2.4",
+    "greenlet>=3.0.3",
+    "google-generativeai>=0.5.3",
+    "pyperclip>=1.8.2",
+    "litellm>=1.37.19",
+    "structlog>=25.1.0",
 ]
 
 [project.urls]
@@ -49,6 +64,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
 crystaldba = "crystaldba.cli.main:main"
+elia = "tui.__main__:cli"
 
 [tool.poetry.scripts]
 lint = "scripts:lint"
@@ -88,7 +104,7 @@ force-single-line = true
 known-first-party = ["crystal"]
 
 [tool.pyright]
-include = ["crystaldba/cli", "crystaldba/shared"]
+include = ["crystaldba/cli", "crystaldba/shared", "tui"]
 typeCheckingMode = "standard"
 pythonVersion = "3.12"
 strictParameterNullChecking = true

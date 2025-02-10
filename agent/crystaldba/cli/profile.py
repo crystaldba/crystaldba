@@ -95,7 +95,7 @@ def get_or_create_profile(
 
 
 class ProfilesConfig:
-    """Configuration for the CrystalDBA Agent."""
+    """Configuration for the Crystal DBA Agent."""
 
     config_dir: Path
     profiles: Dict[str, Profile]
