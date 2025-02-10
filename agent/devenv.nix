@@ -1,5 +1,7 @@
 { pkgs, lib, config, inputs, ... }:
-
+let
+  pkgs-unstable = import inputs.nixpkgs-unstable { system = pkgs.stdenv.system; };
+in
 {
   # https://devenv.sh/packages/
   packages = [
@@ -11,16 +13,17 @@
   languages.python = {
     enable = true;
     version = "3.12";
-    # poetry = {
-    #   enable = true;
-    #   activate.enable = true;
-    #   install = {
-    #     enable = true;
-    #     allExtras = true;
-    #     compile = true;
-    #     quiet = false;
-    #   };
-    # };
+    poetry = {
+      enable = true;
+      package = pkgs-unstable.poetry;
+      activate.enable = true;
+      install = {
+        enable = true;
+        allExtras = true;
+        compile = true;
+        quiet = false;
+      };
+    };
   };
 
   dotenv.enable = true;
