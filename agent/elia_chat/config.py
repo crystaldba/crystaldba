@@ -53,6 +53,16 @@ class EliaChatModel(BaseModel):
 def get_builtin_openai_models() -> list[EliaChatModel]:
     return [
         EliaChatModel(
+            id="crystaldba-model",
+            display_name="CrystalDBA service",
+            description="CrystalDBA auto DBA",
+            # api_base=AnyHttpUrl("http://localhost:7080"),
+            name="gpt-4o",
+            provider="OpenAI",
+            product="ChatGPT",
+            temperature=0.7,
+        ),
+        EliaChatModel(
             id="elia-gpt-3.5-turbo",
             name="gpt-3.5-turbo",
             display_name="GPT-3.5 Turbo",
@@ -127,8 +137,7 @@ def get_builtin_google_models() -> list[EliaChatModel]:
             display_name="Gemini 1.5 Pro",
             provider="Google",
             product="Gemini",
-            description="Excels at reasoning tasks including code and text generation, "
-            "text editing, problem solving, data extraction and generation",
+            description="Excels at reasoning tasks including code and text generation, text editing, problem solving, data extraction and generation",
         ),
         EliaChatModel(
             id="elia-gemini/gemini-1.5-flash-latest",
@@ -153,7 +162,7 @@ class LaunchConfig(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    default_model: str = Field(default="elia-gpt-4o")
+    default_model: str = Field(default="crystaldba-model")
     """The ID or name of the default model."""
     system_prompt: str = Field(default=os.getenv("ELIA_SYSTEM_PROMPT", "You are a helpful assistant named Elia."))
     message_code_theme: str = Field(default="monokai")
