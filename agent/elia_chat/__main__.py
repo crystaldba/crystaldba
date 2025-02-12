@@ -67,7 +67,7 @@ def cli() -> None:
     default=False,
 )
 def default(prompt: tuple[str, ...], model: str, inline: bool) -> None:
-    startup.startup(
+    chat_turn = startup.startup(
         log_path="log.log",
         logging_level=logging.INFO,
     )
@@ -82,7 +82,7 @@ def default(prompt: tuple[str, ...], model: str, inline: bool) -> None:
         cli_config["default_model"] = model
 
     launch_config: dict[str, Any] = {**file_config, **cli_config}
-    app = Elia(LaunchConfig(**launch_config), startup_prompt=joined_prompt)
+    app = Elia(LaunchConfig(**launch_config), startup_prompt=joined_prompt, chat_turn=chat_turn)
     app.run(inline=inline)
 
 
