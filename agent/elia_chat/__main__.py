@@ -3,6 +3,7 @@ Elia CLI
 """
 
 import asyncio
+import logging
 import pathlib
 from textwrap import dedent
 from typing import Any
@@ -12,6 +13,7 @@ import tomllib
 from click_default_group import DefaultGroup
 from rich.console import Console
 
+from crystaldba.cli import startup
 from elia_chat.app import Elia
 from elia_chat.config import LaunchConfig
 from elia_chat.database.database import create_database
@@ -65,6 +67,12 @@ def cli() -> None:
     default=False,
 )
 def default(prompt: tuple[str, ...], model: str, inline: bool) -> None:
+    startup.startup(
+        log_path="log.log",
+        logging_level=logging.INFO,
+    )
+    logger = logging.getLogger(__name__)
+    logger.info("starting elia")
     prompt = prompt or ("",)
     joined_prompt = " ".join(prompt)
     create_db_if_not_exists()

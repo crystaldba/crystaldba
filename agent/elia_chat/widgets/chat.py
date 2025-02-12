@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import AsyncIterator
@@ -168,6 +169,8 @@ class Chat(Widget):
 
         litellm.organization = model.organization
         try:
+            logger = logging.getLogger(__name__)
+            logger.info(f"foo acompletion start: {messages}")
             response = await acompletion(
                 messages=messages,
                 stream=True,
@@ -177,6 +180,8 @@ class Chat(Widget):
                 api_key=model.api_key.get_secret_value() if model.api_key else None,
                 api_base=model.api_base.unicode_string() if model.api_base else None,
             )
+            logging.info(f"foo acompletion response: {response}")
+            # api_base=model.api_base.unicode_string() if model.api_base else None,
         except Exception as exception:
             self.app.notify(
                 f"{exception}",
