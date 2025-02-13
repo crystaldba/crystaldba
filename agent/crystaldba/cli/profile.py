@@ -339,40 +339,36 @@ def _create_new_profile(
         print(f"Error creating the profile: {e!s}")
         sys.exit(1)
 
-    share_data = ui_get_share_data_function()
+    share_data: bool = ui_get_share_data_function()
 
-    if share_data:
-        try:
-            prepared_request = session.prepare_request(
-                requests.Request(
-                    method="POST",
-                    url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
-                    data=json.dumps(SystemPreferences(share_data=True).model_dump()),
-                )
+    try:
+        prepared_request = session.prepare_request(
+            requests.Request(
+                method="POST",
+                url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
+                data=json.dumps(SystemPreferences(share_data=share_data).model_dump()),
             )
-            response = session.send(prepared_request)
-            response.raise_for_status()
-        except requests.HTTPError as e:
-            logger.critical(f"Error updating preferences: {e!r}")
-            print(f"Error updating preferences: {e!s}")
-            sys.exit(1)
-        try:
+        )
+        response = session.send(prepared_request)
+        response.raise_for_status()
+    except requests.HTTPError as e:
+        logger.critical(f"Error updating preferences: {e!r}")
+        print(f"Error updating preferences: {e!s}")
+        sys.exit(1)
+    try:
 
-            def update_fn(p: Profile) -> None:
-                p.share_data = True
+        def update_fn(p: Profile) -> None:
+            p.share_data = share_data
 
-            config.edit_profile(profile.name, update_fn)
-            profile = config.get_profile(profile_name)
-            if profile is None:
-                raise ConfigUpdateError("Profile not found after update")
-        except ConfigUpdateError as e:
-            logger.critical(f"Error for config update: {e!r}")
-            print(f"Error for config update: {e!s}")
-            sys.exit(1)
-        logger.info("share_data: True")
-    else:
-        profile.share_data = False
-        logger.info("share_data: False")
+        config.edit_profile(profile.name, update_fn)
+        profile = config.get_profile(profile_name)
+        if profile is None:
+            raise ConfigUpdateError("Profile not found after update")
+    except ConfigUpdateError as e:
+        logger.critical(f"Error for config update: {e!r}")
+        print(f"Error for config update: {e!s}")
+        sys.exit(1)
+    logger.info("share_data: %s", profile.share_data)
 
     return profile, session
 
