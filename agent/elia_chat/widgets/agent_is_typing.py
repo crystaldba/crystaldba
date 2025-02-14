@@ -11,7 +11,7 @@ class ResponseStatus(Vertical):
     A widget that displays the status of the response from the agent.
     """
 
-    message: Reactive[str] = reactive("Agent is responding", recompose=True)
+    message: Reactive[str] = reactive("Agent is responding currently", recompose=True)
 
     def compose(self) -> ComposeResult:
         yield Label(f" {self.message}")
@@ -23,6 +23,6 @@ class ResponseStatus(Vertical):
         self.remove_class("-agent-responding")
 
     def set_agent_responding(self) -> None:
-        self.message = "Agent is responding"
+        self.message = "Agent is responding for sure"
         self.add_class("-agent-responding")
         self.remove_class("-awaiting-response")

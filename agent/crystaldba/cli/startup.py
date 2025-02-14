@@ -6,6 +6,9 @@ from rich import print
 from rich.console import Console
 
 from crystaldba.cli.chat_requester import ChatRequester
+from crystaldba.cli.chat_response_followup import ChatResponseFollowup
+from crystaldba.cli.chat_turn import ChatTurn
+from crystaldba.cli.dba_chat_client import DbaChatClient
 from crystaldba.cli.parse_args import get_database_url
 from crystaldba.cli.parse_args import get_log_level
 from crystaldba.cli.parse_args import parse_args
@@ -59,8 +62,6 @@ def startup(*, log_path: str = "log.log", logging_level: int = logging.INFO):
         print(f"ERROR: unable to get or create profile. Is the backend server running at {get_crystal_api_url()}? Error: {e}")
         sys.exit(1)
 
-    ChatRequester(http_session, screen_console)
-
     screen_console.print("Testing database connection...")
     try:
         sql_driver.local_execute_query_raw("SELECT 1")
@@ -70,6 +71,15 @@ def startup(*, log_path: str = "log.log", logging_level: int = logging.INFO):
         print("ERROR: Database connection test failed. The database connection appears to be invalid.")
         sys.exit(1)
     screen_console.print("Database connection test successful\n")
+
+    chat_requester = ChatRequester(http_session, screen_console)
+
+    return ChatTurn(
+        DbaChatClient(chat_requester),
+        ChatResponseFollowup(
+            sql_driver,
+        ),
+    )
 
     # user_input = PromptSession(
     #     history=FileHistory(profile_obj.config_dir / "history.txt"),

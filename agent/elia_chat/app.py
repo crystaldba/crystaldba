@@ -3,6 +3,7 @@ from __future__ import annotations
 import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Any
 from typing import ClassVar
 
 from textual.app import App
@@ -38,8 +39,9 @@ class Elia(App[None]):
         Binding("f1,?", "help", "Help"),
     ]
 
-    def __init__(self, config: LaunchConfig, startup_prompt: str = ""):
+    def __init__(self, config: LaunchConfig, startup_prompt: str = "", chat_turn: Any = None):
         self.launch_config = config
+        self.chat_turn = chat_turn
 
         available_themes: dict[str, Theme] = BUILTIN_THEMES.copy()
         available_themes |= load_user_themes()
