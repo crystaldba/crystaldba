@@ -42,21 +42,34 @@ if TYPE_CHECKING:
 
 
 class ChatPromptInput(PromptInput):
-    BINDINGS: ClassVar[list[Binding]] = [Binding("escape", "app.pop_screen", "Close chat", key_display="esc")]
+    BINDINGS: ClassVar[list[Binding]] = [
+        Binding(
+            "escape",
+            "app.quit",
+            "Quit",
+            key_display="esc",
+        )
+        # Binding( # ELIAINFO
+        #     "escape",
+        #     "app.pop_screen",
+        #     "Close chat",
+        #     key_display="esc",
+        # )
+    ]
 
 
 class Chat(Widget):
     BINDINGS: ClassVar[list[BindingType]] = [
-        Binding("ctrl+r", "rename", "Rename", key_display="^r"),
+        # Binding("ctrl+r", "rename", "Rename", key_display="^r"),
         Binding("shift+down", "scroll_container_down", show=False),
         Binding("shift+up", "scroll_container_up", show=False),
-        Binding(
-            key="g",
-            action="focus_first_message",
-            description="First message",
-            key_display="g",
-            show=False,
-        ),
+        # Binding( # ELIAINFO
+        #     key="g",
+        #     action="focus_first_message",
+        #     description="First message",
+        #     key_display="g",
+        #     show=False,
+        # ),
         Binding(
             key="G",
             action="focus_latest_message",
@@ -163,108 +176,35 @@ class Chat(Widget):
 
     @work(thread=True, group="agent_response")
     def stream_agent_response(self) -> None:
-        if get_current_worker().is_cancelled:
-            return
         logger = logging.getLogger(__name__)
-        logger.info(f"GREG stream_agent_response: {self.chat_turn_count}")
+        logger.info(f"ELIAINFO stream_agent_response: {self.chat_turn_count}")
+        # ELIAINFO
         if self.chat_turn_count == 0:
             chat_turn_message = StartupMessage()
-            self.stream_agent_response_startup()
+            self.handle_stream_agent_response(chat_turn_message)
             self.chat_turn_count = 1
-        # GREG
-        logger.info(f"GREG HANDLE stream_agent_response: {self.chat_turn_count}")
+            return
+        logger.info(f"ELIAINFO HANDLE stream_agent_response: {self.chat_turn_count}")
         model = self.chat_data.model
         log.debug(f"Creating streaming response with model {model.name!r}")
-
         raw_messages = [message.message for message in self.chat_data.messages]
         from litellm.utils import trim_messages
 
         messages: list[ChatCompletionUserMessageParam] = trim_messages(raw_messages, model.name)  # type: ignore
-        messages = [messages[-1]]
-        # GREG
-
+        messages = [messages[-1]]  # ELIAINFO
         the_string = " ".join(extract_messages_text(item) for item in messages)
-
         chat_turn_message = api.ChatMessage(message=the_string)
+        self.handle_stream_agent_response(chat_turn_message)
 
-        ai_message: ChatCompletionAssistantMessageParam = {
-            "content": "",
-            "role": "assistant",
-        }
-        now = datetime.datetime.now(datetime.timezone.utc)
-
-        message = ChatMessage(message=ai_message, model=model, timestamp=now)
-        response_chatbox = Chatbox(
-            message=message,
-            model=self.chat_data.model,
-            classes="response-in-progress",
-        )
-        self.post_message(self.AgentResponseStarted())
-        self.app.call_from_thread(self.chat_container.mount, response_chatbox)
-        assert self.chat_container is not None, "Textual has mounted container at this point in the lifecycle."
-
-        try:
-            chunk_count = 0
-            logger.info(f"GREG chat_turn_message: {chat_turn_message}")
-            for chunk in self.chat_turn.run_to_completion(chat_turn_message):
-                response_chatbox.border_title = "Agent is responding now..."
-                delta = chunk
-                if delta is None:
-                    break
-                chunk_content = delta
-                if isinstance(chunk_content, str):
-                    self.app.call_from_thread(response_chatbox.append_chunk, chunk_content)
-                else:
-                    break
-                scroll_y = self.chat_container.scroll_y
-                max_scroll_y = self.chat_container.max_scroll_y
-                if scroll_y in range(max_scroll_y - 3, max_scroll_y + 1):
-                    self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
-                chunk_count += 1
-
-            # GREG
-            # async for chunk in cast(AsyncIterator, response):
-            #     response_chatbox.border_title = "Agent is responding..."
-            #     delta = getattr(chunk.choices[0], "delta", None)
-            #     if delta is None:
-            #         break
-            #     chunk_content = delta.content
-            #     if isinstance(chunk_content, str):
-            #         self.app.call_from_thread(response_chatbox.append_chunk, chunk_content)
-            #     else:
-            #         break
-            #     scroll_y = self.chat_container.scroll_y
-            #     max_scroll_y = self.chat_container.max_scroll_y
-            #     if scroll_y in range(max_scroll_y - 3, max_scroll_y + 1):
-            #         self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
-            #     chunk_count += 1
-        except Exception:
-            self.notify(
-                "There was a problem using this model. Please check your configuration file.",
-                title="Error",
-                severity="error",
-                timeout=constants.ERROR_NOTIFY_TIMEOUT_SECS,
-            )
-            self.post_message(self.AgentResponseFailed(self.chat_data.messages[-1]))
-        else:
-            self.post_message(
-                self.AgentResponseComplete(
-                    chat_id=self.chat_data.id,
-                    message=response_chatbox.message,
-                    chatbox=response_chatbox,
-                )
-            )
-
-    # @work(thread=True, group="agent_response")
     # NOTE: must be run on a thread by the caller
-    def stream_agent_response_startup(self) -> None:
+    def handle_stream_agent_response(self, chat_turn_message: StartupMessage | api.ChatMessage) -> None:
         if get_current_worker().is_cancelled:
             return
         log.debug("stream_agent_response_startup")
         logger = logging.getLogger(__name__)
-        logger.info("GREG stream_agent_response_startup")
-        # GREG
-        chat_turn_message = StartupMessage()
+        logger.info("ELIAINFO stream_agent_response_startup")
+        # ELIAINFO
+        # chat_turn_message = StartupMessage()
 
         ai_message: ChatCompletionAssistantMessageParam = {
             "content": "",
@@ -284,7 +224,7 @@ class Chat(Widget):
 
         try:
             chunk_count = 0
-            logger.info(f"GREG chat_turn_message: {chat_turn_message}")  # TODO remove GREG
+            logger.info(f"ELIAINFO chat_turn_message: {chat_turn_message}")  # TODO remove ELIAINFO
             for chunk in self.chat_turn.run_to_completion(chat_turn_message):
                 response_chatbox.border_title = "Agent is responding now..."
                 if chunk is None:
@@ -393,6 +333,7 @@ class Chat(Widget):
 
     async def load_chat(self, chat_data: ChatData) -> None:
         chatboxes = [Chatbox(chat_message, chat_data.model) for chat_message in chat_data.non_system_messages]
+        chatboxes = chatboxes[1:]  # ELIAINFO skip the first item since it is empty
         await self.chat_container.mount_all(chatboxes)
         self.chat_container.scroll_end(animate=False, force=True)
         chat_header = self.query_one(ChatHeader)

@@ -91,6 +91,7 @@ def default(
     prompt = ("",)
     # prompt = prompt or ("",)
     joined_prompt = " ".join(prompt)
+    joined_prompt = ""  # NOTE: this text will be ignored and instead the StartupMessage will occur  # ELIAINFO
     create_db_if_not_exists()
     file_config = load_or_create_config_file()
     cli_config = {}

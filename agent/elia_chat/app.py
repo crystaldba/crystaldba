@@ -77,11 +77,10 @@ class Elia(App[None]):
         self.runtime_config_signal.publish(self.runtime_config)
 
     async def on_mount(self) -> None:
-        from elia_chat.screens.home_screen import HomeScreen
-
-        await self.push_screen(HomeScreen(self.runtime_config_signal))
+        # from elia_chat.screens.home_screen import HomeScreen # ELIAINFO
+        # await self.push_screen(HomeScreen(self.runtime_config_signal))
         self.theme = self.launch_config.theme
-        if self.startup_prompt:
+        if True or self.startup_prompt:  # ELIAINFO
             await self.launch_chat(
                 prompt=self.startup_prompt,
                 model=self.runtime_config.selected_model,

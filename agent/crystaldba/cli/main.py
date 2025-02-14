@@ -44,13 +44,7 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    logging.basicConfig(
-        level=get_log_level(args.verbose),
-        filename="crystaldba/cli/log.log",
-        filemode="a",
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    logging.basicConfig(level=get_log_level(args.verbose), stream=sys.stderr)
     logger = logging.getLogger(__name__)
 
     screen_console = Console()

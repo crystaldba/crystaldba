@@ -136,7 +136,8 @@ class ChatList(OptionList):
         self.refresh()
 
     async def load_chat_list_items(self) -> list[ChatListItem]:
-        chats = await self.load_chats()
+        # chats = await self.load_chats()
+        chats = []  # ELIAINFO
 
         from elia_chat.app import Elia
 

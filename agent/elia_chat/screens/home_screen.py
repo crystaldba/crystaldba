@@ -76,8 +76,9 @@ ChatList {
     @on(ScreenResume)
     async def reload_screen(self) -> None:
         chat_list = self.query_one(ChatList)
+        chat_list.display = "none"  # ELIAINFO
         await chat_list.reload_and_refresh()
-        self.show_welcome_if_required()
+        # self.show_welcome_if_required()
 
     @on(ChatList.ChatOpened)
     async def open_chat_screen(self, event: ChatList.ChatOpened):
@@ -121,7 +122,7 @@ ChatList {
 
     def show_welcome_if_required(self) -> None:
         chat_list = self.query_one(ChatList)
-        if chat_list.option_count == 0:
+        if chat_list.option_count == 0:  # ELIAINFO
             welcome = self.query_one(Welcome)
             welcome.display = "block"
         else:

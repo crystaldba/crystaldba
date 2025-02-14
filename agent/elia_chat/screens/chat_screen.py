@@ -18,12 +18,18 @@ class ChatScreen(Screen[None]):
     AUTO_FOCUS = "ChatPromptInput"
     BINDINGS: ClassVar[List[Binding]] = [
         Binding(
-            key="escape",
-            action="app.focus('prompt')",
-            description="Focus prompt",
+            "escape",
+            "app.quit",
+            "Quit",
             key_display="esc",
-            tooltip="Return focus to the prompt input.",
-        ),
+        )
+        # Binding( # ELIAINFO
+        #     key="escape",
+        #     action="app.focus('prompt')",
+        #     description="Focus prompt",
+        #     key_display="esc",
+        #     tooltip="Return focus to the prompt input.",
+        # ),
     ]
 
     def __init__(
