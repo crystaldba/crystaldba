@@ -21,6 +21,7 @@ from textual.message import Message
 from textual.widgets import OptionList
 from textual.widgets.option_list import Option
 
+from elia_chat.app import Elia
 from elia_chat.chats_manager import ChatsManager
 from elia_chat.config import LaunchConfig
 from elia_chat.models import ChatData
@@ -175,7 +176,8 @@ class ChatList(OptionList):
         return f"{self.highlighted + 1} / {self.option_count}"
 
     def create_chat(self, chat_data: ChatData) -> None:
-        new_chat_list_item = ChatListItem(chat_data, self.app.launch_config)
+        app = cast(Elia, self.app)
+        new_chat_list_item = ChatListItem(chat_data, app.launch_config)
         log.debug(f"Creating new chat {new_chat_list_item!r}")
 
         option_list = self.query_one(OptionList)

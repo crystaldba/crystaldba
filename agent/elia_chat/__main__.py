@@ -51,14 +51,6 @@ def cli() -> None:
 
 
 @cli.command()
-@click.argument("prompt", nargs=-1, type=str, required=False)
-@click.option(
-    "-m",
-    "--model",
-    type=str,
-    default="",
-    help="The model to use for the chat",
-)
 @click.option(
     "-i",
     "--inline",
@@ -66,14 +58,38 @@ def cli() -> None:
     help="Run in inline mode, without launching full TUI.",
     default=False,
 )
-def default(prompt: tuple[str, ...], model: str, inline: bool) -> None:
+@click.option(
+    "-m",
+    "--model",
+    type=str,
+    default="",
+    help="The model to use for the chat",
+)
+@click.argument("dburi", nargs=-1, type=str, required=False)
+@click.option("--profile", type=str, default="", help="The user profile to use for the chat")
+@click.option("-h", "--host", type=str, default="", help='database server host or socket directory (default: "localhost")')
+@click.option("-p", "--port", type=int, default=5432, help='database server port (default: "5432")')
+@click.option("-U", "-u", "--user", type=str, default="", help='database user name (default: "postgres")')
+@click.option("-d", "--dbname", type=str, default="", help='database name (default: "postgres")')
+def default(
+    inline: bool,
+    model: str,
+    dburi: tuple[str, ...],
+    profile: str,
+    host: str,
+    port: int,
+    user: str,
+    dbname: str,
+    # prompt: tuple[str, ...],
+) -> None:
     chat_turn = startup.startup(
         log_path="log.log",
         logging_level=logging.INFO,
     )
     logger = logging.getLogger(__name__)
     logger.info("starting elia")
-    prompt = prompt or ("",)
+    prompt = ("",)
+    # prompt = prompt or ("",)
     joined_prompt = " ".join(prompt)
     create_db_if_not_exists()
     file_config = load_or_create_config_file()

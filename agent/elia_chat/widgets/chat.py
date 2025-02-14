@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-from typing import cast
 import collections.abc
 import datetime
 import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import ClassVar
+from typing import cast
 
 from textual import events
 from textual import log
 from textual import on
 from textual import work
-from textual.worker import get_current_worker
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
@@ -22,6 +21,7 @@ from textual.message import Message
 from textual.reactive import reactive
 from textual.widget import Widget
 from textual.widgets import Label
+from textual.worker import get_current_worker
 
 from crystaldba.shared import api
 from crystaldba.shared.api import StartupMessage
@@ -183,19 +183,7 @@ class Chat(Widget):
         messages = [messages[-1]]
         # GREG
 
-        def extract_text(item: ChatCompletionUserMessageParam) -> str:
-            content = item.get("content", "")
-            # If it's a string, return it directly.
-            if isinstance(content, str):
-                return content
-            # Otherwise, assume it's an iterable of parts and join them.
-            elif isinstance(content, collections.abc.Iterable):
-                # Convert each element to a string (in case they aren't already)
-                return " ".join(str(part) for part in content)
-            else:
-                return str(content)
-
-        the_string = " ".join(extract_text(item) for item in messages)
+        the_string = " ".join(extract_messages_text(item) for item in messages)
 
         chat_turn_message = api.ChatMessage(message=the_string)
 
@@ -274,7 +262,7 @@ class Chat(Widget):
             return
         log.debug("stream_agent_response_startup")
         logger = logging.getLogger(__name__)
-        logger.info(f"GREG stream_agent_response_startup")
+        logger.info("GREG stream_agent_response_startup")
         # GREG
         chat_turn_message = StartupMessage()
 
@@ -423,3 +411,16 @@ class Chat(Widget):
     def action_close(self) -> None:
         self.app.clear_notifications()
         self.app.pop_screen()
+
+
+def extract_messages_text(item: ChatCompletionUserMessageParam) -> str:
+    content = item.get("content", "")
+    # If it's a string, return it directly.
+    if isinstance(content, str):
+        return content
+    # Otherwise, assume it's an iterable of parts and join them.
+    elif isinstance(content, collections.abc.Iterable):
+        # Convert each element to a string (in case they aren't already)
+        return " ".join(str(part) for part in content)
+    else:
+        return str(content)

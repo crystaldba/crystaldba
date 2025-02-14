@@ -4,6 +4,7 @@ import bisect
 from dataclasses import dataclass
 from typing import ClassVar
 
+import pyperclip
 from pyperclip import PyperclipException
 from pyperclip import copy
 from rich.console import RenderableType
@@ -275,8 +276,6 @@ class Chatbox(Widget, can_focus=True):
             text_to_copy = self.message.message.get("content")
             if isinstance(text_to_copy, str):
                 try:
-                    import pyperclip
-
                     pyperclip.copy(text_to_copy)
                 except pyperclip.PyperclipException as exc:
                     self.notify(

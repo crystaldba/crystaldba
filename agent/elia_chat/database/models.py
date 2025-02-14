@@ -19,7 +19,7 @@ from elia_chat.database.database import get_session
 
 
 class SystemPromptsDao(AsyncAttrs, SQLModel, table=True):
-    __tablename__: ClassVar[str] = "system_prompt"
+    __tablename__: ClassVar[Any] = "system_prompt"
 
     id: int | None = Field(default=None, primary_key=True)
     title: str
@@ -28,7 +28,7 @@ class SystemPromptsDao(AsyncAttrs, SQLModel, table=True):
 
 
 class MessageDao(AsyncAttrs, SQLModel, table=True):
-    __tablename__: ClassVar[str] = "message"
+    __tablename__: ClassVar[Any] = "message"
 
     id: int | None = Field(default=None, primary_key=True)
     chat_id: Optional[int] = Field(foreign_key="chat.id")
@@ -52,7 +52,7 @@ class MessageDao(AsyncAttrs, SQLModel, table=True):
 
 
 class ChatDao(AsyncAttrs, SQLModel, table=True):
-    __tablename__: ClassVar[str] = "chat"
+    __tablename__: ClassVar[Any] = "chat"
 
     id: int = Field(default=None, primary_key=True)
     model: str

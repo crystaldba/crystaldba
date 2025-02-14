@@ -46,7 +46,7 @@ def main():
 
     logging.basicConfig(
         level=get_log_level(args.verbose),
-        filename="agent/elia_chat/log.txt",
+        filename="crystaldba/cli/log.log",
         filemode="a",
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
