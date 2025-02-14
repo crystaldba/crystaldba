@@ -35,6 +35,7 @@ def parse_args():
     conn_group.add_argument("-p", "--port", metavar="PORT", help='database server port (default: "5432")')
     conn_group.add_argument("-U", "-u", "--username", metavar="USERNAME", help='database user name (default: "postgres")')
     conn_group.add_argument("-d", "--dbname", metavar="DBNAME", help='database name (default: "postgres")')
+    conn_group.add_argument("-m", "--model", metavar="MODEL", help='The model to use for chat (default: "elia-gpt-4o"')
 
     # Other options group
     other_group = parser.add_argument_group("Other options")
