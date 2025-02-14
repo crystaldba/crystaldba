@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import cast
 import collections.abc
 import datetime
 import logging
@@ -11,6 +12,7 @@ from textual import events
 from textual import log
 from textual import on
 from textual import work
+from textual.worker import get_current_worker
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.binding import BindingType
@@ -69,10 +71,12 @@ class Chat(Widget):
 
     def __init__(self, chat_data: ChatData) -> None:
         super().__init__()
+        from elia_chat.app import Elia
+
         self.chat_data = chat_data
         self.model = chat_data.model
         self.chat_turn_count = 0
-        self.chat_turn = self.app.chat_turn
+        self.chat_turn = cast(Elia, self.app).chat_turn
 
     @dataclass
     class AgentResponseStarted(Message):
@@ -158,64 +162,42 @@ class Chat(Widget):
         self.stream_agent_response()
 
     @work(thread=True, group="agent_response")
-    async def stream_agent_response(self) -> None:
+    def stream_agent_response(self) -> None:
+        if get_current_worker().is_cancelled:
+            return
+        logger = logging.getLogger(__name__)
+        logger.info(f"GREG stream_agent_response: {self.chat_turn_count}")
+        if self.chat_turn_count == 0:
+            chat_turn_message = StartupMessage()
+            self.stream_agent_response_startup()
+            self.chat_turn_count = 1
         # GREG
-        # worker = get_current_worker() # worker.is_cancelled
+        logger.info(f"GREG HANDLE stream_agent_response: {self.chat_turn_count}")
         model = self.chat_data.model
         log.debug(f"Creating streaming response with model {model.name!r}")
 
         raw_messages = [message.message for message in self.chat_data.messages]
-        # import litellm
-        # from litellm import acompletion
         from litellm.utils import trim_messages
 
         messages: list[ChatCompletionUserMessageParam] = trim_messages(raw_messages, model.name)  # type: ignore
-        # litellm.organization = model.organization
-        # try:
-        logger = logging.getLogger(__name__)
-        logger.info(f"foo acompletion start: {self.chat_turn_count} {messages}")
+        messages = [messages[-1]]
         # GREG
-        self.chat_turn_count = 1
-        if self.chat_turn_count == 0:
-            chat_turn_message = StartupMessage()
-        else:
-            # GREG
-            def extract_text(item: ChatCompletionUserMessageParam) -> str:
-                content = item.get("content", "")
-                # If it's a string, return it directly.
-                if isinstance(content, str):
-                    return content
-                # Otherwise, assume it's an iterable of parts and join them.
-                elif isinstance(content, collections.abc.Iterable):
-                    # Convert each element to a string (in case they aren't already)
-                    return " ".join(str(part) for part in content)
-                else:
-                    return str(content)
 
-            the_string = " ".join(extract_text(item) for item in messages)
+        def extract_text(item: ChatCompletionUserMessageParam) -> str:
+            content = item.get("content", "")
+            # If it's a string, return it directly.
+            if isinstance(content, str):
+                return content
+            # Otherwise, assume it's an iterable of parts and join them.
+            elif isinstance(content, collections.abc.Iterable):
+                # Convert each element to a string (in case they aren't already)
+                return " ".join(str(part) for part in content)
+            else:
+                return str(content)
 
-            chat_turn_message = api.ChatMessage(message=the_string)
-            # GREG
-            # response = await acompletion(
-            #     messages=messages,
-            #     stream=True,
-            #     model=model.name,
-            #     temperature=model.temperature,
-            #     max_retries=model.max_retries,
-            #     api_key=model.api_key.get_secret_value() if model.api_key else None,
-            #     api_base=model.api_base.unicode_string() if model.api_base else None,
-            # )
-            # logging.info(f"foo acompletion response: {response}")
-            # api_base=model.api_base.unicode_string() if model.api_base else None,
-        # except Exception as exception:
-        #     self.app.notify(
-        #         f"{exception}",
-        #         title="Error",
-        #         severity="error",
-        #         timeout=constants.ERROR_NOTIFY_TIMEOUT_SECS,
-        #     )
-        #     self.post_message(self.AgentResponseFailed(self.chat_data.messages[-1]))
-        #     return
+        the_string = " ".join(extract_text(item) for item in messages)
+
+        chat_turn_message = api.ChatMessage(message=the_string)
 
         ai_message: ChatCompletionAssistantMessageParam = {
             "content": "",
@@ -235,11 +217,8 @@ class Chat(Widget):
 
         try:
             chunk_count = 0
-            buffer = ""
             logger.info(f"GREG chat_turn_message: {chat_turn_message}")
             for chunk in self.chat_turn.run_to_completion(chat_turn_message):
-                buffer += chunk
-                # live.update(Markdown(buffer))
                 response_chatbox.border_title = "Agent is responding now..."
                 delta = chunk
                 if delta is None:
@@ -271,6 +250,67 @@ class Chat(Widget):
             #     if scroll_y in range(max_scroll_y - 3, max_scroll_y + 1):
             #         self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
             #     chunk_count += 1
+        except Exception:
+            self.notify(
+                "There was a problem using this model. Please check your configuration file.",
+                title="Error",
+                severity="error",
+                timeout=constants.ERROR_NOTIFY_TIMEOUT_SECS,
+            )
+            self.post_message(self.AgentResponseFailed(self.chat_data.messages[-1]))
+        else:
+            self.post_message(
+                self.AgentResponseComplete(
+                    chat_id=self.chat_data.id,
+                    message=response_chatbox.message,
+                    chatbox=response_chatbox,
+                )
+            )
+
+    # @work(thread=True, group="agent_response")
+    # NOTE: must be run on a thread by the caller
+    def stream_agent_response_startup(self) -> None:
+        if get_current_worker().is_cancelled:
+            return
+        log.debug("stream_agent_response_startup")
+        logger = logging.getLogger(__name__)
+        logger.info(f"GREG stream_agent_response_startup")
+        # GREG
+        chat_turn_message = StartupMessage()
+
+        ai_message: ChatCompletionAssistantMessageParam = {
+            "content": "",
+            "role": "assistant",
+        }
+        now = datetime.datetime.now(datetime.timezone.utc)
+        model = self.chat_data.model
+        message = ChatMessage(message=ai_message, model=model, timestamp=now)
+        response_chatbox = Chatbox(
+            message=message,
+            model=model,
+            classes="response-in-progress",
+        )
+        self.post_message(self.AgentResponseStarted())
+        self.app.call_from_thread(self.chat_container.mount, response_chatbox)
+        assert self.chat_container is not None, "Textual has mounted container at this point in the lifecycle."
+
+        try:
+            chunk_count = 0
+            logger.info(f"GREG chat_turn_message: {chat_turn_message}")  # TODO remove GREG
+            for chunk in self.chat_turn.run_to_completion(chat_turn_message):
+                response_chatbox.border_title = "Agent is responding now..."
+                if chunk is None:
+                    break
+                if isinstance(chunk, str):
+                    self.app.call_from_thread(response_chatbox.append_chunk, chunk)
+                else:
+                    break
+                scroll_y = self.chat_container.scroll_y
+                max_scroll_y = self.chat_container.max_scroll_y
+                if scroll_y in range(max_scroll_y - 3, max_scroll_y + 1):
+                    self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
+                chunk_count += 1
+
         except Exception:
             self.notify(
                 "There was a problem using this model. Please check your configuration file.",

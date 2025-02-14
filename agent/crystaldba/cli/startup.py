@@ -81,47 +81,6 @@ def startup(*, log_path: str = "log.log", logging_level: int = logging.INFO):
         ),
     )
 
-    # user_input = PromptSession(
-    #     history=FileHistory(profile_obj.config_dir / "history.txt"),
-    #     enable_suspend=True,  # Allow Ctrl+Z suspension
-    #     wrap_lines=True,  # Wrap long lines
-    # )
-
-    # try:
-    #
-    #     def prompt_fn(prompt: str) -> str:
-    #         return user_input.prompt(prompt)
-    #
-    #     chat_loop = ChatLoop(
-    #         chat_turn=ChatTurn(
-    #             DbaChatClient(chat_requester),
-    #             ChatResponseFollowup(
-    #                 sql_driver,
-    #             ),
-    #         ),
-    #         prompt_fn=prompt_fn,
-    #         screen_console=screen_console,
-    #         startup_message=StartupMessage(),
-    #     )
-    #     exit_state = chat_loop.chat_loop()
-    #
-    #     if exit_state == ChatLoopExit.UNKNOWN_EXCEPTION:
-    #         sys.exit(1)
-    #     elif exit_state == ChatLoopExit.BYE:
-    #         return
-    #     elif exit_state == ChatLoopExit.KEYBOARD_INTERRUPT:
-    #         return
-    #     else:
-    #         return
-    # except Exception as e:
-    #     logger.critical(f"Error running chat loop: {e!r}", exc_info=True)
-    #     print(f"CRITICAL: Error running chat loop: {e!s}")
-    #     print("\nStack trace:")
-    #     import traceback
-    #
-    #     print("".join(traceback.format_exception(type(e), e, e.__traceback__)))
-    #     sys.exit(1)
-
 
 def password_prompt() -> str:
     try:
