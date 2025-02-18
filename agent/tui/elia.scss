@@ -80,7 +80,6 @@ Tooltip {
   border: wide $main-border-color;
 }
 
-
 Chat {
   ChatHeader {
     width: 100%;
@@ -283,7 +282,6 @@ Chatbox {
         background: $accent;
       }
     }
-
   }
 
   &.human-message {
@@ -301,7 +299,6 @@ Chatbox {
       width: 1fr;
     }
   }
-
 }
 
 Footer {
@@ -375,7 +372,6 @@ RenameChat {
       border-subtitle-background: $background;
     }
   }
-
 }
 
 ChatDetails {
@@ -404,10 +400,8 @@ ChatDetails {
     & .datum {
       text-style: i;
     }
-
   }
 }
-
 
 MessageInfo #message-info-header {
   dock: top;
@@ -459,53 +453,6 @@ MessageInfo #inner-container #metadata {
   height: auto;
 }
 
-OptionsModal {
-  align: center middle;
-}
-
-OptionsModal #form-scrollable {
-  background: $background;
-  padding: 1 0 0 1;
-  scrollbar-gutter: stable;
-  scrollbar-size: 2 1;
-  width: 75%;
-  height: auto;
-  max-height: 90%;
-  border: wide $main-darken-2 80%;
-  border-title-color: $main-border-text-color;
-  border-title-background: $background;
-  & #available-models {
-    width: 100%;
-    border: round $main-border-color;
-    border-title-color: $main-border-text-color;
-    background: red 0%;
-    padding: 1 0;
-
-    &:focus {
-      border: round $main-border-color-focus;
-      border-title-style: bold;
-    }
-  }
-
-  & TextArea {
-    height: auto;
-    max-height: 12;
-    border-subtitle-color: $main-border-color;
-    &:focus {
-      border-subtitle-color: $main-border-color-focus;
-    }
-  }
-
-
-  #xdg-info {
-    padding: 1 2;
-    border: round $main-border-color;
-    height: auto;
-    border-title-color: $main-border-text-color;
-  }
-
-}
-
 .code_inline {
   text-style: none;
   color: $accent;
@@ -529,7 +476,7 @@ RadioButton .toggle--button {
 }
 
 HelpScreen {
-  width:1fr;
+  width: 1fr;
   height: auto;
   align: center middle;
 

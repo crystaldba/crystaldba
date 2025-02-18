@@ -26,15 +26,16 @@ from textual.worker import get_current_worker
 from crystaldba.shared import api
 from crystaldba.shared.api import StartupMessage
 from tui import constants
-from tui.chats_manager import ChatsManager
 from tui.models import ChatData
 from tui.models import ChatMessage
-from tui.screens.chat_details import ChatDetails
 from tui.widgets.agent_is_typing import ResponseStatus
 from tui.widgets.chat_header import ChatHeader
-from tui.widgets.chat_header import TitleStatic
 from tui.widgets.chatbox import Chatbox
 from tui.widgets.prompt_input import PromptInput
+
+# from tui.chats_manager import ChatsManager
+# from tui.screens.chat_details import ChatDetails
+# from tui.widgets.chat_header import TitleStatic
 
 if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionAssistantMessageParam
@@ -76,7 +77,7 @@ class Chat(Widget):
             description="Latest message",
             show=False,
         ),
-        Binding(key="f2", action="details", description="Chat info"),
+        # Binding(key="f2", action="details", description="Chat info"),
     ]
 
     allow_input_submit = reactive(True)
@@ -87,7 +88,7 @@ class Chat(Widget):
         from tui.app import Elia
 
         self.chat_data = chat_data
-        self.model = chat_data.model
+        # self.model = chat_data.model
         self.chat_turn_count = 0
         self.chat_turn = cast(Elia, self.app).chat_turn
 
@@ -114,7 +115,10 @@ class Chat(Widget):
 
     def compose(self) -> ComposeResult:
         yield ResponseStatus()
-        yield ChatHeader(chat=self.chat_data, model=self.model)
+        yield ChatHeader(
+            chat=self.chat_data,
+            # model=self.model,
+        )
 
         with VerticalScroll(id="chat-container") as vertical_scroll:
             vertical_scroll.can_focus = False
@@ -156,9 +160,16 @@ class Chat(Widget):
             "role": "user",
         }
 
-        user_chat_message = ChatMessage(user_message, now_utc, self.chat_data.model)
+        user_chat_message = ChatMessage(
+            user_message,
+            now_utc,
+            # self.chat_data.model,
+        )
         self.chat_data.messages.append(user_chat_message)
-        user_message_chatbox = Chatbox(user_chat_message, self.chat_data.model)
+        user_message_chatbox = Chatbox(
+            user_chat_message,
+            # self.chat_data.model,
+        )
 
         assert self.chat_container is not None, "Textual has mounted container at this point in the lifecycle."
 
@@ -168,7 +179,7 @@ class Chat(Widget):
         self.post_message(self.NewUserMessage(content))
 
         assert self.chat_data.id is not None, "chat id must not be None"
-        await ChatsManager.add_message_to_chat(chat_id=self.chat_data.id, message=user_chat_message)
+        # await ChatsManager.add_message_to_chat(chat_id=self.chat_data.id, message=user_chat_message)
 
         prompt = self.query_one(ChatPromptInput)
         prompt.submit_ready = False
@@ -185,12 +196,15 @@ class Chat(Widget):
             self.chat_turn_count = 1
             return
         logger.info(f"ELIAINFO HANDLE stream_agent_response: {self.chat_turn_count}")
-        model = self.chat_data.model
-        log.debug(f"Creating streaming response with model {model.name!r}")
+        # model = self.chat_data.model
+        # log.debug(f"Creating streaming response with model {model.name!r}")
         raw_messages = [message.message for message in self.chat_data.messages]
         from litellm.utils import trim_messages
 
-        messages: list[ChatCompletionUserMessageParam] = trim_messages(raw_messages, model.name)  # type: ignore
+        messages: list[ChatCompletionUserMessageParam] = trim_messages(
+            raw_messages,
+            # model.name,
+        )  # type: ignore
         messages = [messages[-1]]  # ELIAINFO
         the_string = " ".join(extract_messages_text(item) for item in messages)
         chat_turn_message = api.ChatMessage(message=the_string)
@@ -211,11 +225,15 @@ class Chat(Widget):
             "role": "assistant",
         }
         now = datetime.datetime.now(datetime.timezone.utc)
-        model = self.chat_data.model
-        message = ChatMessage(message=ai_message, model=model, timestamp=now)
+        # model = self.chat_data.model
+        message = ChatMessage(
+            message=ai_message,
+            # model=model,
+            timestamp=now,
+        )
         response_chatbox = Chatbox(
             message=message,
-            model=model,
+            # model=model,
             classes="response-in-progress",
         )
         self.post_message(self.AgentResponseStarted())
@@ -226,7 +244,7 @@ class Chat(Widget):
             chunk_count = 0
             logger.info(f"ELIAINFO chat_turn_message: {chat_turn_message}")  # TODO remove ELIAINFO
             for chunk in self.chat_turn.run_to_completion(chat_turn_message):
-                response_chatbox.border_title = "Agent is responding now..."
+                response_chatbox.border_title = "Agent is responding..."
                 if chunk is None:
                     break
                 if isinstance(chunk, str):
@@ -241,7 +259,8 @@ class Chat(Widget):
 
         except Exception:
             self.notify(
-                "There was a problem using this model. Please check your configuration file.",
+                "There was a problem with the chat turn.",
+                # "There was a problem using this model. Please check your configuration file.",
                 title="Error",
                 severity="error",
                 timeout=constants.ERROR_NOTIFY_TIMEOUT_SECS,
@@ -290,13 +309,13 @@ class Chat(Widget):
     def move_focus_to_prompt(self) -> None:
         self.query_one(ChatPromptInput).focus()
 
-    @on(TitleStatic.ChatRenamed)
-    async def handle_chat_rename(self, event: TitleStatic.ChatRenamed) -> None:
-        if event.chat_id == self.chat_data.id and event.new_title:
-            self.chat_data.title = event.new_title
-            header = self.query_one(ChatHeader)
-            header.update_header(self.chat_data, self.model)
-            await ChatsManager.rename_chat(event.chat_id, event.new_title)
+    # @on(TitleStatic.ChatRenamed)
+    # async def handle_chat_rename(self, event: TitleStatic.ChatRenamed) -> None:
+    #     if event.chat_id == self.chat_data.id and event.new_title:
+    #         self.chat_data.title = event.new_title
+    #         header = self.query_one(ChatHeader)
+    #         header.update_header(self.chat_data, self.model)
+    #         await ChatsManager.rename_chat(event.chat_id, event.new_title)
 
     def get_latest_chatbox(self) -> Chatbox:
         return self.query(Chatbox).last()
@@ -307,9 +326,9 @@ class Chat(Widget):
         except NoMatches:
             pass
 
-    def action_rename(self) -> None:
-        title_static = self.query_one(TitleStatic)
-        title_static.begin_rename()
+    # def action_rename(self) -> None:
+    #     title_static = self.query_one(TitleStatic)
+    #     title_static.begin_rename()
 
     def action_focus_latest_message(self) -> None:
         self.focus_latest_message()
@@ -328,18 +347,24 @@ class Chat(Widget):
         if self.chat_container:
             self.chat_container.scroll_down()
 
-    async def action_details(self) -> None:
-        await self.app.push_screen(ChatDetails(self.chat_data))
+    # async def action_details(self) -> None:
+    #     await self.app.push_screen(ChatDetails(self.chat_data))
 
     async def load_chat(self, chat_data: ChatData) -> None:
-        chatboxes = [Chatbox(chat_message, chat_data.model) for chat_message in chat_data.non_system_messages]
+        chatboxes = [
+            Chatbox(
+                chat_message,
+                # chat_data.model,
+            )
+            for chat_message in chat_data.non_system_messages
+        ]
         chatboxes = chatboxes[1:]  # ELIAINFO skip the first item since it is empty
         await self.chat_container.mount_all(chatboxes)
         self.chat_container.scroll_end(animate=False, force=True)
         chat_header = self.query_one(ChatHeader)
         chat_header.update_header(
             chat=chat_data,
-            model=chat_data.model,
+            # model=chat_data.model,
         )
 
         # If the last message didn't receive a response, try again.

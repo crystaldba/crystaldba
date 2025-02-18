@@ -22,7 +22,6 @@ from textual.widgets import OptionList
 from textual.widgets.option_list import Option
 
 from tui.app import Elia
-from tui.chats_manager import ChatsManager
 from tui.config import LaunchConfig
 from tui.models import ChatData
 
@@ -136,37 +135,36 @@ class ChatList(OptionList):
         self.refresh()
 
     async def load_chat_list_items(self) -> list[ChatListItem]:
-        # chats = await self.load_chats()
-        chats = []  # ELIAINFO
+        chats = await self.load_chats()
 
         from tui.app import Elia
 
         elia = cast(Elia, self.app)
         return [ChatListItem(chat, elia.launch_config) for chat in chats]
 
-    async def load_chats(self) -> list[ChatData]:
-        all_chats = await ChatsManager.all_chats()
-        return all_chats
+    # async def load_chats(self) -> list[ChatData]:
+    #     all_chats = await ChatsManager.all_chats()
+    #     return all_chats
 
-    async def action_archive_chat(self) -> None:
-        if self.highlighted is None:
-            return
-
-        item = cast(ChatListItem, self.get_option_at_index(self.highlighted))
-        self.options.pop(self.highlighted)
-        self.remove_option_at_index(self.highlighted)
-
-        assert item.chat.id is not None, "chat id must not be None"
-        chat_id = item.chat.id
-        await ChatsManager.archive_chat(chat_id)
-
-        self.border_title = self.get_border_title()
-        self.border_subtitle = self.get_border_subtitle()
-        self.app.notify(
-            item.chat.title or f"Chat [b]{chat_id!r}[/] archived.",
-            title="Chat archived",
-        )
-        self.refresh()
+    # async def action_archive_chat(self) -> None:
+    #     if self.highlighted is None:
+    #         return
+    #
+    #     item = cast(ChatListItem, self.get_option_at_index(self.highlighted))
+    #     self.options.pop(self.highlighted)
+    #     self.remove_option_at_index(self.highlighted)
+    #
+    #     assert item.chat.id is not None, "chat id must not be None"
+    #     chat_id = item.chat.id
+    #     await ChatsManager.archive_chat(chat_id)
+    #
+    #     self.border_title = self.get_border_title()
+    #     self.border_subtitle = self.get_border_subtitle()
+    #     self.app.notify(
+    #         item.chat.title or f"Chat [b]{chat_id!r}[/] archived.",
+    #         title="Chat archived",
+    #     )
+    #     self.refresh()
 
     def get_border_title(self) -> str:
         return f"History ({len(self.options)})"

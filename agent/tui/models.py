@@ -4,51 +4,46 @@ from dataclasses import dataclass
 from datetime import UTC
 from datetime import datetime
 from typing import TYPE_CHECKING
-from typing import cast
 
-from textual._context import active_app
-
-from tui.config import EliaChatModel
-from tui.config import LaunchConfig
+# from tui.config import EliaChatModel
+# from tui.config import LaunchConfig
 
 if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionMessageParam
 
 
-class UnknownModel(EliaChatModel):
-    pass
-
-
-def get_model(model_id_or_name: str, config: LaunchConfig | None = None) -> EliaChatModel:
-    """Given the id or name of a model as a string, return the EliaChatModel.
-
-    Models are looked up by ID first.
-    """
-    if config is None:
-        from tui.app import Elia
-
-        config = cast(Elia, active_app.get()).launch_config
-    try:
-        return {model.id: model for model in config.all_models}[model_id_or_name]
-    except KeyError:
-        try:
-            return {model.name: model for model in config.all_models}[model_id_or_name]
-        except KeyError:
-            pass
-    return UnknownModel(id="unknown", name="unknown model")
+# class UnknownModel(EliaChatModel):
+#     pass
+# def get_model(model_id_or_name: str, config: LaunchConfig | None = None) -> EliaChatModel:
+#     """Given the id or name of a model as a string, return the EliaChatModel.
+#
+#     Models are looked up by ID first.
+#     """
+#     if config is None:
+#         from tui.app import Elia
+#
+#         config = cast(Elia, active_app.get()).launch_config
+#     try:
+#         return {model.id: model for model in config.all_models}[model_id_or_name]
+#     except KeyError:
+#         try:
+#             return {model.name: model for model in config.all_models}[model_id_or_name]
+#         except KeyError:
+#             pass
+#     return UnknownModel(id="unknown", name="unknown model")
 
 
 @dataclass
 class ChatMessage:
     message: ChatCompletionMessageParam
     timestamp: datetime | None
-    model: EliaChatModel
+    # model: EliaChatModel
 
 
 @dataclass
 class ChatData:
     id: int | None  # Can be None before the chat gets assigned ID from database.
-    model: EliaChatModel
+    # model: EliaChatModel
     title: str | None
     create_timestamp: datetime | None
     messages: list[ChatMessage]

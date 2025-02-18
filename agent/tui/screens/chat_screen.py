@@ -8,7 +8,7 @@ from textual.binding import Binding
 from textual.screen import Screen
 from textual.widgets import Footer
 
-from tui.chats_manager import ChatsManager
+# from tui.chats_manager import ChatsManager
 from tui.models import ChatData
 from tui.widgets.agent_is_typing import ResponseStatus
 from tui.widgets.chat import Chat
@@ -38,7 +38,7 @@ class ChatScreen(Screen[None]):
     ):
         super().__init__()
         self.chat_data = chat_data
-        self.chats_manager = ChatsManager()
+        # self.chats_manager = ChatsManager()
 
     def compose(self) -> ComposeResult:
         yield Chat(self.chat_data)
@@ -68,4 +68,4 @@ class ChatScreen(Screen[None]):
         if self.chat_data.id is None:
             raise RuntimeError("Chat has no ID. This is likely a bug in Elia.")
 
-        await self.chats_manager.add_message_to_chat(chat_id=self.chat_data.id, message=event.message)
+        # await self.chats_manager.add_message_to_chat(chat_id=self.chat_data.id, message=event.message)

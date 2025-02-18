@@ -17,31 +17,15 @@ class HelpScreen(ModalScreen[None]):
     ]
 
     HELP_MARKDOWN = """\
-### How do I quit Elia?
+### How do I quit this app?
 
 Press `Ctrl+C` on your keyboard.
 `q` also works if an input isn't currently focused.
-If focus is on the prompt input box on the home screen, `esc` will close Elia too.
-
-### Environment
-
-You may need to set some environment variables, depending on the model
-you wish to set.
-To use OpenAI models, the `OPENAI_API_KEY` env var must be set.
-To use Anthropic models, the `ANTHROPIC_API_KEY` env var must be set.
-
-To use a local model, see the instructions in the README:
-
-* https://github.com/crystaldba/crystaldba/blob/main/README.md
-
-### Config file and database
-
-The locations of the config file and the database can be found at the bottom
-of the options screen (`ctrl+o`).
+If focus is on the prompt input box on the home screen, `esc` will close this app too.
 
 ### General navigation
 
-Elia has very strong mouse support. Most things can be clicked.
+This app has very strong mouse support. Most things can be clicked.
 
 Use `tab` and `shift+tab` to move between different widgets on screen.
 
@@ -55,30 +39,6 @@ be used to navigate.
 
 On the chat screen, pressing `up` and `down` will navigate through messages,
 but if you just wish to scroll a little, you can use `shift+up` and `shift+down`.
-
-### The chat list
-
-- `up,down,k,j`: Navigate through chats.
-- `a`: Archive the highlighted chat.
-- `pageup,pagedown`: Up/down a page.
-- `home,end`: Go to first/last chat.
-- `g,G`: Go to first/last chat.
-- `enter,l`: Open chat.
-
-### The options window
-
-Press `ctrl+o` to open the _options window_.
-
-On this window you can change the `model` and `system prompt`.
-The system prompt tells the model to behave, and is added to the
-start of every conversation.
-
-Changes made on the options window are saved automatically.
-
-> **`Note`**: Changes made in the options window only apply to the current session!
-
-You can change the system prompt globally by updating the config file.
-The location of the config file is shown at the bottom of the options window.
 
 ### Writing a prompt
 
@@ -129,7 +89,6 @@ and the cursor is at (0, 0) will move focus to the latest message.
 
 You can use the arrow keys to move up and down through messages.
 
-- `ctrl+r`: Rename the chat (or click the chat title).
 - `f2`: View more information about the chat.
 
 _With a message focused_:
@@ -144,18 +103,16 @@ _With a message focused_:
     - Press `u` to quickly select the next code block in the message.
     - With some text selected, press `y` or c` to copy.
 - `enter`: View more details about a message.
-    - The amount of details available may vary depending on the model
-        or provider being used.
-- `g`: Focus the first message.
 - `G`: Focus the latest message.
 - `m`: Move focus to the prompt box.
 - `up,down,k,j`: Navigate through messages.
 
 """
+    # - `g`: Focus the first message.
 
     def compose(self) -> ComposeResult:
         with Vertical(id="help-container") as vertical:
-            vertical.border_title = "Elia Help"
+            vertical.border_title = "App Help"
             with VerticalScroll():
                 yield Markdown(self.HELP_MARKDOWN, id="help-markdown")
             yield Markdown(

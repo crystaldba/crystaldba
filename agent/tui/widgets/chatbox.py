@@ -21,8 +21,9 @@ from textual.widget import Widget
 from textual.widgets import TextArea
 from textual.widgets.text_area import Selection
 
-from tui.config import EliaChatModel
 from tui.models import ChatMessage
+
+# from tui.config import EliaChatModel
 
 
 class SelectionTextArea(TextArea):
@@ -233,7 +234,7 @@ class Chatbox(Widget, can_focus=True):
     def __init__(
         self,
         message: ChatMessage,
-        model: EliaChatModel,
+        # model: EliaChatModel,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -246,7 +247,7 @@ class Chatbox(Widget, can_focus=True):
             disabled=disabled,
         )
         self.message = message
-        self.model = model
+        # self.model = model
 
     def on_mount(self) -> None:
         litellm_message = self.message.message
@@ -335,15 +336,15 @@ class Chatbox(Widget, can_focus=True):
     @property
     def markdown(self) -> Markdown:
         """Return the content as a Rich Markdown object."""
-        from typing import cast
 
         content = self.message.message.get("content")
         if not isinstance(content, str):
             content = ""
-
-        from tui.app import Elia
-
-        return Markdown(content, code_theme=cast(Elia, self.app).launch_config.message_code_theme)
+        # from tui.app import Elia
+        return Markdown(
+            content,
+            # code_theme=cast(Elia, self.app).launch_config.message_code_theme,
+        )
 
     def render(self) -> RenderableType:
         if self.selection_mode:
