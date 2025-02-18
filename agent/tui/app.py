@@ -13,17 +13,17 @@ from textual.reactive import Reactive
 from textual.reactive import reactive
 from textual.signal import Signal
 
-from elia_chat.chats_manager import ChatsManager
-from elia_chat.config import EliaChatModel
-from elia_chat.config import LaunchConfig
-from elia_chat.models import ChatData
-from elia_chat.models import ChatMessage
-from elia_chat.runtime_config import RuntimeConfig
-from elia_chat.screens.chat_screen import ChatScreen
-from elia_chat.screens.help_screen import HelpScreen
-from elia_chat.themes import BUILTIN_THEMES
-from elia_chat.themes import Theme
-from elia_chat.themes import load_user_themes
+from tui.chats_manager import ChatsManager
+from tui.config import EliaChatModel
+from tui.config import LaunchConfig
+from tui.models import ChatData
+from tui.models import ChatMessage
+from tui.runtime_config import RuntimeConfig
+from tui.screens.chat_screen import ChatScreen
+from tui.screens.help_screen import HelpScreen
+from tui.themes import BUILTIN_THEMES
+from tui.themes import Theme
+from tui.themes import load_user_themes
 
 if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionSystemMessageParam
@@ -77,7 +77,7 @@ class Elia(App[None]):
         self.runtime_config_signal.publish(self.runtime_config)
 
     async def on_mount(self) -> None:
-        # from elia_chat.screens.home_screen import HomeScreen # ELIAINFO
+        # from tui.screens.home_screen import HomeScreen # ELIAINFO
         # await self.push_screen(HomeScreen(self.runtime_config_signal))
         self.theme = self.launch_config.theme
         if True or self.startup_prompt:  # ELIAINFO

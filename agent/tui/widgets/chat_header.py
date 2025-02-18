@@ -10,9 +10,9 @@ from textual.message import Message
 from textual.widget import Widget
 from textual.widgets import Static
 
-from elia_chat.config import EliaChatModel
-from elia_chat.models import ChatData
-from elia_chat.screens.rename_chat_screen import RenameChat
+from tui.config import EliaChatModel
+from tui.models import ChatData
+from tui.screens.rename_chat_screen import RenameChat
 
 
 class TitleStatic(Static):

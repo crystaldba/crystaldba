@@ -18,11 +18,11 @@ from textual.widgets import RadioSet
 from textual.widgets import Static
 from textual.widgets import TextArea
 
-from elia_chat.config import EliaChatModel
-from elia_chat.database.database import sqlite_file_name
-from elia_chat.locations import config_file
-from elia_chat.locations import theme_directory
-from elia_chat.runtime_config import RuntimeConfig
+from tui.config import EliaChatModel
+from tui.database.database import sqlite_file_name
+from tui.locations import config_file
+from tui.locations import theme_directory
+from tui.runtime_config import RuntimeConfig
 
 if TYPE_CHECKING:
     pass
@@ -66,7 +66,7 @@ class OptionsModal(ModalScreen[RuntimeConfig]):
         classes: str | None = None,
     ) -> None:
         super().__init__(name, id, classes)
-        from elia_chat.app import Elia
+        from tui.app import Elia
 
         self.elia = cast(Elia, self.app)
         self.runtime_config = self.elia.runtime_config

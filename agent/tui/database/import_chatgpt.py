@@ -6,9 +6,9 @@ from rich.console import Console
 from rich.live import Live
 from rich.text import Text
 
-from elia_chat.database.database import get_session
-from elia_chat.database.models import ChatDao
-from elia_chat.database.models import MessageDao
+from tui.database.database import get_session
+from tui.database.models import ChatDao
+from tui.database.models import MessageDao
 
 
 async def import_chatgpt_data(file: Path) -> None:

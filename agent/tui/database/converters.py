@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
 from typing import Any
 
-from elia_chat.database.models import ChatDao
-from elia_chat.database.models import MessageDao
-from elia_chat.models import ChatData
-from elia_chat.models import ChatMessage
-from elia_chat.models import get_model
+from tui.database.models import ChatDao
+from tui.database.models import MessageDao
+from tui.models import ChatData
+from tui.models import ChatMessage
+from tui.models import get_model
 
 if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionUserMessageParam

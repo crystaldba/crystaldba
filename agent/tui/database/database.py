@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from elia_chat.locations import data_directory
+from tui.locations import data_directory
 
 sqlite_file_name = data_directory() / "elia.sqlite"
 sqlite_url = f"sqlite+aiosqlite:///{sqlite_file_name}"

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from pydantic import Field
 from textual.design import ColorSystem
 
-from elia_chat.locations import theme_directory
+from tui.locations import theme_directory
 
 
 class Theme(BaseModel):

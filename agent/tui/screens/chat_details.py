@@ -14,7 +14,7 @@ from textual.widgets import Label
 from textual.widgets import Markdown
 from textual.widgets import Rule
 
-from elia_chat.models import ChatData
+from tui.models import ChatData
 
 
 class ChatDetails(ModalScreen[None]):
@@ -35,7 +35,7 @@ class ChatDetails(ModalScreen[None]):
     ) -> None:
         super().__init__(name, id, classes)
         self.chat = chat
-        from elia_chat.app import Elia
+        from tui.app import Elia
 
         self.elia = cast(Elia, self.app)
 

@@ -15,7 +15,7 @@ from sqlmodel import Relationship
 from sqlmodel import SQLModel
 from sqlmodel import select
 
-from elia_chat.database.database import get_session
+from tui.database.database import get_session
 
 
 class SystemPromptsDao(AsyncAttrs, SQLModel, table=True):

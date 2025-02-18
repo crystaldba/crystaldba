@@ -25,16 +25,16 @@ from textual.worker import get_current_worker
 
 from crystaldba.shared import api
 from crystaldba.shared.api import StartupMessage
-from elia_chat import constants
-from elia_chat.chats_manager import ChatsManager
-from elia_chat.models import ChatData
-from elia_chat.models import ChatMessage
-from elia_chat.screens.chat_details import ChatDetails
-from elia_chat.widgets.agent_is_typing import ResponseStatus
-from elia_chat.widgets.chat_header import ChatHeader
-from elia_chat.widgets.chat_header import TitleStatic
-from elia_chat.widgets.chatbox import Chatbox
-from elia_chat.widgets.prompt_input import PromptInput
+from tui import constants
+from tui.chats_manager import ChatsManager
+from tui.models import ChatData
+from tui.models import ChatMessage
+from tui.screens.chat_details import ChatDetails
+from tui.widgets.agent_is_typing import ResponseStatus
+from tui.widgets.chat_header import ChatHeader
+from tui.widgets.chat_header import TitleStatic
+from tui.widgets.chatbox import Chatbox
+from tui.widgets.prompt_input import PromptInput
 
 if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionAssistantMessageParam
@@ -84,7 +84,7 @@ class Chat(Widget):
 
     def __init__(self, chat_data: ChatData) -> None:
         super().__init__()
-        from elia_chat.app import Elia
+        from tui.app import Elia
 
         self.chat_data = chat_data
         self.model = chat_data.model

@@ -21,10 +21,10 @@ from textual.message import Message
 from textual.widgets import OptionList
 from textual.widgets.option_list import Option
 
-from elia_chat.app import Elia
-from elia_chat.chats_manager import ChatsManager
-from elia_chat.config import LaunchConfig
-from elia_chat.models import ChatData
+from tui.app import Elia
+from tui.chats_manager import ChatsManager
+from tui.config import LaunchConfig
+from tui.models import ChatData
 
 
 @dataclass
@@ -139,7 +139,7 @@ class ChatList(OptionList):
         # chats = await self.load_chats()
         chats = []  # ELIAINFO
 
-        from elia_chat.app import Elia
+        from tui.app import Elia
 
         elia = cast(Elia, self.app)
         return [ChatListItem(chat, elia.launch_config) for chat in chats]

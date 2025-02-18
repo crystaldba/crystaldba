@@ -6,14 +6,14 @@ from dataclasses import dataclass
 from sqlmodel import select
 from textual import log
 
-from elia_chat.database.converters import chat_dao_to_chat_data
-from elia_chat.database.converters import chat_message_to_message_dao
-from elia_chat.database.converters import message_dao_to_chat_message
-from elia_chat.database.database import get_session
-from elia_chat.database.models import ChatDao
-from elia_chat.database.models import MessageDao
-from elia_chat.models import ChatData
-from elia_chat.models import ChatMessage
+from tui.database.converters import chat_dao_to_chat_data
+from tui.database.converters import chat_message_to_message_dao
+from tui.database.converters import message_dao_to_chat_message
+from tui.database.database import get_session
+from tui.database.models import ChatDao
+from tui.database.models import MessageDao
+from tui.models import ChatData
+from tui.models import ChatMessage
 
 
 @dataclass

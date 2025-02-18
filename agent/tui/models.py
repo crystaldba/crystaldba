@@ -8,8 +8,8 @@ from typing import cast
 
 from textual._context import active_app
 
-from elia_chat.config import EliaChatModel
-from elia_chat.config import LaunchConfig
+from tui.config import EliaChatModel
+from tui.config import LaunchConfig
 
 if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionMessageParam
@@ -25,7 +25,7 @@ def get_model(model_id_or_name: str, config: LaunchConfig | None = None) -> Elia
     Models are looked up by ID first.
     """
     if config is None:
-        from elia_chat.app import Elia
+        from tui.app import Elia
 
         config = cast(Elia, active_app.get()).launch_config
     try:

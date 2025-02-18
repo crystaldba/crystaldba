@@ -21,8 +21,8 @@ from textual.widget import Widget
 from textual.widgets import TextArea
 from textual.widgets.text_area import Selection
 
-from elia_chat.config import EliaChatModel
-from elia_chat.models import ChatMessage
+from tui.config import EliaChatModel
+from tui.models import ChatMessage
 
 
 class SelectionTextArea(TextArea):
@@ -341,7 +341,7 @@ class Chatbox(Widget, can_focus=True):
         if not isinstance(content, str):
             content = ""
 
-        from elia_chat.app import Elia
+        from tui.app import Elia
 
         return Markdown(content, code_theme=cast(Elia, self.app).launch_config.message_code_theme)
 
@@ -354,7 +354,7 @@ class Chatbox(Widget, can_focus=True):
         message = self.message.message
         from typing import cast
 
-        from elia_chat.app import Elia
+        from tui.app import Elia
 
         theme = cast(Elia, self.app).theme_object
         if theme:

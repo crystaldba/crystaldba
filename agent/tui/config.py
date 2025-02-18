@@ -177,7 +177,7 @@ class LaunchConfig(BaseModel):
 
     @property
     def default_model_object(self) -> EliaChatModel:
-        from elia_chat.models import get_model
+        from tui.models import get_model
 
         return get_model(self.default_model, self)
 

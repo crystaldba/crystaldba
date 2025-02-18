@@ -64,7 +64,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
 crystaldba = "crystaldba.cli.main:main"
-elia = "elia_chat.__main__:cli"
+elia = "tui.__main__:cli"
 
 [tool.poetry.scripts]
 lint = "scripts:lint"
@@ -104,7 +104,7 @@ force-single-line = true
 known-first-party = ["crystal"]
 
 [tool.pyright]
-include = ["crystaldba/cli", "crystaldba/shared", "elia_chat"]
+include = ["crystaldba/cli", "crystaldba/shared", "tui"]
 typeCheckingMode = "standard"
 pythonVersion = "3.12"
 strictParameterNullChecking = true

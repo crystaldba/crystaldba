@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
-from elia_chat.config import EliaChatModel
+from tui.config import EliaChatModel
 
 
 class RuntimeConfig(BaseModel):

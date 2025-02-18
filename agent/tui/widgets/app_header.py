@@ -12,10 +12,10 @@ from textual.signal import Signal
 from textual.widget import Widget
 from textual.widgets import Label
 
-from elia_chat.app import Elia
-from elia_chat.config import EliaChatModel
-from elia_chat.models import get_model
-from elia_chat.runtime_config import RuntimeConfig
+from tui.app import Elia
+from tui.config import EliaChatModel
+from tui.models import get_model
+from tui.runtime_config import RuntimeConfig
 
 try:
     ELIA_VERSION = version("crystaldba")

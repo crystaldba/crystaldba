@@ -14,12 +14,12 @@ from click_default_group import DefaultGroup
 from rich.console import Console
 
 from crystaldba.cli import startup
-from elia_chat.app import Elia
-from elia_chat.config import LaunchConfig
-from elia_chat.database.database import create_database
-from elia_chat.database.database import sqlite_file_name
-from elia_chat.database.import_chatgpt import import_chatgpt_data
-from elia_chat.locations import config_file
+from tui.app import Elia
+from tui.config import LaunchConfig
+from tui.database.database import create_database
+from tui.database.database import sqlite_file_name
+from tui.database.import_chatgpt import import_chatgpt_data
+from tui.locations import config_file
 
 console = Console()
 

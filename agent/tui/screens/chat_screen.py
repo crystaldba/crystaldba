@@ -8,10 +8,10 @@ from textual.binding import Binding
 from textual.screen import Screen
 from textual.widgets import Footer
 
-from elia_chat.chats_manager import ChatsManager
-from elia_chat.models import ChatData
-from elia_chat.widgets.agent_is_typing import ResponseStatus
-from elia_chat.widgets.chat import Chat
+from tui.chats_manager import ChatsManager
+from tui.models import ChatData
+from tui.widgets.agent_is_typing import ResponseStatus
+from tui.widgets.chat import Chat
 
 
 class ChatScreen(Screen[None]):
