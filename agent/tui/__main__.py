@@ -58,13 +58,6 @@ def cli() -> None:
     help="Run in inline mode, without launching full TUI.",
     default=False,
 )
-@click.option(
-    "-m",
-    "--model",
-    type=str,
-    default="",
-    help="The model to use for the chat",
-)
 @click.argument("dburi", nargs=-1, type=str, required=False)
 @click.option("--profile", type=str, default="", help="The user profile to use for the chat")
 @click.option("-h", "--host", type=str, default="", help='database server host or socket directory (default: "localhost")')
@@ -73,7 +66,6 @@ def cli() -> None:
 @click.option("-d", "--dbname", type=str, default="", help='database name (default: "postgres")')
 def default(
     inline: bool,
-    model: str,
     dburi: tuple[str, ...],
     profile: str,
     host: str,
@@ -95,8 +87,6 @@ def default(
     create_db_if_not_exists()
     file_config = load_or_create_config_file()
     cli_config = {}
-    if model:
-        cli_config["default_model"] = model
 
     launch_config: dict[str, Any] = {**file_config, **cli_config}
     app = Elia(LaunchConfig(**launch_config), startup_prompt=joined_prompt, chat_turn=chat_turn)

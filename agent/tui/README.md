@@ -1,4 +1,4 @@
-# CrystalDBA Terminal UI (tui)
+# Crystal DBA Terminal UI (tui)
 
 ## Starting the app
 

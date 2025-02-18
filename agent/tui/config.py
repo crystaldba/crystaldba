@@ -54,8 +54,8 @@ def get_builtin_openai_models() -> list[EliaChatModel]:
     return [
         EliaChatModel(
             id="crystaldba-model",
-            display_name="CrystalDBA service",
-            description="CrystalDBA auto DBA",
+            display_name="Crystal DBA service",
+            description="Crystal DBA auto DBA",
             # api_base=AnyHttpUrl("http://localhost:7080"),
             name="gpt-4o",
             provider="CrystalDBA",
@@ -164,7 +164,7 @@ class LaunchConfig(BaseModel):
 
     default_model: str = Field(default="crystaldba-model")
     """The ID or name of the default model."""
-    system_prompt: str = Field(default=os.getenv("ELIA_SYSTEM_PROMPT", "CrystalDBA is here to help you."))
+    system_prompt: str = Field(default=os.getenv("ELIA_SYSTEM_PROMPT", "Crystal DBA is here to help you."))
     message_code_theme: str = Field(default="monokai")
     """The default Pygments syntax highlighting theme to be used in chatboxes."""
     models: list[EliaChatModel] = Field(default_factory=list)
