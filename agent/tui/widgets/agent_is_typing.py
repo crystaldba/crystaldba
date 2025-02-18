@@ -23,6 +23,6 @@ class ResponseStatus(Vertical):
         self.remove_class("-agent-responding")
 
     def set_agent_responding(self) -> None:
-        self.message = "Agent is responding for sure"
+        self.message = "Agent is responding"
         self.add_class("-agent-responding")
         self.remove_class("-awaiting-response")

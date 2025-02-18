@@ -19,7 +19,7 @@ If you have any issues or feedback, please let me know [@click='open_issues'][b 
 
 Finally, please consider starring the repo and sharing it with your friends and colleagues!
 
-[@click='open_repo'][b r]https://github.com/darrenburns/elia[/][/]
+[@click='open_repo'][b r]https://github.com/crystaldba/crystaldba[/][/]
 """
 
     BORDER_TITLE = "Welcome to Elia!"
@@ -30,9 +30,9 @@ Finally, please consider starring the repo and sharing it with your friends and 
     def _action_open_repo(self) -> None:
         import webbrowser
 
-        webbrowser.open("https://github.com/darrenburns/elia")
+        webbrowser.open("https://github.com/crystaldba/crystaldba")
 
     def _action_open_issues(self) -> None:
         import webbrowser
 
-        webbrowser.open("https://github.com/darrenburns/elia/issues")
+        webbrowser.open("https://github.com/crystaldba/crystaldba/issues")

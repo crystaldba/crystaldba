@@ -55,7 +55,7 @@ def get_builtin_openai_models() -> list[EliaChatModel]:
         EliaChatModel(
             id="crystaldba-model",
             display_name="Crystal DBA service",
-            description="Crystal DBA auto DBA",
+            description="AI teammate with PostgreSQL expertise",
             # api_base=AnyHttpUrl("http://localhost:7080"),
             name="gpt-4o",
             provider="CrystalDBA",
