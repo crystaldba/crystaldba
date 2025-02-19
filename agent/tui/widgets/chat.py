@@ -65,11 +65,11 @@ class Chat(Widget):
 
     def __init__(self, chat_data: ChatData) -> None:
         super().__init__()
-        from tui.app import Elia
+        from tui.app import Tui
 
         self.chat_data = chat_data
         self.chat_turn_count = 0
-        self.chat_turn = cast(Elia, self.app).chat_turn
+        self.chat_turn = cast(Tui, self.app).chat_turn
 
     @dataclass
     class AgentResponseStarted(Message):

@@ -20,9 +20,9 @@ if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionUserMessageParam
 
 
-class Elia(App[None]):
+class Tui(App[None]):
     ENABLE_COMMAND_PALETTE: ClassVar[bool] = False
-    CSS_PATH = Path(__file__).parent / "elia.scss"
+    CSS_PATH = Path(__file__).parent / "tui.scss"
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding("q", "app.quit", "Quit", show=False),
         Binding("f1,?", "help", "Help"),
@@ -82,5 +82,5 @@ class Elia(App[None]):
 
 
 if __name__ == "__main__":
-    app = Elia()
+    app = Tui()
     app.run()

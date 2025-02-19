@@ -9,14 +9,14 @@ from click_default_group import DefaultGroup
 from rich.console import Console
 
 from crystaldba.cli import startup
-from tui.app import Elia
+from tui.app import Tui
 
 console = Console()
 
 
 @click.group(cls=DefaultGroup, default="default", default_if_no_args=True)
 def cli() -> None:
-    """Interact with large language models using your terminal."""
+    """Your AI teammate with PostgreSQL expertise."""
 
 
 @cli.command()
@@ -47,7 +47,7 @@ def default(
         logging_level=logging.INFO,
     )
 
-    app = Elia(chat_turn=chat_turn)
+    app = Tui(chat_turn=chat_turn)
     app.run(inline=inline)
 
 

@@ -9,7 +9,7 @@ from textual.containers import Vertical
 from textual.widget import Widget
 from textual.widgets import Label
 
-from tui.app import Elia
+from tui.app import Tui
 
 TUI_VERSION = version("crystaldba")
 
@@ -25,12 +25,12 @@ class AppHeader(Widget):
         disabled: bool = False,
     ) -> None:
         super().__init__(name=name, id=id, classes=classes, disabled=disabled)
-        self.elia = cast(Elia, self.app)
+        self.tui = cast(Tui, self.app)
 
     def compose(self) -> ComposeResult:
         with Horizontal():
             with Vertical(id="cl-header-container"):
                 yield Label(
                     Text("TUI") + Text(f" v{TUI_VERSION}", style="dim"),
-                    id="elia-title",
+                    id="tui-title",
                 )
