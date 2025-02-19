@@ -24,13 +24,11 @@ dependencies = [
     "pexpect (>=4.9.0,<5.0.0)",
     
     # Tui dependencies
-    "textual[syntax]==0.79.1",
-    "click>=8.1.6",
     "click-default-group>=1.2.4",
+    "click>=8.1.6",
+    "litellm>=1.37.19",
     "pyperclip>=1.8.2",
-    # "humanize>=4.6.0",
-    # "greenlet>=3.0.3",
-    # "structlog>=25.1.0",
+    "textual[syntax]==0.79.1",
 ]
 
 [project.urls]
