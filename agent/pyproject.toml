@@ -53,8 +53,9 @@ requires = ["poetry-core>=1.9.0"]
 build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
-crystaldba = "crystaldba.cli.main:main"
-tui = "tui.__main__:cli"
+crystaldba = "tui.__main__:cli"
+# crystaldba = "crystaldba.cli.main:main"
+# tui = "tui.__main__:cli"
 
 [tool.poetry.scripts]
 lint = "scripts:lint"
