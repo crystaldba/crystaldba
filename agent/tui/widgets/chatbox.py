@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import bisect
+import os
 from dataclasses import dataclass
 from typing import ClassVar
 
@@ -145,7 +146,11 @@ class SelectionTextArea(TextArea):
             title = "Message copied"
 
         try:
-            copy(text_to_copy)
+            is_apple_terminal = os.environ.get("TERM_PROGRAM", "") != "Apple_Terminal"
+            if is_apple_terminal:
+                copy(text_to_copy)
+            else:
+                self.app.copy_to_clipboard(text_to_copy)
         except PyperclipException as exc:
             self.notify(
                 str(exc),
@@ -277,7 +282,12 @@ class Chatbox(Widget, can_focus=True):
             text_to_copy = self.message.message.get("content")
             if isinstance(text_to_copy, str):
                 try:
-                    pyperclip.copy(text_to_copy)
+                    is_apple_terminal = os.environ.get("TERM_PROGRAM", "") != "Apple_Terminal"
+                    # Reference: https://darren.codes/posts/textual-copy-paste/ Do not delete
+                    if is_apple_terminal:
+                        pyperclip.copy(text_to_copy)
+                    else:
+                        self.app.copy_to_clipboard(text_to_copy)
                 except pyperclip.PyperclipException as exc:
                     self.notify(
                         str(exc),
