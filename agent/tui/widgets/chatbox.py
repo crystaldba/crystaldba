@@ -24,8 +24,6 @@ from textual.widgets.text_area import Selection
 
 from tui.models import ChatMessage
 
-# from tui.config import EliaChatModel
-
 
 class SelectionTextArea(TextArea):
     class LeaveSelectionMode(Message):
@@ -239,7 +237,6 @@ class Chatbox(Widget, can_focus=True):
     def __init__(
         self,
         message: ChatMessage,
-        # model: EliaChatModel,
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
@@ -252,7 +249,6 @@ class Chatbox(Widget, can_focus=True):
             disabled=disabled,
         )
         self.message = message
-        # self.model = model
 
     def on_mount(self) -> None:
         litellm_message = self.message.message
@@ -350,10 +346,8 @@ class Chatbox(Widget, can_focus=True):
         content = self.message.message.get("content")
         if not isinstance(content, str):
             content = ""
-        # from tui.app import Elia
         return Markdown(
             content,
-            # code_theme=cast(Elia, self.app).launch_config.message_code_theme,
         )
 
     def render(self) -> RenderableType:
@@ -363,15 +357,7 @@ class Chatbox(Widget, can_focus=True):
             return ""
 
         message = self.message.message
-        from typing import cast
-
-        from tui.app import Elia
-
-        theme = cast(Elia, self.app).theme_object
-        if theme:
-            background_color = theme.background
-        else:
-            background_color = "#121212"
+        background_color = "#121212"
 
         if message["role"] == "user":
             content = message["content"] or ""

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import collections.abc
 import datetime
-import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import ClassVar
@@ -33,10 +32,6 @@ from tui.widgets.chat_header import ChatHeader
 from tui.widgets.chatbox import Chatbox
 from tui.widgets.prompt_input import PromptInput
 
-# from tui.chats_manager import ChatsManager
-# from tui.screens.chat_details import ChatDetails
-# from tui.widgets.chat_header import TitleStatic
-
 if TYPE_CHECKING:
     from litellm.types.completion import ChatCompletionAssistantMessageParam
     from litellm.types.completion import ChatCompletionUserMessageParam
@@ -50,34 +45,19 @@ class ChatPromptInput(PromptInput):
             "Quit",
             key_display="esc",
         )
-        # Binding( # ELIAINFO
-        #     "escape",
-        #     "app.pop_screen",
-        #     "Close chat",
-        #     key_display="esc",
-        # )
     ]
 
 
 class Chat(Widget):
     BINDINGS: ClassVar[list[BindingType]] = [
-        # Binding("ctrl+r", "rename", "Rename", key_display="^r"),
         Binding("shift+down", "scroll_container_down", show=False),
         Binding("shift+up", "scroll_container_up", show=False),
-        # Binding( # ELIAINFO
-        #     key="g",
-        #     action="focus_first_message",
-        #     description="First message",
-        #     key_display="g",
-        #     show=False,
-        # ),
         Binding(
             key="G",
             action="focus_latest_message",
             description="Latest message",
             show=False,
         ),
-        # Binding(key="f2", action="details", description="Chat info"),
     ]
 
     allow_input_submit = reactive(True)
@@ -88,7 +68,6 @@ class Chat(Widget):
         from tui.app import Elia
 
         self.chat_data = chat_data
-        # self.model = chat_data.model
         self.chat_turn_count = 0
         self.chat_turn = cast(Elia, self.app).chat_turn
 
@@ -117,7 +96,6 @@ class Chat(Widget):
         yield ResponseStatus()
         yield ChatHeader(
             chat=self.chat_data,
-            # model=self.model,
         )
 
         with VerticalScroll(id="chat-container") as vertical_scroll:
@@ -163,12 +141,10 @@ class Chat(Widget):
         user_chat_message = ChatMessage(
             user_message,
             now_utc,
-            # self.chat_data.model,
         )
         self.chat_data.messages.append(user_chat_message)
         user_message_chatbox = Chatbox(
             user_chat_message,
-            # self.chat_data.model,
         )
 
         assert self.chat_container is not None, "Textual has mounted container at this point in the lifecycle."
@@ -179,7 +155,6 @@ class Chat(Widget):
         self.post_message(self.NewUserMessage(content))
 
         assert self.chat_data.id is not None, "chat id must not be None"
-        # await ChatsManager.add_message_to_chat(chat_id=self.chat_data.id, message=user_chat_message)
 
         prompt = self.query_one(ChatPromptInput)
         prompt.submit_ready = False
@@ -187,25 +162,18 @@ class Chat(Widget):
 
     @work(thread=True, group="agent_response")
     def stream_agent_response(self) -> None:
-        logger = logging.getLogger(__name__)
-        logger.info(f"ELIAINFO stream_agent_response: {self.chat_turn_count}")
-        # ELIAINFO
         if self.chat_turn_count == 0:
             chat_turn_message = StartupMessage()
             self.handle_stream_agent_response(chat_turn_message)
             self.chat_turn_count = 1
             return
-        logger.info(f"ELIAINFO HANDLE stream_agent_response: {self.chat_turn_count}")
-        # model = self.chat_data.model
-        # log.debug(f"Creating streaming response with model {model.name!r}")
         raw_messages = [message.message for message in self.chat_data.messages]
         from litellm.utils import trim_messages
 
         messages: list[ChatCompletionUserMessageParam] = trim_messages(
             raw_messages,
-            # model.name,
         )  # type: ignore
-        messages = [messages[-1]]  # ELIAINFO
+        messages = [messages[-1]]
         the_string = " ".join(extract_messages_text(item) for item in messages)
         chat_turn_message = api.ChatMessage(message=the_string)
         self.handle_stream_agent_response(chat_turn_message)
@@ -215,25 +183,18 @@ class Chat(Widget):
         if get_current_worker().is_cancelled:
             return
         log.debug("stream_agent_response_startup")
-        logger = logging.getLogger(__name__)
-        logger.info("ELIAINFO stream_agent_response_startup")
-        # ELIAINFO
-        # chat_turn_message = StartupMessage()
 
         ai_message: ChatCompletionAssistantMessageParam = {
             "content": "",
             "role": "assistant",
         }
         now = datetime.datetime.now(datetime.timezone.utc)
-        # model = self.chat_data.model
         message = ChatMessage(
             message=ai_message,
-            # model=model,
             timestamp=now,
         )
         response_chatbox = Chatbox(
             message=message,
-            # model=model,
             classes="response-in-progress",
         )
         self.post_message(self.AgentResponseStarted())
@@ -242,7 +203,6 @@ class Chat(Widget):
 
         try:
             chunk_count = 0
-            logger.info(f"ELIAINFO chat_turn_message: {chat_turn_message}")  # TODO remove ELIAINFO
             for chunk in self.chat_turn.run_to_completion(chat_turn_message):
                 response_chatbox.border_title = "Agent is responding..."
                 if chunk is None:
@@ -260,7 +220,6 @@ class Chat(Widget):
         except Exception:
             self.notify(
                 "There was a problem with the chat turn.",
-                # "There was a problem using this model. Please check your configuration file.",
                 title="Error",
                 severity="error",
                 timeout=constants.ERROR_NOTIFY_TIMEOUT_SECS,
@@ -309,14 +268,6 @@ class Chat(Widget):
     def move_focus_to_prompt(self) -> None:
         self.query_one(ChatPromptInput).focus()
 
-    # @on(TitleStatic.ChatRenamed)
-    # async def handle_chat_rename(self, event: TitleStatic.ChatRenamed) -> None:
-    #     if event.chat_id == self.chat_data.id and event.new_title:
-    #         self.chat_data.title = event.new_title
-    #         header = self.query_one(ChatHeader)
-    #         header.update_header(self.chat_data, self.model)
-    #         await ChatsManager.rename_chat(event.chat_id, event.new_title)
-
     def get_latest_chatbox(self) -> Chatbox:
         return self.query(Chatbox).last()
 
@@ -325,10 +276,6 @@ class Chat(Widget):
             self.get_latest_chatbox().focus()
         except NoMatches:
             pass
-
-    # def action_rename(self) -> None:
-    #     title_static = self.query_one(TitleStatic)
-    #     title_static.begin_rename()
 
     def action_focus_latest_message(self) -> None:
         self.focus_latest_message()
@@ -347,24 +294,19 @@ class Chat(Widget):
         if self.chat_container:
             self.chat_container.scroll_down()
 
-    # async def action_details(self) -> None:
-    #     await self.app.push_screen(ChatDetails(self.chat_data))
-
     async def load_chat(self, chat_data: ChatData) -> None:
         chatboxes = [
             Chatbox(
                 chat_message,
-                # chat_data.model,
             )
             for chat_message in chat_data.non_system_messages
         ]
-        chatboxes = chatboxes[1:]  # ELIAINFO skip the first item since it is empty
+        chatboxes = chatboxes[1:]  # skip the first item since it is empty
         await self.chat_container.mount_all(chatboxes)
         self.chat_container.scroll_end(animate=False, force=True)
         chat_header = self.query_one(ChatHeader)
         chat_header.update_header(
             chat=chat_data,
-            # model=chat_data.model,
         )
 
         # If the last message didn't receive a response, try again.

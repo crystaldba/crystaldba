@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass
 from typing import ClassVar
 from typing import List
@@ -9,8 +8,6 @@ from textual.binding import Binding
 from textual.message import Message
 from textual.reactive import reactive
 from textual.widgets import TextArea
-
-logger = logging.getLogger(__name__)
 
 
 class PromptInput(TextArea):
@@ -85,7 +82,6 @@ class PromptInput(TextArea):
         if self.submit_ready:
             message = self.PromptSubmitted(self.text, prompt_input=self)
             self.clear()
-            logger.info("Submitting prompt: %r", self.text)
             self.post_message(message)
         else:
             self.app.bell()
@@ -102,7 +98,6 @@ class PromptInput(TextArea):
         text_area = event.text_area
         if text_area.text.strip() != "":
             text_area.border_subtitle = "[[white]^j[/]] Add a new line [[white]enter[/]] Send message"
-            # text_area.border_subtitle = "[[white]^j[/]] Send message"
         else:
             text_area.border_subtitle = None
 

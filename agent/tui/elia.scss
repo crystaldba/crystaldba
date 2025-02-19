@@ -176,16 +176,6 @@ PromptInput.multiline .text-area--cursor-line {
   background: white 3%;
 }
 
-HomeScreen PromptInput {
-  height: auto;
-  max-height: 65%;
-
-  & TextArea {
-    height: auto;
-    max-height: 100%;
-  }
-}
-
 AppHeader #cl-header-container {
   height: auto;
   background: $background;
@@ -215,37 +205,6 @@ AppHeader {
     border: none;
     background: $main-darken-2 0%;
     text-style: dim;
-  }
-}
-
-HomeScreen {
-  & ChatList {
-    padding: 0;
-    height: 1fr;
-    width: 1fr;
-    border: round $main-border-color;
-    border-title-color: $main-border-text-color;
-    border-subtitle-color: $main-border-text-color;
-
-    &:focus {
-      border: round $main-border-color-focus;
-      border-title-style: bold;
-      border-subtitle-color: $main-border-text-color;
-    }
-
-    &.-empty {
-      hatch: right $background-lighten-1;
-    }
-  }
-
-  & Welcome {
-    display: none;
-    border: round $main-border-color;
-    border-title-color: $main-border-text-color;
-    border-title-align: center;
-    border-title-style: bold;
-    padding: 0 1;
-    text-align: center;
   }
 }
 
@@ -311,95 +270,6 @@ Footer {
   .footer-key--key {
     color: $accent;
     background: transparent;
-  }
-}
-
-OptionList {
-  background: $background 15%;
-}
-
-OptionList > .option-list--option-highlighted {
-  background: $main 15%;
-  color: $text;
-  text-style: none;
-}
-
-OptionList:focus > .option-list--option-highlighted {
-  background: $main-darken-2 80%;
-  text-style: none;
-}
-
-OptionList > .option-list--option-disabled {
-  color: $text-disabled;
-}
-
-OptionList > .option-list--option-hover {
-  background: $boost;
-}
-
-OptionList > .option-list--option-hover-disabled {
-  color: $text-disabled;
-  background: $boost;
-}
-
-OptionList > .option-list--option-hover-highlighted {
-  background: $main-lighten-1 40%;
-  color: $text;
-  text-style: bold;
-}
-
-OptionList:focus > .option-list--option-hover-highlighted {
-  background: $main-lighten-1 50%;
-  color: $text;
-  text-style: bold;
-}
-
-OptionList > .option-list--option-hover-highlighted-disabled {
-  color: $text-disabled;
-  background: $main 60%;
-}
-
-RenameChat {
-  & > Vertical {
-    background: $background 0%;
-    height: auto;
-    & Input {
-      padding: 0 4;
-      border: none;
-      border-bottom: hkey $main-border-color;
-      border-top: hkey $main-border-color;
-      border-subtitle-color: $main-border-text-color;
-      border-subtitle-background: $background;
-    }
-  }
-}
-
-ChatDetails {
-  align: center middle;
-  & > #container {
-    width: 90%;
-    height: 85%;
-    background: $background;
-    padding: 1 2;
-    border: wide $main-border-color-focus;
-    border-title-color: $main-border-text-color;
-    border-title-background: $background;
-    border-title-style: b;
-    border-subtitle-color: $text-muted;
-    border-subtitle-background: $background;
-
-    & Markdown {
-      padding: 0;
-      margin: 0;
-    }
-
-    & .heading {
-      color: $text-muted;
-    }
-
-    & .datum {
-      text-style: i;
-    }
   }
 }
 

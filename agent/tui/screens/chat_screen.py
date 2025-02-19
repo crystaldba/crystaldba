@@ -8,7 +8,6 @@ from textual.binding import Binding
 from textual.screen import Screen
 from textual.widgets import Footer
 
-# from tui.chats_manager import ChatsManager
 from tui.models import ChatData
 from tui.widgets.agent_is_typing import ResponseStatus
 from tui.widgets.chat import Chat
@@ -23,13 +22,6 @@ class ChatScreen(Screen[None]):
             "Quit",
             key_display="esc",
         )
-        # Binding( # ELIAINFO
-        #     key="escape",
-        #     action="app.focus('prompt')",
-        #     description="Focus prompt",
-        #     key_display="esc",
-        #     tooltip="Return focus to the prompt input.",
-        # ),
     ]
 
     def __init__(
@@ -38,7 +30,6 @@ class ChatScreen(Screen[None]):
     ):
         super().__init__()
         self.chat_data = chat_data
-        # self.chats_manager = ChatsManager()
 
     def compose(self) -> ComposeResult:
         yield Chat(self.chat_data)
@@ -66,6 +57,4 @@ class ChatScreen(Screen[None]):
         self.query_one(Chat).allow_input_submit = True
         log.debug(f"Agent response complete. Adding message to chat_id {event.chat_id!r}: {event.message}")
         if self.chat_data.id is None:
-            raise RuntimeError("Chat has no ID. This is likely a bug in Elia.")
-
-        # await self.chats_manager.add_message_to_chat(chat_id=self.chat_data.id, message=event.message)
+            raise RuntimeError("Chat has no ID. This is likely a bug in the TUI.")

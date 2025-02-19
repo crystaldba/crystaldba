@@ -21,7 +21,6 @@ class HelpScreen(ModalScreen[None]):
 
 Press `Ctrl+C` on your keyboard.
 `q` also works if an input isn't currently focused.
-If focus is on the prompt input box on the home screen, `esc` will close this app too.
 
 ### General navigation
 
@@ -31,7 +30,7 @@ Use `tab` and `shift+tab` to move between different widgets on screen.
 
 In some places you can make use of the arrow keys or Vim nav keys to move around.
 
-In general, pressing `esc` will move you "closer to home".
+In general, pressing `esc` will move you "closer to exiting".
 Pay attention to the bar at the bottom to see where `esc` will take you.
 
 If you can see a scrollbar, `pageup`, `pagedown`, `home`, and `end` can also
@@ -44,10 +43,10 @@ but if you just wish to scroll a little, you can use `shift+up` and `shift+down`
 
 The shortcuts below work when the _prompt editor_ is focused.
 The prompt editor is the box where you type your message.
-It's present on both the home screen and the chat page.
 
-- `ctrl+j`: Submit the prompt
-- `alt+enter`: Submit the prompt (only works in some terminals)
+- `enter`: Submit the prompt
+- `ctrl+j`: Add a new line to the prompt
+- `alt+enter`: Add a new line to the prompt (only works in some terminals)
 - `up`: Move the cursor up
 - `down`: Move the cursor down
 - `left`: Move the cursor left
@@ -89,8 +88,6 @@ and the cursor is at (0, 0) will move focus to the latest message.
 
 You can use the arrow keys to move up and down through messages.
 
-- `f2`: View more information about the chat.
-
 _With a message focused_:
 
 - `y,c`: Copy the raw Markdown of the message to the clipboard.
@@ -102,13 +99,11 @@ _With a message focused_:
         needing to hold `shift`.
     - Press `u` to quickly select the next code block in the message.
     - With some text selected, press `y` or c` to copy.
-- `enter`: View more details about a message.
 - `G`: Focus the latest message.
 - `m`: Move focus to the prompt box.
 - `up,down,k,j`: Navigate through messages.
 
 """
-    # - `g`: Focus the first message.
 
     def compose(self) -> ComposeResult:
         with Vertical(id="help-container") as vertical:
