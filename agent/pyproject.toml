@@ -23,13 +23,13 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "pexpect (>=4.9.0,<5.0.0)",
     
-    # Added Tui dependencies
-    # "textual[syntax]==0.79.1",
+    # Tui dependencies
+    "textual[syntax]==0.79.1",
+    "click>=8.1.6",
+    "click-default-group>=1.2.4",
+    "pyperclip>=1.8.2",
     # "humanize>=4.6.0",
-    # "click>=8.1.6",
-    # "click-default-group>=1.2.4",
     # "greenlet>=3.0.3",
-    # "pyperclip>=1.8.2",
     # "structlog>=25.1.0",
 ]
 

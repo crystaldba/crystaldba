@@ -23,7 +23,9 @@ class ChatData:
     messages: list[ChatMessage]
 
     @property
-    def short_preview(self) -> str:
+    def short_preview(self) -> str | None:
+        if not self.messages:
+            return None
         first_message = self.first_user_message.message
 
         if "content" in first_message:

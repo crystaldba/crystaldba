@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import collections.abc
 import datetime
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
@@ -167,13 +166,7 @@ class Chat(Widget):
             self.handle_stream_agent_response(chat_turn_message)
             self.chat_turn_count = 1
             return
-        raw_messages = [message.message for message in self.chat_data.messages]
-        from litellm.utils import trim_messages
-
-        messages: list[ChatCompletionUserMessageParam] = trim_messages(
-            raw_messages,
-        )  # type: ignore
-        messages = [messages[-1]]
+        messages = [self.chat_data.messages[-1]] if len(self.chat_data.messages) > 0 else []
         the_string = " ".join(extract_messages_text(item) for item in messages)
         chat_turn_message = api.ChatMessage(message=the_string)
         self.handle_stream_agent_response(chat_turn_message)
@@ -321,14 +314,18 @@ class Chat(Widget):
         self.app.pop_screen()
 
 
-def extract_messages_text(item: ChatCompletionUserMessageParam) -> str:
-    content = item.get("content", "")
-    # If it's a string, return it directly.
-    if isinstance(content, str):
-        return content
-    # Otherwise, assume it's an iterable of parts and join them.
-    elif isinstance(content, collections.abc.Iterable):
-        # Convert each element to a string (in case they aren't already)
-        return " ".join(str(part) for part in content)
-    else:
-        return str(content)
+def extract_messages_text(item: ChatMessage) -> str:
+    return str(item.message)
+
+
+# def extract_messages_text(item: ChatCompletionUserMessageParam) -> str:
+#     content = item.get("content", "")
+#     # If it's a string, return it directly.
+#     if isinstance(content, str):
+#         return content
+#     # Otherwise, assume it's an iterable of parts and join them.
+#     elif isinstance(content, collections.abc.Iterable):
+#         # Convert each element to a string (in case they aren't already)
+#         return " ".join(str(part) for part in content)
+#     else:
+#         return str(content)

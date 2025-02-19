@@ -69,7 +69,7 @@ class ChatHeader(Widget):
 
     def title_static_content(self) -> str:
         chat = self.chat
-        content = escape(chat.title or chat.short_preview) if chat else "Empty chat"
+        content = escape(chat.title or chat.short_preview or "") if chat else "Empty chat"
         return f"{content}"
 
     def compose(self) -> ComposeResult:
