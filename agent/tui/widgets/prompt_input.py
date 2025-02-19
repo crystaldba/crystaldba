@@ -27,7 +27,20 @@ class PromptInput(TextArea):
     class CursorEscapingBottom(Message):
         pass
 
-    BINDINGS: ClassVar[List[Binding]] = [Binding("ctrl+j,alt+enter", "submit_prompt", "Send message", key_display="^j")]
+    BINDINGS: ClassVar[List[Binding]] = [
+        Binding(
+            "enter",
+            "submit_prompt",
+            "Send message",
+            key_display="enter",
+        ),
+        Binding(
+            "ctrl+j,alt+enter",
+            "add_newline",
+            "add newline without sending",
+            key_display="^j",
+        ),
+    ]
 
     submit_ready = reactive(True)
 
@@ -49,29 +62,20 @@ class PromptInput(TextArea):
             event.prevent_default()
             self.post_message(self.CursorEscapingBottom())
             event.stop()
+        elif event.key == "ctrl+j":
+            event.stop()
+            event.prevent_default()
+            insert = "\n"
+            start, end = self.selection
+            self._replace_via_keyboard(insert, start, end)
+            return
+        elif event.key == "enter":
+            event.prevent_default()
+            event.stop()
+            self.action_submit_prompt()
 
-    def watch_submit_ready(self, submit_ready: bool) -> None:
-        self.set_class(not submit_ready, "-submit-blocked")
-
-    def on_mount(self):
-        self.border_title = "Enter your [u]m[/]essage..."
-
-    @on(TextArea.Changed)
-    async def prompt_changed(self, event: TextArea.Changed) -> None:
-        text_area = event.text_area
-        if text_area.text.strip() != "":
-            text_area.border_subtitle = "[[white]^j[/]] Send message"
-        else:
-            text_area.border_subtitle = None
-
-        text_area.set_class(text_area.wrapped_document.height > 1, "multiline")
-
-        # TODO - when the height of the textarea changes
-        #  things don't appear to refresh correctly.
-        #  I think this may be a Textual bug.
-        #  The refresh below should not be required.
-        if self.parent is not None:
-            self.parent.refresh()
+    def action_add_newline(self) -> None:
+        pass  # handled in self.on_key
 
     def action_submit_prompt(self) -> None:
         if self.text.strip() == "":
@@ -86,3 +90,27 @@ class PromptInput(TextArea):
         else:
             self.app.bell()
             self.notify("Please wait for response to complete.")
+
+    def watch_submit_ready(self, submit_ready: bool) -> None:
+        self.set_class(not submit_ready, "-submit-blocked")
+
+    def on_mount(self):
+        self.border_title = "Enter your [u]m[/]essage..."
+
+    @on(TextArea.Changed)
+    async def prompt_changed(self, event: TextArea.Changed) -> None:
+        text_area = event.text_area
+        if text_area.text.strip() != "":
+            text_area.border_subtitle = "[[white]^j[/]] Add a new line [[white]enter[/]] Send message"
+            # text_area.border_subtitle = "[[white]^j[/]] Send message"
+        else:
+            text_area.border_subtitle = None
+
+        text_area.set_class(text_area.wrapped_document.height > 1, "multiline")
+
+        # TODO - when the height of the textarea changes
+        #  things don't appear to refresh correctly.
+        #  I think this may be a Textual bug.
+        #  The refresh below should not be required.
+        if self.parent is not None:
+            self.parent.refresh()

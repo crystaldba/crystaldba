@@ -35,21 +35,13 @@ class HomeScreen(Screen[None]):
 
     BINDINGS: ClassVar[List[Binding]] = [
         # Binding(
-        #     "enter",
+        #     "ctrl+j,alt+enter",
         #     "send_message",
         #     "Send message",
         #     priority=True,
         #     key_display="^j",
         #     tooltip="Send a message to the chosen LLM. On modern terminals, [b u]alt+enter[/] can be used as an alternative.",
         # ),
-        Binding(
-            "ctrl+j,alt+enter",
-            "send_message",
-            "Send message",
-            priority=True,
-            key_display="^j",
-            tooltip="Send a message to the chosen LLM. On modern terminals, [b u]alt+enter[/] can be used as an alternative.",
-        ),
         # Binding(
         #     "o,ctrl+o",
         #     "options",
@@ -112,9 +104,9 @@ class HomeScreen(Screen[None]):
     # async def move_focus_below(self) -> None:
     #     self.focus_next(ChatList)
 
-    def action_send_message(self) -> None:
-        prompt_input = self.query_one(PromptInput)
-        prompt_input.action_submit_prompt()
+    # def action_send_message(self) -> None:
+    #     prompt_input = self.query_one(PromptInput)
+    #     prompt_input.action_submit_prompt()
 
     # async def action_options(self) -> None:
     #     await self.app.push_screen(
