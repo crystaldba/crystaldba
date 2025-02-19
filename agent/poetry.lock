@@ -1433,13 +1433,13 @@ files = [
 
 [[package]]
 name = "nuitka"
-version = "2.6.4"
+version = "2.6.6"
 description = "Python compiler with full language support and CPython compatibility"
 optional = false
 python-versions = "*"
 groups = ["dev"]
 files = [
-    {file = "Nuitka-2.6.4.tar.gz", hash = "sha256:9fc8d5d16b7fd43520312128cd979eea00f5abbffbce59cc2e6f18cd615dfedb"},
+    {file = "Nuitka-2.6.6.tar.gz", hash = "sha256:4376fe46a5eea7db570266773fedf47329b6d529475900d2ba0dc8054e7f5aaf"},
 ]
 
 [package.dependencies]
@@ -1919,14 +1919,14 @@ files = [
 
 [[package]]
 name = "pyright"
-version = "1.1.393"
+version = "1.1.394"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
 files = [
-    {file = "pyright-1.1.393-py3-none-any.whl", hash = "sha256:8320629bb7a44ca90944ba599390162bf59307f3d9fb6e27da3b7011b8c17ae5"},
-    {file = "pyright-1.1.393.tar.gz", hash = "sha256:aeeb7ff4e0364775ef416a80111613f91a05c8e01e58ecfefc370ca0db7aed9c"},
+    {file = "pyright-1.1.394-py3-none-any.whl", hash = "sha256:5f74cce0a795a295fb768759bbeeec62561215dea657edcaab48a932b031ddbb"},
+    {file = "pyright-1.1.394.tar.gz", hash = "sha256:56f2a3ab88c5214a451eb71d8f2792b7700434f841ea219119ade7f42ca93608"},
 ]
 
 [package.dependencies]
