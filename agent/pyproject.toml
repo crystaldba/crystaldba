@@ -24,8 +24,6 @@ dependencies = [
     "pexpect (>=4.9.0,<5.0.0)",
     
     # Tui dependencies
-    "click-default-group>=1.2.4",
-    "click>=8.1.6",
     "litellm>=1.37.19",
     "pyperclip>=1.8.2",
     "textual[syntax]==0.79.1",
