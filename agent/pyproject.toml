@@ -22,11 +22,11 @@ dependencies = [
     "pyyaml>=6.0.2",
     "psycopg2-binary>=2.9.10",
     "pexpect (>=4.9.0,<5.0.0)",
-    
+
     # Tui dependencies
     "litellm>=1.37.19",
     "pyperclip>=1.8.2",
-    "textual[syntax]==0.79.1",
+    "textual[syntax]==1.0.0",
 ]
 
 [project.urls]
@@ -37,6 +37,7 @@ documentation = "https://www.crystaldba.ai/docs"
 [tool.poetry]
 packages = [
     { include = "crystaldba", from = "." },
+    { include = "tui", from = "." },
 ]
 
 [tool.poetry.group.dev.dependencies]
