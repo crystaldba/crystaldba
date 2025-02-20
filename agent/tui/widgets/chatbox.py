@@ -172,7 +172,9 @@ class SelectionTextArea(TextArea):
         else:
             if query:
                 code_block_nodes = self.document.query_syntax_tree(query)
-                locations: list[tuple[tuple[int, int], tuple[int, int]]] = [(node.start_point, node.end_point) for (node, _name) in code_block_nodes]
+                locations: list[tuple[tuple[int, int], tuple[int, int]]] = [
+                    (node.start_point, node.end_point) for _capture, nodes in code_block_nodes.items() for node in nodes
+                ]
                 if not locations:
                     return
                 self.visual_mode = True

@@ -20,7 +20,7 @@ class HelpScreen(ModalScreen[None]):
 ### How do I quit this app?
 
 Press `Ctrl+C` on your keyboard.
-`q` also works if an input isn't currently focused.
+`Ctrl+q` also works to quit.
 
 ### General navigation
 
