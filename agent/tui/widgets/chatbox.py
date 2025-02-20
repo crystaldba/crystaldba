@@ -144,7 +144,7 @@ class SelectionTextArea(TextArea):
             title = "Message copied"
 
         try:
-            is_apple_terminal = os.environ.get("TERM_PROGRAM", "") != "Apple_Terminal"
+            is_apple_terminal = os.environ.get("TERM_PROGRAM", "") == "Apple_Terminal"
             if is_apple_terminal:
                 copy(text_to_copy)
             else:
