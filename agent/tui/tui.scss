@@ -1,0 +1,393 @@
+$main-lighten-2: $primary-lighten-2;
+$main-lighten-1: $primary-lighten-1;
+$main: $primary;
+$main-darken-1: $primary-darken-1;
+$main-darken-2: $primary-darken-2;
+$main-border-text-color: $accent;
+$main-border-color: $main-lighten-1 50%;
+$main-border-color-focus: $main-lighten-1 100%;
+
+$left-border-trim: vkey $main-lighten-2 15%;
+
+* {
+  scrollbar-color: $accent 30%;
+  scrollbar-color-hover: $accent 50%;
+  scrollbar-color-active: $accent 80%;
+  scrollbar-background: $surface-darken-1;
+  scrollbar-background-hover: $surface-darken-1;
+  scrollbar-background-active: $surface-darken-1;
+  scrollbar-size-vertical: 1;
+  link-style: none;
+  link-color-hover: $accent;
+  link-background-hover: $main 0%;
+  link-style-hover: u not dim bold;
+}
+
+Tabs .underline--bar {
+  color: $main-lighten-2 50%;
+  background: $main 75%;
+}
+
+Screen {
+  background: $background;
+  padding: 0 2 1 2;
+  &:inline {
+    height: 80vh;
+    padding: 0 2;
+  }
+}
+
+ModalScreen {
+  background: black 50%;
+  padding: 0;
+  &:inline {
+    padding: 0;
+    border: none;
+  }
+  & Footer {
+    margin: 0 2 1 2;
+  }
+}
+
+Rule {
+  color: white 20%;
+
+  &.-horizontal {
+    margin: 0 0;
+  }
+}
+
+Toast {
+  background: $background-darken-1;
+  border-right: none;
+  &.-information {
+    border-left: outer $main-lighten-1;
+    & .toast--title {
+      color: $main-lighten-2;
+    }
+  }
+
+  &.-error {
+    border-left: outer $main-lighten-1;
+    & .toast--title {
+      color: $main-lighten-2;
+    }
+  }
+}
+
+Tooltip {
+  background: $background-darken-1;
+  border: wide $main-border-color;
+}
+
+Chat {
+  ChatHeader {
+    width: 100%;
+    height: auto;
+    padding: 1 2;
+    background: $background;
+    &:inline {
+      padding: 0 2 1 2;
+    }
+
+    & #model-static {
+      color: $text-muted;
+    }
+  }
+  ChatPromptInput {
+    height: auto;
+    max-height: 50%;
+    padding: 0 1;
+    background: $background;
+    &.-submit-blocked {
+      border: round $error 50%;
+    }
+  }
+
+  ResponseStatus {
+    dock: top;
+    align-horizontal: right;
+    display: none;
+    layer: overlay;
+    height: 2;
+    width: auto;
+    margin-top: 1;
+    margin-right: 2;
+    & Label {
+      width: auto;
+    }
+    & LoadingIndicator {
+      width: auto;
+      color: $primary;
+      height: 1;
+      margin-top: 1;
+      dock: right;
+    }
+    &.-awaiting-response {
+      LoadingIndicator {
+        color: $primary;
+      }
+    }
+    &.-agent-responding {
+      LoadingIndicator {
+        color: $secondary;
+      }
+    }
+  }
+}
+
+TextArea {
+  padding: 1 2;
+  border: round $main-border-color;
+  border-title-color: $main-border-text-color;
+  border-subtitle-color: $main-border-text-color;
+  &:focus {
+    border: round $main-border-color-focus;
+    border-title-style: bold;
+    & .text-area--selection {
+      background: $main 60%;
+    }
+  }
+  & .text-area--cursor-line {
+    background: $background 0%;
+  }
+
+  & .text-area--cursor-gutter {
+    background: $background 0%;
+  }
+  &:focus .text-area--cursor-gutter {
+    color: yellowgreen;
+    background: $background 0%;
+  }
+  & .text-area--selection {
+    background: $main-lighten-2 25%;
+  }
+
+  &.selection-mode {
+    border: none;
+    height: auto;
+    max-height: 75vh;
+    width: 100%;
+    padding: 0;
+  }
+}
+
+PromptInput.multiline .text-area--cursor-line {
+  background: white 3%;
+}
+
+AppHeader #cl-header-container {
+  height: auto;
+  background: $background;
+}
+
+AppHeader {
+  dock: top;
+  width: 1fr;
+  padding: 1 2;
+  height: auto;
+  background: $background;
+
+  &:inline {
+    padding: 0 2 1 2;
+  }
+
+  & #tui-title {
+    color: $accent;
+    text-style: bold;
+  }
+
+  & Horizontal {
+    height: auto;
+  }
+
+  & #model-label {
+    border: none;
+    background: $main-darken-2 0%;
+    text-style: dim;
+  }
+}
+
+Chatbox {
+  height: auto;
+  width: auto;
+  min-width: 12;
+  max-width: 1fr;
+  margin: 0 1;
+  padding: 0 2;
+
+  &.assistant-message.response-in-progress {
+    background: $accent 3%;
+    min-width: 30%;
+  }
+
+  &.assistant-message {
+    width: 1fr;
+    border: round $accent 60%;
+    &:focus-within {
+      border: round $accent;
+      border-left: thick $accent 50%;
+    }
+
+    & TextArea {
+      & .text-area--selection {
+        background: $accent 23%;
+        color: white 93%;
+      }
+    }
+
+    & SelectionTextArea.visual-mode {
+      & .text-area--cursor {
+        background: $accent;
+      }
+    }
+  }
+
+  &.human-message {
+    border: round $main-border-color;
+    &:focus-within {
+      border: round $main-border-color-focus;
+      border-left: thick $main-border-color-focus;
+    }
+    & SelectionTextArea.visual-mode {
+      & .text-area--cursor {
+        background: $main-lighten-2;
+      }
+    }
+    & TextArea {
+      width: 1fr;
+    }
+  }
+}
+
+Footer {
+  background: transparent;
+
+  & FooterKey {
+    background: transparent;
+  }
+
+  .footer-key--key {
+    color: $accent;
+    background: transparent;
+  }
+}
+
+MessageInfo #message-info-header {
+  dock: top;
+  width: 1fr;
+  height: auto;
+  background: $main-darken-2 70%;
+  color: $text;
+}
+
+MessageInfo #message-info-header Tab {
+  width: 1fr;
+}
+
+MessageInfo #message-info-footer {
+  dock: bottom;
+  height: 3;
+  padding: 1 2;
+  background: $main-darken-1;
+  color: $text;
+  width: 1fr;
+}
+
+MessageInfo #timestamp {
+  dock: left;
+  height: 3;
+  width: auto;
+}
+
+MessageInfo #token-count {
+  dock: right;
+  height: 3;
+  width: auto;
+}
+
+Tabs:focus .underline--bar {
+  color: $text 35%;
+}
+
+MessageInfo #inner-container ContentSwitcher {
+  height: auto;
+  padding: 1 2;
+}
+
+MessageInfo #inner-container #markdown-content {
+  height: 1fr;
+}
+
+MessageInfo #inner-container #metadata {
+  height: auto;
+}
+
+.code_inline {
+  text-style: none;
+  color: $accent;
+}
+
+RadioSet:focus > RadioButton.-on {
+  & > .toggle--label {
+    text-style: bold not dim;
+    color: $accent;
+  }
+}
+
+RadioSet > RadioButton.-on {
+  text-style: bold not dim;
+  color: $accent;
+}
+
+RadioButton .toggle--button {
+  color: $accent 80%;
+  background: $background-lighten-1;
+}
+
+HelpScreen {
+  width: 1fr;
+  height: auto;
+  align: center middle;
+
+  & #help-scroll-keys-info {
+    dock: bottom;
+    border-top: solid $main 50%;
+    text-style: dim;
+    padding: 0 2;
+    background: $background 0%;
+  }
+  & > Vertical {
+    border: wide $main-border-color 80%;
+    border-title-color: $main-border-text-color;
+    border-title-background: $background;
+    border-title-style: bold;
+    width: 80%;
+    height: 90%;
+    background: $background;
+  }
+
+  & VerticalScroll {
+    scrollbar-gutter: stable;
+  }
+
+  & Markdown {
+    margin: 0;
+    padding: 0 2;
+
+    & MarkdownH3 {
+      background: $background 0%;
+      margin: 0;
+      margin-top: 1;
+      padding: 0;
+    }
+    & MarkdownBlockQuote {
+      background: $boost;
+      border-left: outer $main;
+      padding: 1;
+    }
+    & MarkdownBulletList {
+      margin-left: 1;
+    }
+  }
+}

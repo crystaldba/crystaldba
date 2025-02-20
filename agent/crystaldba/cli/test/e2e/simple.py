@@ -43,7 +43,7 @@ def test_client_server_interaction(test_postgres_connection_string):
         )  # NOTE: ignore the type error. This is the right thing to do for "env"
 
         # Uncomment one of the lines below to log client output to a file or stdout
-        # client.logfile = open("private/test_client_log.txt", "w")
+        # client.logfile = open("private/test_client_log.log", "w")
         client.logfile = sys.stdout
 
         # Go through onboarding flow

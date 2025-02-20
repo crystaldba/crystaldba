@@ -1,13 +1,13 @@
 [project]
 name = "crystaldba"
 version = "0.9.0rc1"
-description = "Crystal DBA Agent CLI"
+description = "Crystal DBA Agent CLI with Tui Chat integration"
 license = { text = "Apache-2.0" }
 authors = [
     {name = "Crystal DBA Developers", email = "support@crystaldba.ai"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<4.0.0"
 dependencies = [
     "prompt-toolkit>=3.0.48",  # For CLI interface
     "rich>=13.9.4",  # For CLI formatting
@@ -22,6 +22,11 @@ dependencies = [
     "pyyaml>=6.0.2",
     "psycopg2-binary>=2.9.10",
     "pexpect (>=4.9.0,<5.0.0)",
+    
+    # Tui dependencies
+    "litellm>=1.37.19",
+    "pyperclip>=1.8.2",
+    "textual[syntax]==0.79.1",
 ]
 
 [project.urls]
@@ -48,7 +53,9 @@ requires = ["poetry-core>=1.9.0"]
 build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
-crystaldba = "crystaldba.cli.main:main"
+crystaldba = "tui.__main__:cli"
+# crystaldba = "crystaldba.cli.main:main"
+# tui = "tui.__main__:cli"
 
 [tool.poetry.scripts]
 lint = "scripts:lint"
@@ -88,7 +95,7 @@ force-single-line = true
 known-first-party = ["crystal"]
 
 [tool.pyright]
-include = ["crystaldba/cli", "crystaldba/shared"]
+include = ["crystaldba/cli", "crystaldba/shared", "tui"]
 typeCheckingMode = "standard"
 pythonVersion = "3.12"
 strictParameterNullChecking = true

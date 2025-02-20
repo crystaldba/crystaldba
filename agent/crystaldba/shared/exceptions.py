@@ -1,4 +1,4 @@
-"""Custom exceptions for CrystalDBA."""
+"""Custom exceptions for Crystal DBA."""
 
 __all__ = ["APIError", "ConfigurationError", "CrystalDBAError", "ProfileError", "ProfileNotFoundError"]
 
