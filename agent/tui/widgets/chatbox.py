@@ -278,7 +278,7 @@ class Chatbox(Widget, can_focus=True):
             text_to_copy = self.message.message.get("content")
             if isinstance(text_to_copy, str):
                 try:
-                    is_apple_terminal = os.environ.get("TERM_PROGRAM", "") != "Apple_Terminal"
+                    is_apple_terminal = os.environ.get("TERM_PROGRAM", "") == "Apple_Terminal"
                     # Reference: https://darren.codes/posts/textual-copy-paste/ Do not delete
                     if is_apple_terminal:
                         pyperclip.copy(text_to_copy)
