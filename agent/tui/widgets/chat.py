@@ -196,6 +196,7 @@ class Chat(Widget):
 
         try:
             chunk_count = 0
+            # self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
             for chunk in self.chat_turn.run_to_completion(chat_turn_message):
                 response_chatbox.border_title = "Agent is responding..."
                 if chunk is None:
@@ -204,9 +205,14 @@ class Chat(Widget):
                     self.app.call_from_thread(response_chatbox.append_chunk, chunk)
                 else:
                     break
-                scroll_y = self.chat_container.scroll_y
-                max_scroll_y = self.chat_container.max_scroll_y
+                # scroll_y = self.chat_container.scroll_y
+                # max_scroll_y = self.chat_container.max_scroll_y
+                # import logging
+                #
+                # logger = logging.getLogger(__name__)
+                # logger.warning(f"GREG log position {scroll_y} = {max_scroll_y}")
                 # if scroll_y in range(max_scroll_y - 3, max_scroll_y + 1):
+                #     self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
                 self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
                 chunk_count += 1
 
