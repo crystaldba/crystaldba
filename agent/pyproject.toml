@@ -26,7 +26,7 @@ dependencies = [
     # Tui dependencies
     "litellm>=1.37.19",
     "pyperclip>=1.8.2",
-    "textual[syntax]==1.0.0",
+    "textual[syntax]>=2.1.0",
 ]
 
 [project.urls]

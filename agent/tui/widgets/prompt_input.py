@@ -97,7 +97,7 @@ class PromptInput(TextArea):
     async def prompt_changed(self, event: TextArea.Changed) -> None:
         text_area = event.text_area
         if text_area.text.strip() != "":
-            text_area.border_subtitle = "[[white]^j[/]] Add a new line [[white]enter[/]] Send message"
+            text_area.border_subtitle = "[white]^j[/white] Add a new line [white]enter[/white] Send message"
         else:
             text_area.border_subtitle = None
 
