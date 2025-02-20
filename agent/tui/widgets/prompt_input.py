@@ -34,7 +34,7 @@ class PromptInput(TextArea):
         Binding(
             "ctrl+j,alt+enter",
             "add_newline",
-            "add newline without sending",
+            "Newline",
             key_display="^j",
         ),
     ]
