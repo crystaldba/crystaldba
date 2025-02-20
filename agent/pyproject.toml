@@ -1,6 +1,6 @@
 [project]
 name = "crystaldba"
-version = "0.9.0rc2"
+version = "0.9.0"
 description = "Crystal DBA Agent CLI with Tui Chat integration"
 license = { text = "Apache-2.0" }
 authors = [
