@@ -206,8 +206,8 @@ class Chat(Widget):
                     break
                 scroll_y = self.chat_container.scroll_y
                 max_scroll_y = self.chat_container.max_scroll_y
-                if scroll_y in range(max_scroll_y - 3, max_scroll_y + 1):
-                    self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
+                # if scroll_y in range(max_scroll_y - 3, max_scroll_y + 1):
+                self.app.call_from_thread(self.chat_container.scroll_end, animate=False)
                 chunk_count += 1
 
         except Exception:
