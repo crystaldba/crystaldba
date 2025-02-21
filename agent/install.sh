@@ -81,9 +81,9 @@ EXT=".tar.gz"
 
 if [ "$OS" = "Linux" ]; then
     if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "amd64" ]; then
-        FILE="${FILE_PREFIX}_linux_amd64${EXT}"
+        FILE_SUFFIX="linux_amd64"
     elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        FILE="${FILE_PREFIX}_linux_arm64${EXT}"
+        FILE_SUFFIX="linux_arm64"
     else
         log "ERROR" "Unsupported Linux architecture: $ARCH"
         exit 1
@@ -94,13 +94,13 @@ elif [ "$OS" = "Darwin" ]; then
         if sysctl hw.optional.arm64 2> /dev/null | grep -q ': 1'; then
             log "INFO" "Detected Rosetta 2 (x86 on Apple Silicon), switching to arm64."
             ARCH="arm64"
-            FILE="${FILE_PREFIX}_macos_arm64${EXT}"
+            FILE_SUFFIX="macos_arm64"
         else
             log "INFO" "Detected Intel Mac"
-            FILE="${FILE_PREFIX}_macos_x86_64${EXT}"
+            FILE_SUFFIX="macos_x86_64"
         fi
     elif [ "$ARCH" = "arm64" ]; then
-        FILE="${FILE_PREFIX}_macos_arm64${EXT}"
+        FILE_SUFFIX="macos_arm64"
     else
         log "ERROR" "Unsupported macOS architecture: $ARCH"
         exit 1
@@ -111,7 +111,6 @@ else
 fi
 
 log "INFO" "Detected platform: $OS $ARCH"
-log "INFO" "File: $FILE"
 
 # Fetching Release
 if [ -n "$VERSION" ]; then
@@ -136,6 +135,8 @@ else
     fi
 fi
 
+# Construct filename with version
+FILE="${FILE_PREFIX}_${FILE_SUFFIX}-${RELEASE_TAG}${EXT}"
 ASSET_URL="${REPO_BASE}/releases/download/${RELEASE_TAG}/${FILE}"
 
 log "INFO" "Using release tag: $RELEASE_TAG"
