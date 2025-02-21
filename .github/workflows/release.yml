@@ -100,6 +100,83 @@ jobs:
           name: crystaldba_cli-artifacts
           path: ./agent/dist/*
 
+  build_linux_amd64:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./agent
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "2.0.1"
+
+      - name: Build
+        run: poetry install
+
+      - name: Build with Nuitka (Linux AMD64)
+        run: poetry run package_amd64
+
+      - name: Prepare Tar Archive
+        run: |
+          mkdir -p ./package/linux_amd64
+          cp -r ./build/linux_amd64/main.dist ./package/linux_amd64/crystal_client_linux_amd64
+          tar -czf ./package/linux_amd64/crystal_client_linux_amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz ./package/linux_amd64/crystal_client_linux_amd64
+
+      - name: Upload Linux AMD64 Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: crystal_client_linux_amd64
+          path: ./package/linux_amd64/crystal_client_linux_amd64-*.tar.gz
+
+
+  build_linux_arm64:
+    needs: prepare
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./agent
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "2.0.1"
+
+      - name: Build
+        run: poetry install
+
+      - name: Build with Nuitka (Linux ARM64)
+        run: poetry run package_arm64
+
+      - name: Prepare Tar Archive
+        run: |
+          mkdir -p ./package/linux_arm64
+          cp -r ./build/linux_arm64/main.dist ./package/linux_arm64/crystal_client_linux_arm64
+          tar -czf ./package/linux_arm64/crystal_client_linux_arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz ./package/linux_arm64/crystal_client_linux_arm64
+
+      - name: Upload Linux ARM64 Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: crystal_client_linux_arm64
+          path: ./package/linux_arm64/crystal_client_linux_arm64-*.tar.gz
+
   create_release:
     needs: [prepare, build_server, build_python]
     runs-on: ubuntu-20.04

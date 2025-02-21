@@ -77,14 +77,13 @@ def build_linux_arm64():
         "--standalone",
         "--follow-imports",
         "--assume-yes-for-downloads",
-        "--include-package=client",
-        "--include-package=shared",
+        "--include-package=crystaldba",
         "--include-package=prompt_toolkit",
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/linux_arm64",
         "--output-filename=crystaldba",
-        "client/main.py",
+        "crystaldba/cli/main.py",
     ]
     subprocess.run(command, check=True)
     print("✅ Linux ARM64 build complete: build/linux_arm64/main.dist/crystal-client-linux-arm64")
@@ -100,14 +99,13 @@ def build_macos_arm64():
         "--standalone",
         "--follow-imports",
         "--assume-yes-for-downloads",
-        "--include-package=client",
-        "--include-package=shared",
+        "--include-package=crystaldba",
         "--include-package=prompt_toolkit",
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/macos_arm64",
         "--output-filename=crystaldba",
-        "client/main.py",
+        "crystaldba/cli/main.py",
     ]
     subprocess.run(command, check=True)
     print("✅ macOS ARM64 build complete: build/macos_arm64/main.dist/crystal-client-macos-arm64")
@@ -134,14 +132,13 @@ def build_linux_amd64():
         "--standalone",
         "--follow-imports",
         "--assume-yes-for-downloads",
-        "--include-package=client",
-        "--include-package=shared",
+        "--include-package=crystaldba",
         "--include-package=prompt_toolkit",
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/linux_amd64",
         "--output-filename=crystaldba",
-        "client/main.py",
+        "crystaldba/cli/main.py",
     ]
     subprocess.run(command, check=True, env={**cross_compile_env, **dict(os.environ)})
     print("✅ Linux AMD64 build complete: build/linux_amd64/main.dist/crystal-client-linux-amd64")
