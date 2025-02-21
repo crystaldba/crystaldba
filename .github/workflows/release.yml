@@ -128,13 +128,13 @@ jobs:
 
       - name: Prepare Tar Archive
         run: |
-          tar -czf ./build/linux_amd64/crystal_client_linux_amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz ./build/linux_amd64/main.dist
+          tar -czf ./build/linux_amd64/crystal-client-linux-amd64-${{ needs.prepare.outputs.release_tag }}.tar.gz -C ./build/linux_amd64 main.dist
 
       - name: Upload Linux AMD64 Executable
         uses: actions/upload-artifact@v4
         with:
           name: crystal_client_linux_amd64
-          path: ./build/linux_amd64/crystal_client_linux_amd64-*.tar.gz
+          path: ./build/linux_amd64/crystal-client-linux-amd64-*.tar.gz
 
 
 
@@ -166,13 +166,13 @@ jobs:
 
       - name: Prepare Tar Archive
         run: |
-          tar -czf ./build/linux_arm64/crystal_client_linux_arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz ./build/linux_arm64/main.dist
+          tar -czf ./build/linux_arm64/crystal-client-linux-arm64-${{ needs.prepare.outputs.release_tag }}.tar.gz -C ./build/linux_arm64 main.dist
 
       - name: Upload Linux ARM64 Executable
         uses: actions/upload-artifact@v4
         with:
           name: crystal_client_linux_arm64
-          path: ./build/linux_arm64/crystal_client_linux_arm64-*.tar.gz
+          path: ./build/linux_arm64/crystal-client-linux-arm64-*.tar.gz
 
   create_release:
     needs: [prepare, build_server, build_python]
