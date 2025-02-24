@@ -94,7 +94,7 @@ elif [ "$OS" = "Darwin" ]; then
         if sysctl hw.optional.arm64 2> /dev/null | grep -q ': 1'; then
             log "INFO" "Detected Rosetta 2 (x86 on Apple Silicon), switching to arm64."
             ARCH="arm64"
-            FILE_SUFFIX="macos_arm64"
+            FILE_SUFFIX="macos-arm64"
         else
             log "INFO" "Detected Intel Mac"
             FILE_SUFFIX="macos-x86_64"
