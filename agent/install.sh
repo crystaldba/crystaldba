@@ -76,14 +76,14 @@ OS=$(uname -s)
 ARCH=$(uname -m)
 log "DEBUG" "Detected OS: $OS"
 log "DEBUG" "Detected ARCH: $ARCH"
-FILE_PREFIX="crystal_client"
+FILE_PREFIX="crystal-client"
 EXT=".tar.gz"
 
 if [ "$OS" = "Linux" ]; then
     if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "amd64" ]; then
-        FILE_SUFFIX="linux_amd64"
+        FILE_SUFFIX="linux-amd64"
     elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        FILE_SUFFIX="linux_arm64"
+        FILE_SUFFIX="linux-arm64"
     else
         log "ERROR" "Unsupported Linux architecture: $ARCH"
         exit 1
@@ -97,10 +97,10 @@ elif [ "$OS" = "Darwin" ]; then
             FILE_SUFFIX="macos_arm64"
         else
             log "INFO" "Detected Intel Mac"
-            FILE_SUFFIX="macos_x86_64"
+            FILE_SUFFIX="macos-x86_64"
         fi
     elif [ "$ARCH" = "arm64" ]; then
-        FILE_SUFFIX="macos_arm64"
+        FILE_SUFFIX="macos-arm64"
     else
         log "ERROR" "Unsupported macOS architecture: $ARCH"
         exit 1
@@ -120,7 +120,7 @@ else
     log "INFO" "Fetching latest release..."
     REPO_URL="https://api.github.com/repos/${REPO_BASE#https://github.com/}/releases/latest"
     log "DEBUG" "Fetching from URL: $REPO_URL"
-    
+
     RELEASE_DATA=$(curl -s "$REPO_URL")
     if ! echo "$RELEASE_DATA" | grep -q '"tag_name":'; then
         log "ERROR" "Failed to fetch release data from GitHub. Check your internet connection or GitHub API rate limits."
@@ -128,7 +128,7 @@ else
     fi
 
     RELEASE_TAG=$(echo "$RELEASE_DATA" | grep -o '"tag_name": "[^"]*"' | cut -d'"' -f4)
-    
+
     if [ -z "$RELEASE_TAG" ]; then
         log "ERROR" "Could not determine latest release tag"
         exit 1
@@ -136,7 +136,7 @@ else
 fi
 
 # Construct filename with version
-FILE="${FILE_PREFIX}_${FILE_SUFFIX}-${RELEASE_TAG}${EXT}"
+FILE="${FILE_PREFIX}-${FILE_SUFFIX}-${RELEASE_TAG}${EXT}"
 ASSET_URL="${REPO_BASE}/releases/download/${RELEASE_TAG}/${FILE}"
 
 log "INFO" "Using release tag: $RELEASE_TAG"
@@ -188,9 +188,9 @@ log "INFO" "Extraction completed successfully."
 DIST_DIR="$EXTRACT_DIR/main.dist"
 # Use XDG_DATA_HOME if set, otherwise default to ~/.local/lib
 DATA_HOME="${XDG_DATA_HOME:-$HOME/.local}"
-INSTALL_DIR="$DATA_HOME/lib/crystal-client"
+INSTALL_DIR="$DATA_HOME/lib/crystaldba-client"
 BIN_DIR="$DATA_HOME/bin"
-INSTALL_PATH="$BIN_DIR/crystal-client"
+INSTALL_PATH="$BIN_DIR/crystaldba"
 
 log "INFO" "Installing executable..."
 if [ ! -d "$DIST_DIR" ]; then
