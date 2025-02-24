@@ -222,7 +222,7 @@ rm -f "$DOWNLOAD_PATH"
 rm -rf "$EXTRACT_DIR"
 
 log "INFO" "Installation complete!"
-log "INFO" "You can now run Crystal Client using: crystal-client"
+log "INFO" "You can now run Crystal Client using: crystaldba"
 if [ ! -d "$BIN_DIR" ]; then
     log "INFO" "Note: You may need to restart your shell or run: export PATH=\"\$PATH:$BIN_DIR\""
 fi
