@@ -150,7 +150,6 @@ def build_macos_arm64():
                     "Applications": (600, 185)
                 },
                 "window_rect": ((200, 120), (800, 400)),
-                # "background": "resources/macos/background.png",  # Optional: specify a background image
                 "files": [(app_path, "Crystal DBA.app")],  # Correctly specify files here
             }
         )
