@@ -22,10 +22,36 @@ def startup(*, log_path: str = "log.log", logging_level: int = logging.INFO):
 
     try:
         database_url = get_database_url(args, password_prompt)
-    except ValueError as e:
-        print(f"\nThere is a problem with your DATABASE_URL. Error: {e}")
-        parser.print_help()
-        sys.exit(1)
+    except ValueError:
+        while True:
+            print("\nPlease enter your database URL (e.g. postgresql://user:pass@host:5432/dbname):")
+            try:
+                database_url = input("> ")
+                if not database_url:
+                    print("No database URL provided. Please try again.")
+                    continue
+
+                # Basic validation of URL format
+                if not database_url.startswith(("postgresql://", "postgres://")):
+                    print("Invalid database URL format: URL must start with postgresql:// or postgres://")
+                    continue
+
+                try:
+                    from urllib.parse import urlparse
+                    parsed = urlparse(database_url)
+                    if not parsed.hostname:
+                        print("Invalid database URL format: Missing hostname")
+                        continue
+                    if not parsed.path.lstrip("/"):
+                        print("Invalid database URL format: Missing database name")
+                        continue
+                    break
+                except Exception as e:
+                    print(f"Invalid database URL format: {e}")
+                    continue
+            except (KeyboardInterrupt, EOFError):
+                print("\nDatabase URL input cancelled.")
+                sys.exit(1)
 
     logging.basicConfig(
         level=get_log_level(logging_level),
