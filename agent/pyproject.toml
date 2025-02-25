@@ -48,6 +48,7 @@ pytest-asyncio = "^0.25.0"  # For async tests
 pytest-mock = "^3.14.0"  # For mocking in tests
 docker = "^7.1.0"  # For building docker images
 nuitka = "^2.6.1"
+dmgbuild = "^1.6.4"
 
 [build-system]
 requires = ["poetry-core>=1.9.0"]

@@ -4,6 +4,7 @@ import logging
 import os
 import subprocess
 import sys
+import tempfile
 
 logger = logging.getLogger(__name__)
 
@@ -100,15 +101,64 @@ def build_macos_arm64():
         "--follow-imports",
         "--assume-yes-for-downloads",
         "--include-package=crystaldba",
+        "--include-package=tui",
         "--include-package=prompt_toolkit",
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
+        "--include-package=pygments",
+        "--macos-create-app-bundle",
+        "--macos-app-icon=resources/macos/crystal-dba.icns",
         "--output-dir=build/macos_arm64",
         "--output-filename=crystaldba",
-        "crystaldba/cli/main.py",
+        "--include-data-files=tui/tui.scss=tui/tui.scss",
+        "--include-data-files=resources/macos/launch.sh=launch.sh",
+        "tui/__main__.py",
     ]
     subprocess.run(command, check=True)
-    print("✅ macOS ARM64 build complete: build/macos_arm64/main.dist/crystal-client-macos-arm64")
+    # Rename the app bundle
+    os.rename("build/macos_arm64/__main__.app", "build/macos_arm64/Crystal DBA.app")
+
+    # Update Info.plist to use launch.sh as executable
+    info_plist_path = "build/macos_arm64/Crystal DBA.app/Contents/Info.plist"
+    with open(info_plist_path) as f:
+        info_plist = f.read()
+    import re
+    pattern = re.compile(r'(<key>CFBundleExecutable</key>\s*<string>)crystaldba(</string>)')
+    if not pattern.search(info_plist):
+        raise ValueError("Could not find CFBundleExecutable pattern in Info.plist")
+    info_plist = pattern.sub(r'\1launch.sh\2', info_plist)
+    with open(info_plist_path, "w") as f:
+        f.write(info_plist)
+
+
+    # Create a DMG file using dmgbuild
+    print("📦 Creating DMG file using dmgbuild...")
+    dmg_path = "build/macos_arm64/crystaldba.dmg"
+    app_path = "build/macos_arm64/Crystal DBA.app"
+
+    # Run dmgbuild command
+    try:
+        import dmgbuild
+
+        dmgbuild.build_dmg(
+            filename=dmg_path,
+            volume_name="CrystalDBA",
+            settings={
+                "symlinks": {"Applications": "/Applications"},
+                "icon_locations": {
+                    "Crystal DBA.app": (200, 190),
+                    "Applications": (600, 185)
+                },
+                "window_rect": ((200, 120), (800, 400)),
+                "files": [(app_path, "Crystal DBA.app")],
+            }
+        )
+        print(f"✅ DMG file created: {dmg_path}")
+    except Exception as e:
+        print("❌ Failed to create DMG file.")
+        print("Error output:")
+        print(e)
+        sys.exit(1)
 
 
 def build_linux_amd64():
