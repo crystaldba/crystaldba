@@ -299,72 +299,16 @@ def create_profile_with_system_id(
     email: str = "",
     config_dir: Path = CRYSTAL_CONFIG_DIRECTORY,
     share_data: bool = False,
-    register_with_server: bool = True,
 ) -> Profile:
-    """
-    Create a new profile with the specified system ID.
-
-    Args:
-        profile_name: Name of the profile
-        system_id: System ID to use for the profile
-        email: Optional email address for the profile
-        config_dir: Directory to store configuration files
-        share_data: Whether to share usage data
-        register_with_server: Whether to register the profile with the server
-
-    Returns:
-        The created Profile object
-    """
     logger = logging.getLogger(__name__)
 
     if not Profile.validate_profile_name(profile_name):
         raise ValueError(f"Invalid profile name: {profile_name}")
 
-    # Create profile with the provided system_id
     profile = Profile.new(name=profile_name, email=email, system_id=system_id)
     profile.share_data = share_data
 
-    # Create config and save profile
     profiles_config = ProfilesConfig(config_dir=config_dir)
-
-    # Register with server if requested
-    if register_with_server and email:
-        session = SecureSession(
-            system_id=profile.system_id,
-            private_key=profile.private_key,
-        )
-
-        registration = Registration(
-            system_id=profile.system_id,
-            public_key=profile.public_key,
-            email=email,
-            agree_tos=True,
-        )
-
-        try:
-            prepared_request = session.prepare_request(
-                requests.Request(
-                    method="POST",
-                    url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['REGISTER']}",
-                    data=json.dumps(registration.model_dump()),
-                )
-            )
-            response = session.send(prepared_request)
-            response.raise_for_status()
-
-            # Update preferences if registration successful
-            prepared_request = session.prepare_request(
-                requests.Request(
-                    method="POST",
-                    url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
-                    data=json.dumps(SystemPreferences(share_data=share_data).model_dump()),
-                )
-            )
-            response = session.send(prepared_request)
-            response.raise_for_status()
-        except requests.HTTPError as e:
-            logger.critical(f"Error registering with server: {e!r}")
-            raise
 
     try:
         profiles_config.create_profile(profile)
@@ -392,21 +336,51 @@ def _create_new_profile(
     share_data = ui_get_share_data_function()
 
     try:
-        # Use the new function to create the profile
         profile = create_profile_with_system_id(
             profile_name=profile_name,
             system_id=generate_b64id(),
             email=email,
             config_dir=config.config_dir,
             share_data=share_data,
-            register_with_server=True,
         )
 
-        # Create session
         session = session_factory.create_session(
             system_id=profile.system_id,
             private_key=profile.private_key,
         )
+
+        if email:
+            registration = Registration(
+                system_id=profile.system_id,
+                public_key=profile.public_key,
+                email=email,
+                agree_tos=True,
+            )
+
+            try:
+                prepared_request = session.prepare_request(
+                    requests.Request(
+                        method="POST",
+                        url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['REGISTER']}",
+                        data=json.dumps(registration.model_dump()),
+                    )
+                )
+                response = session.send(prepared_request)
+                response.raise_for_status()
+
+                # Update preferences if registration successful
+                prepared_request = session.prepare_request(
+                    requests.Request(
+                        method="POST",
+                        url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
+                        data=json.dumps(SystemPreferences(share_data=share_data).model_dump()),
+                    )
+                )
+                response = session.send(prepared_request)
+                response.raise_for_status()
+            except requests.HTTPError as e:
+                logger.critical(f"Error registering with server: {e!r}")
+                raise
 
         return profile, session
 
