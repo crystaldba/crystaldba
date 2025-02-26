@@ -192,3 +192,33 @@ def build_linux_amd64():
     ]
     subprocess.run(command, check=True, env={**cross_compile_env, **dict(os.environ)})
     print("✅ Linux AMD64 build complete: build/linux_amd64/main.dist/crystal-client-linux-amd64")
+
+
+def build_windows_arm64():
+    """Build for Windows ARM64 using Nuitka."""
+    print("\n🚀 Building for Windows ARM64...")
+    command = [
+        "python",
+        "-m",
+        "nuitka",
+        "--standalone",
+        "--follow-imports",
+        "--assume-yes-for-downloads",
+        "--include-package=crystaldba",
+        "--include-package=tui",
+        "--include-package=prompt_toolkit",
+        "--include-package=sqlalchemy",
+        "--include-package=cryptography",
+        "--include-package=pygments",
+        "--windows-icon-from-ico=resources/windows/crystal-dba.ico",
+        "--windows-company-name=Crystal DBA",
+        "--windows-product-name=Crystal DBA",
+        "--windows-file-version=1.0.0.0",
+        "--windows-product-version=1.0.0.0",
+        "--output-dir=build/windows_arm64",
+        "--output-filename=crystaldba",
+        "--include-data-files=tui/tui.scss=tui/tui.scss",
+        "tui/__main__.py",
+    ]
+    subprocess.run(command, check=True)
+    print("✅ Windows ARM64 build complete: build/windows_arm64/__main__.dist/crystaldba.exe")

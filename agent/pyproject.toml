@@ -67,6 +67,7 @@ list = "scripts:list_commands"
 package_arm64 = "scripts:build_linux_arm64"
 package_amd64 = "scripts:build_linux_amd64"
 package_macos = "scripts:build_macos_arm64"
+package_windows = "scripts:build_windows_arm64"
 
 [tool.black]
 line-length = 150
