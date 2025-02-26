@@ -81,16 +81,24 @@ class Profile:
 
 def get_or_create_profile(
     profile_name: str,
+    config_dir: Path = CRYSTAL_CONFIG_DIRECTORY,
 ) -> Tuple[Profile, SecureSession]:
-    profiles_config = ProfilesConfig()
+    logger = logging.getLogger(__name__)
+    profiles_config = ProfilesConfig(config_dir=config_dir)
     profile = profiles_config.get_profile(profile_name)
     if profile:
-        logger = logging.getLogger(__name__)
         logger.info(f"Loaded profile: {profile_name}. System ID: {profile.system_id}")
         return profile, SecureSession(
             system_id=profile.system_id,
             private_key=profile.private_key,
         )
+
+    logger.info(f"Did not find profile: {profile_name}. Creating new profile.")
+    logger.info(f"Profiles config directory: {profiles_config.config_dir}")
+
+    # Print to UI that we're creating a new profile and where we looked
+    print(wrap_text_to_terminal(f"No existing profile '{profile_name}' found in {config_dir}."))
+    print(wrap_text_to_terminal("Creating a new profile..."))
 
     return _create_new_profile(profile_name, profiles_config)
 

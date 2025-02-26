@@ -1,6 +1,8 @@
 import logging
+import os
 import sys
 from getpass import getpass
+from pathlib import Path
 
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
@@ -12,6 +14,7 @@ from crystaldba.cli.chat_loop import ChatLoopExit
 from crystaldba.cli.chat_requester import ChatRequester
 from crystaldba.cli.chat_response_followup import ChatResponseFollowup
 from crystaldba.cli.chat_turn import ChatTurn
+from crystaldba.cli.constants import CRYSTAL_CONFIG_DIRECTORY
 from crystaldba.cli.dba_chat_client import DbaChatClient
 from crystaldba.cli.parse_args import get_database_url
 from crystaldba.cli.parse_args import get_log_level
@@ -63,8 +66,12 @@ def main():
         print(f"Oops! I was unable to connect to the database:\n{database_url}")
         sys.exit(1)
 
+    # Get config directory from environment variable or use default
+    config_dir = os.environ.get("CRYSTAL_CONFIG_DIR")
+    config_dir_path = Path(config_dir) if config_dir else CRYSTAL_CONFIG_DIRECTORY
+
     try:
-        profile_obj, http_session = get_or_create_profile(args.profile)
+        profile_obj, http_session = get_or_create_profile(args.profile, config_dir=config_dir_path)
         logger.info(f"Using profile: {args.profile}")
     except Exception as e:
         logger.critical(f"Error getting or creating profile: {e!r}")
