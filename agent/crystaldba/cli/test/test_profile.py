@@ -6,11 +6,9 @@ import yaml
 from pytest_mock import MockerFixture
 
 from crystaldba.cli.profile import MAX_PROFILE_NAME_LENGTH
-from crystaldba.cli.profile import ConfigUpdateError
 from crystaldba.cli.profile import Profile
 from crystaldba.cli.profile import ProfilesConfig
 from crystaldba.cli.profile import _create_new_profile  # pyright: ignore[reportPrivateUsage]
-from crystaldba.cli.profile import _update_profile  # pyright: ignore[reportPrivateUsage]
 from crystaldba.shared.secure_session import SecureSession
 
 
@@ -182,26 +180,3 @@ class TestNewProfile:
         mock_session.prepare_request.assert_called()
         mock_session.send.assert_called_with(mock_prepared_request)  # Verify HTTP request was made
         assert mock_session.send.call_count == 2  # verify both registration and preferences call
-
-
-class TestProfileUpdate:
-    @pytest.mark.private
-    def test_update_profile_concurrent_modification(self, temp_dir):
-        """Test handling of concurrent profile updates"""
-        config_file = temp_dir / "config.yaml"
-        profile = Profile(name="test", system_id="abc123", email="test@example.com", share_data=False, public_key="pub_key", private_key="priv_key")
-
-        # Create initial config
-        with open(config_file, "w") as f:
-            yaml.dump({"test": profile.to_dict()}, f)
-
-        # Simulate unexpected concurrent modification
-        profile.email = "unexpected-change-since-config-was-written-to-disk@example.com"
-
-        # New version that won't get written because of unexpected concurrent modification
-        modified_profile = Profile(
-            name="test", system_id="xyz789", email="other@example.com", share_data=True, public_key="pub_key2", private_key="priv_key2"
-        )
-
-        with pytest.raises(ConfigUpdateError):
-            _update_profile(config_file, "test", profile, modified_profile)

@@ -1,7 +1,7 @@
-import fcntl
 import json
 import logging
 import os
+import platform
 import string
 import sys
 from dataclasses import dataclass
@@ -181,37 +181,47 @@ class ProfilesConfig:
 
 
 def _update_profile(config_file: Path, profile_name: str, prev_profile: Optional[Profile], new_profile: Profile) -> None:
-    """Atomically update config file if the profile hasn't changed since reading.
-    Raises ConfigUpdateError if there was a concurrent modification.
+    """Update config file in a crash-safe manner.
+    The function ensures that if something goes wrong during the update,
+    the configuration file won't be left in a corrupted state.
     """
+    # Create temp file with new configuration
+    temp_file = config_file.with_suffix(".tmp")
 
-    # We use a+ to create the file if it doesn't exist
-    with open(config_file, "a+") as f:
-        # Get exclusive lock
-        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+    # Read current config
+    current_config = {}
+    if config_file.exists():
         try:
-            # Read current config
-            f.seek(0)
-            current_config = yaml.safe_load(f) or {}
+            with open(config_file) as f:
+                current_config = yaml.safe_load(f) or {}
+        except Exception as e:
+            logging.warning(f"Failed to read config file: {e}")
 
-            # Check if profile changed since we read it
-            if profile_name in current_config:
-                if prev_profile is not None and current_config[profile_name] != prev_profile.to_dict():
-                    raise ConfigUpdateError(f"Profile '{profile_name}' was modified by another process")
+    # Prepare the new config
+    new_config = current_config.copy()
+    new_config[profile_name] = new_profile.to_dict()
 
-            new_config = current_config.copy()
-            new_config[profile_name] = new_profile.to_dict()
+    # Write to temp file first
+    with open(temp_file, "w") as tmp:
+        yaml.dump(new_config, tmp)
 
-            # Write new config to temp file
-            temp_file = config_file.with_suffix(".tmp")
-            with open(temp_file, "w") as tmp:
-                yaml.dump(new_config, tmp)
-
-            # Atomic rename
+    try:
+        # Replace the original file with the temp file
+        # This is the critical operation that needs to be atomic
+        if platform.system() == "Windows":
+            # On Windows, use os.replace which is atomic
+            os.replace(temp_file, config_file)
+        else:
+            # On Unix, rename is atomic
             temp_file.rename(config_file)
-
-        finally:
-            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+    except OSError as e:
+        # If replacement fails, clean up the temp file
+        if temp_file.exists():
+            try:
+                temp_file.unlink()
+            except Exception:
+                pass
+        raise ConfigUpdateError("Failed to update config file") from e
 
 
 def _ui_get_email(
