@@ -1,4 +1,3 @@
-import fcntl
 import json
 import logging
 import os
@@ -22,6 +21,7 @@ from prompt_toolkit.shortcuts import confirm
 
 from crystaldba.cli.constants import CRYSTAL_CONFIG_DIRECTORY
 from crystaldba.cli.constants import MAX_PROFILE_NAME_LENGTH
+from crystaldba.cli.filelock import file_lock
 from crystaldba.cli.keypair import generate_keypair
 from crystaldba.cli.ui import make_clickable
 from crystaldba.cli.ui import wrap_text_to_terminal
@@ -187,9 +187,8 @@ def _update_profile(config_file: Path, profile_name: str, prev_profile: Optional
 
     # We use a+ to create the file if it doesn't exist
     with open(config_file, "a+") as f:
-        # Get exclusive lock
-        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-        try:
+        # Use our platform-independent file locking
+        with file_lock(f):
             # Read current config
             f.seek(0)
             current_config = yaml.safe_load(f) or {}
@@ -209,9 +208,6 @@ def _update_profile(config_file: Path, profile_name: str, prev_profile: Optional
 
             # Atomic rename
             temp_file.rename(config_file)
-
-        finally:
-            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
 
 def _ui_get_email(
