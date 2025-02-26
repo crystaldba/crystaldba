@@ -210,7 +210,7 @@ def build_windows_arm64():
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--include-package=pygments",
-        "--windows-icon-from-ico=resources/windows/crystal-dba.ico",
+        #"--windows-icon-from-ico=resources/windows/crystal-dba.ico",
         "--windows-company-name=Crystal DBA",
         "--windows-product-name=Crystal DBA",
         "--windows-file-version=1.0.0.0",
@@ -220,5 +220,11 @@ def build_windows_arm64():
         "--include-data-files=tui/tui.scss=tui/tui.scss",
         "tui/__main__.py",
     ]
-    subprocess.run(command, check=True)
-    print("✅ Windows ARM64 build complete: build/windows_arm64/__main__.dist/crystaldba.exe")
+    try:
+        subprocess.run(command, check=True)
+        print("✅ Windows ARM64 build complete: build/windows_arm64/__main__.dist/crystaldba.exe")
+    except subprocess.CalledProcessError as e:
+        print("❌ Failed to build for Windows ARM64.")
+        print("Error output:")
+        print(e)
+        sys.exit(1)
