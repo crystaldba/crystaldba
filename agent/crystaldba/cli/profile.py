@@ -59,11 +59,12 @@ class Profile:
         return CRYSTAL_CONFIG_DIRECTORY / self.system_id
 
     @classmethod
-    def new(cls, name: str, email: str) -> "Profile":
+    def new(cls, name: str, email: str = "", system_id: Optional[Base64Id] = None) -> "Profile":
         if not cls.validate_profile_name(name):
             raise ValueError(f"Invalid profile name: {name}")
 
-        system_id = generate_b64id()
+        if system_id is None:
+            system_id = generate_b64id()
 
         private_key, public_key = generate_keypair()
         return cls(name=name, email=email, system_id=system_id, share_data=False, public_key=public_key, private_key=private_key)
@@ -292,6 +293,88 @@ def _ui_get_share_data() -> bool:
     return share_data
 
 
+def create_profile_with_system_id(
+    profile_name: str,
+    system_id: Base64Id,
+    email: str = "",
+    config_dir: Path = CRYSTAL_CONFIG_DIRECTORY,
+    share_data: bool = False,
+    register_with_server: bool = True,
+) -> Profile:
+    """
+    Create a new profile with the specified system ID.
+
+    Args:
+        profile_name: Name of the profile
+        system_id: System ID to use for the profile
+        email: Optional email address for the profile
+        config_dir: Directory to store configuration files
+        share_data: Whether to share usage data
+        register_with_server: Whether to register the profile with the server
+
+    Returns:
+        The created Profile object
+    """
+    logger = logging.getLogger(__name__)
+
+    if not Profile.validate_profile_name(profile_name):
+        raise ValueError(f"Invalid profile name: {profile_name}")
+
+    # Create profile with the provided system_id
+    profile = Profile.new(name=profile_name, email=email, system_id=system_id)
+    profile.share_data = share_data
+
+    # Create config and save profile
+    profiles_config = ProfilesConfig(config_dir=config_dir)
+
+    # Register with server if requested
+    if register_with_server and email:
+        session = SecureSession(
+            system_id=profile.system_id,
+            private_key=profile.private_key,
+        )
+
+        registration = Registration(
+            system_id=profile.system_id,
+            public_key=profile.public_key,
+            email=email,
+            agree_tos=True,
+        )
+
+        try:
+            prepared_request = session.prepare_request(
+                requests.Request(
+                    method="POST",
+                    url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['REGISTER']}",
+                    data=json.dumps(registration.model_dump()),
+                )
+            )
+            response = session.send(prepared_request)
+            response.raise_for_status()
+
+            # Update preferences if registration successful
+            prepared_request = session.prepare_request(
+                requests.Request(
+                    method="POST",
+                    url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
+                    data=json.dumps(SystemPreferences(share_data=share_data).model_dump()),
+                )
+            )
+            response = session.send(prepared_request)
+            response.raise_for_status()
+        except requests.HTTPError as e:
+            logger.critical(f"Error registering with server: {e!r}")
+            raise
+
+    try:
+        profiles_config.create_profile(profile)
+    except ConfigUpdateError as e:
+        logger.critical(f"Error creating profile: {e!r}")
+        raise
+
+    return profile
+
+
 def _create_new_profile(
     profile_name: str,
     config: ProfilesConfig,
@@ -299,78 +382,38 @@ def _create_new_profile(
     ui_get_share_data_function: Callable[[], bool] = _ui_get_share_data,
     session_factory: SecureSessionFactory = DefaultSecureSessionFactory(),  # noqa: B008
 ) -> Tuple[Profile, SecureSession]:
+    """Create a new profile with interactive UI prompts for email and data sharing preferences."""
     logger = logging.getLogger(__name__)
+
+    # Get email from UI
     email = ui_get_email_function(profile_name)
 
-    profile = Profile.new(name=profile_name, email=email)
-
-    registration = Registration(
-        system_id=profile.system_id,
-        public_key=profile.public_key,
-        email=email,
-        agree_tos=True,
-    )
-
-    session = session_factory.create_session(
-        system_id=profile.system_id,
-        private_key=profile.private_key,
-    )
+    # Get share_data preference from UI
+    share_data = ui_get_share_data_function()
 
     try:
-        prepared_request = session.prepare_request(
-            requests.Request(
-                method="POST",
-                url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['REGISTER']}",
-                data=json.dumps(registration.model_dump()),
-            )
+        # Use the new function to create the profile
+        profile = create_profile_with_system_id(
+            profile_name=profile_name,
+            system_id=generate_b64id(),
+            email=email,
+            config_dir=config.config_dir,
+            share_data=share_data,
+            register_with_server=True,
         )
 
-        response = session.send(prepared_request)
-        response.raise_for_status()
-    except requests.HTTPError as e:
-        logger.critical(f"Error registering with server: {e!r}")
-        print(wrap_text_to_terminal(f"Error registering with server: {e!s}"))
-        sys.exit(1)
-
-    try:
-        config.create_profile(profile)
-    except ConfigUpdateError as e:
-        logger.critical(f"Error registering with server: {e!r}")
-        print(f"Error creating the profile: {e!s}")
-        sys.exit(1)
-
-    share_data: bool = ui_get_share_data_function()
-
-    try:
-        prepared_request = session.prepare_request(
-            requests.Request(
-                method="POST",
-                url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
-                data=json.dumps(SystemPreferences(share_data=share_data).model_dump()),
-            )
+        # Create session
+        session = session_factory.create_session(
+            system_id=profile.system_id,
+            private_key=profile.private_key,
         )
-        response = session.send(prepared_request)
-        response.raise_for_status()
-    except requests.HTTPError as e:
-        logger.critical(f"Error updating preferences: {e!r}")
-        print(f"Error updating preferences: {e!s}")
+
+        return profile, session
+
+    except (ConfigUpdateError, requests.HTTPError) as e:
+        logger.critical(f"Error creating profile: {e!r}")
+        print(wrap_text_to_terminal(f"Error: {e!s}"))
         sys.exit(1)
-    try:
-
-        def update_fn(p: Profile) -> None:
-            p.share_data = share_data
-
-        config.edit_profile(profile.name, update_fn)
-        profile = config.get_profile(profile_name)
-        if profile is None:
-            raise ConfigUpdateError("Profile not found after update")
-    except ConfigUpdateError as e:
-        logger.critical(f"Error for config update: {e!r}")
-        print(f"Error for config update: {e!s}")
-        sys.exit(1)
-    logger.info("share_data: %s", profile.share_data)
-
-    return profile, session
 
 
 class ConfigUpdateError(Exception):
