@@ -54,16 +54,13 @@ class Profile:
             "share_data": self.share_data,
         }
 
-    @property
-    def config_dir(self) -> Path:
-        return CRYSTAL_CONFIG_DIRECTORY / self.system_id
-
     @classmethod
-    def new(cls, name: str, email: str) -> "Profile":
+    def new(cls, name: str, email: str = "", system_id: Optional[Base64Id] = None) -> "Profile":
         if not cls.validate_profile_name(name):
             raise ValueError(f"Invalid profile name: {name}")
 
-        system_id = generate_b64id()
+        if system_id is None:
+            system_id = generate_b64id()
 
         private_key, public_key = generate_keypair()
         return cls(name=name, email=email, system_id=system_id, share_data=False, public_key=public_key, private_key=private_key)
@@ -80,16 +77,24 @@ class Profile:
 
 def get_or_create_profile(
     profile_name: str,
+    config_dir: Path = CRYSTAL_CONFIG_DIRECTORY,
 ) -> Tuple[Profile, SecureSession]:
-    profiles_config = ProfilesConfig()
+    logger = logging.getLogger(__name__)
+    profiles_config = ProfilesConfig(config_dir=config_dir)
     profile = profiles_config.get_profile(profile_name)
     if profile:
-        logger = logging.getLogger(__name__)
         logger.info(f"Loaded profile: {profile_name}. System ID: {profile.system_id}")
         return profile, SecureSession(
             system_id=profile.system_id,
             private_key=profile.private_key,
         )
+
+    logger.info(f"Did not find profile: {profile_name}. Creating new profile.")
+    logger.info(f"Profiles config directory: {profiles_config.config_dir}")
+
+    # Print to UI that we're creating a new profile and where we looked
+    print(wrap_text_to_terminal(f"No existing profile '{profile_name}' found in {config_dir}."))
+    print(wrap_text_to_terminal("Creating a new profile..."))
 
     return _create_new_profile(profile_name, profiles_config)
 
@@ -299,7 +304,10 @@ def _create_new_profile(
     ui_get_share_data_function: Callable[[], bool] = _ui_get_share_data,
     session_factory: SecureSessionFactory = DefaultSecureSessionFactory(),  # noqa: B008
 ) -> Tuple[Profile, SecureSession]:
+    """Create a new profile with interactive UI prompts for email and data sharing preferences."""
     logger = logging.getLogger(__name__)
+
+    # Get email from UI
     email = ui_get_email_function(profile_name)
 
     profile = Profile.new(name=profile_name, email=email)

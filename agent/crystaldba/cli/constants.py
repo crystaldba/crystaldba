@@ -22,4 +22,6 @@ DEFAULT_PROFILE_NAME: Final[str] = "default"
 MAX_PROFILE_NAME_LENGTH: Final[int] = 16
 
 # Configuration
-CRYSTAL_CONFIG_DIRECTORY: Final[Path] = Path.home() / ".crystal"
+CRYSTAL_CONFIG_DIRECTORY: Final[Path] = (
+    Path(os.environ.get("CRYSTAL_CONFIG_DIR", "")) if os.environ.get("CRYSTAL_CONFIG_DIR") else Path.home() / ".crystal"
+)

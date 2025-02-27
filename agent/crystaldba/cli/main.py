@@ -3,7 +3,6 @@ import sys
 from getpass import getpass
 
 from prompt_toolkit import PromptSession
-from prompt_toolkit.history import FileHistory
 from rich import print
 from rich.console import Console
 
@@ -75,7 +74,7 @@ def main():
     chat_requester = ChatRequester(http_session, screen_console)
 
     user_input = PromptSession(
-        history=FileHistory(profile_obj.config_dir / "history.txt"),
+        # history=FileHistory(profile_obj.config_dir / "history.txt"),
         enable_suspend=True,  # Allow Ctrl+Z suspension
         wrap_lines=True,  # Wrap long lines
     )
