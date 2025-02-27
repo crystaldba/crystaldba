@@ -54,10 +54,6 @@ class Profile:
             "share_data": self.share_data,
         }
 
-    @property
-    def config_dir(self) -> Path:
-        return CRYSTAL_CONFIG_DIRECTORY / self.system_id
-
     @classmethod
     def new(cls, name: str, email: str = "", system_id: Optional[Base64Id] = None) -> "Profile":
         if not cls.validate_profile_name(name):
@@ -301,32 +297,6 @@ def _ui_get_share_data() -> bool:
     return share_data
 
 
-def create_profile_with_system_id(
-    profile_name: str,
-    system_id: Base64Id,
-    email: str = "",
-    config_dir: Path = CRYSTAL_CONFIG_DIRECTORY,
-    share_data: bool = False,
-) -> Profile:
-    logger = logging.getLogger(__name__)
-
-    if not Profile.validate_profile_name(profile_name):
-        raise ValueError(f"Invalid profile name: {profile_name}")
-
-    profile = Profile.new(name=profile_name, email=email, system_id=system_id)
-    profile.share_data = share_data
-
-    profiles_config = ProfilesConfig(config_dir=config_dir)
-
-    try:
-        profiles_config.create_profile(profile)
-    except ConfigUpdateError as e:
-        logger.critical(f"Error creating profile: {e!r}")
-        raise
-
-    return profile
-
-
 def _create_new_profile(
     profile_name: str,
     config: ProfilesConfig,
@@ -340,62 +310,75 @@ def _create_new_profile(
     # Get email from UI
     email = ui_get_email_function(profile_name)
 
-    # Get share_data preference from UI
-    share_data = ui_get_share_data_function()
+    profile = Profile.new(name=profile_name, email=email)
+
+    registration = Registration(
+        system_id=profile.system_id,
+        public_key=profile.public_key,
+        email=email,
+        agree_tos=True,
+    )
+
+    session = session_factory.create_session(
+        system_id=profile.system_id,
+        private_key=profile.private_key,
+    )
 
     try:
-        profile = create_profile_with_system_id(
-            profile_name=profile_name,
-            system_id=generate_b64id(),
-            email=email,
-            config_dir=config.config_dir,
-            share_data=share_data,
-        )
-
-        session = session_factory.create_session(
-            system_id=profile.system_id,
-            private_key=profile.private_key,
-        )
-
-        if email:
-            registration = Registration(
-                system_id=profile.system_id,
-                public_key=profile.public_key,
-                email=email,
-                agree_tos=True,
+        prepared_request = session.prepare_request(
+            requests.Request(
+                method="POST",
+                url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['REGISTER']}",
+                data=json.dumps(registration.model_dump()),
             )
+        )
 
-            try:
-                prepared_request = session.prepare_request(
-                    requests.Request(
-                        method="POST",
-                        url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['REGISTER']}",
-                        data=json.dumps(registration.model_dump()),
-                    )
-                )
-                response = session.send(prepared_request)
-                response.raise_for_status()
-
-                # Update preferences if registration successful
-                prepared_request = session.prepare_request(
-                    requests.Request(
-                        method="POST",
-                        url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
-                        data=json.dumps(SystemPreferences(share_data=share_data).model_dump()),
-                    )
-                )
-                response = session.send(prepared_request)
-                response.raise_for_status()
-            except requests.HTTPError as e:
-                logger.critical(f"Error registering with server: {e!r}")
-                raise
-
-        return profile, session
-
-    except (ConfigUpdateError, requests.HTTPError) as e:
-        logger.critical(f"Error creating profile: {e!r}")
-        print(wrap_text_to_terminal(f"Error: {e!s}"))
+        response = session.send(prepared_request)
+        response.raise_for_status()
+    except requests.HTTPError as e:
+        logger.critical(f"Error registering with server: {e!r}")
+        print(wrap_text_to_terminal(f"Error registering with server: {e!s}"))
         sys.exit(1)
+
+    try:
+        config.create_profile(profile)
+    except ConfigUpdateError as e:
+        logger.critical(f"Error registering with server: {e!r}")
+        print(f"Error creating the profile: {e!s}")
+        sys.exit(1)
+
+    share_data: bool = ui_get_share_data_function()
+
+    try:
+        prepared_request = session.prepare_request(
+            requests.Request(
+                method="POST",
+                url=f"{CRYSTAL_API_URL}{API_ENDPOINTS['PREFERENCES']}",
+                data=json.dumps(SystemPreferences(share_data=share_data).model_dump()),
+            )
+        )
+        response = session.send(prepared_request)
+        response.raise_for_status()
+    except requests.HTTPError as e:
+        logger.critical(f"Error updating preferences: {e!r}")
+        print(f"Error updating preferences: {e!s}")
+        sys.exit(1)
+    try:
+
+        def update_fn(p: Profile) -> None:
+            p.share_data = share_data
+
+        config.edit_profile(profile.name, update_fn)
+        profile = config.get_profile(profile_name)
+        if profile is None:
+            raise ConfigUpdateError("Profile not found after update")
+    except ConfigUpdateError as e:
+        logger.critical(f"Error for config update: {e!r}")
+        print(f"Error for config update: {e!s}")
+        sys.exit(1)
+    logger.info("share_data: %s", profile.share_data)
+
+    return profile, session
 
 
 class ConfigUpdateError(Exception):
