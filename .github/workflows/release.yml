@@ -5,7 +5,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ startsWith(github.ref, 'refs/tags') }}
     outputs:
       release_tag: ${{ steps.get_tag.outputs.RELEASE_TAG }}
@@ -33,7 +33,7 @@ jobs:
 
   build_server:
     needs: prepare
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
   # Client build jobs
   build_python:
     needs: prepare
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: ./agent
@@ -102,7 +102,7 @@ jobs:
 
   create_release:
     needs: [prepare, build_server, build_python]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     steps:
