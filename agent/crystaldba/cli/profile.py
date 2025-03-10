@@ -255,15 +255,14 @@ def _ui_get_email(
         sys.exit(1)
 
     tos_message = (
-        "Please enter your email address to register this system. By entering your "
-        "email address, you acknowledge that you have read, understood, and agree to "
-        "be bound by the Crystal Customer Terms and Conditions (as made available "
-        "from time to time at " + make_clickable("https://www.crystaldba.ai/customer-terms-and-conditions") + ")."
+        "By messaging Crystal DBA, you agree to our Terms and Conditions (" 
+        + make_clickable("https://www.crystaldba.ai/customer-terms-and-conditions") + ")"
+        + " and Privacy Policy (" + make_clickable("https://www.crystaldba.ai/privacy") + ")."
     )
     print()
     print(wrap_text_to_terminal(tos_message))
     while True:
-        email = prompt("\nYour email address: ").strip()
+        email = prompt("\nEnter your email to continue: ").strip()
 
         try:
             validate_email(email)
@@ -273,7 +272,7 @@ def _ui_get_email(
             print("Please try again.")
 
     print()
-    print(wrap_text_to_terminal("Registering system with server..."))
+    # print(wrap_text_to_terminal("Registering system with server..."))
 
     return email
 
@@ -283,11 +282,7 @@ def _ui_get_share_data() -> bool:
     share_data_str: str
     while True:
         usage_data_prompt = (
-            "Would you like to share Usage Data with us to improve our products "
-            "and services? If you answer 'No', we will not use such Usage Data "
-            "for such purposes notwithstanding anything to the contrary in the "
-            "Crystal Customer Terms and Conditions (as made available from time "
-            "to time at " + make_clickable("https://www.crystaldba.ai/customer-terms-and-conditions") + ")."
+            "Would you like to help improve the AI model for everyone?"
         )
         print()
         print(wrap_text_to_terminal(usage_data_prompt))
