@@ -75,16 +75,16 @@ def build_linux_arm64():
         "-m",
         "nuitka",
         "--standalone",
-        "--follow-imports",
         "--assume-yes-for-downloads",
-        "--include-package=client",
-        "--include-package=shared",
+        "--include-package=crystaldba.cli",
+        "--include-package=crystaldba.shared",
         "--include-package=prompt_toolkit",
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/linux_arm64",
         "--output-filename=crystaldba",
-        "client/main.py",
+        # "--report=compilation-report.xml",
+        "tui/__main__.py",
     ]
     subprocess.run(command, check=True)
     print("✅ Linux ARM64 build complete: build/linux_arm64/main.dist/crystal-client-linux-arm64")
@@ -97,17 +97,18 @@ def build_macos_arm64():
         "python",
         "-m",
         "nuitka",
+        "--macos-create-app-bundle",
         "--standalone",
-        "--follow-imports",
         "--assume-yes-for-downloads",
-        "--include-package=client",
-        "--include-package=shared",
+        "--include-package=crystaldba.cli",
+        "--include-package=crystaldba.shared",
         "--include-package=prompt_toolkit",
         "--include-package=sqlalchemy",
         "--include-package=cryptography",
         "--output-dir=build/macos_arm64",
         "--output-filename=crystaldba",
-        "client/main.py",
+        # "--report=compilation-report.xml",
+        "tui/__main__.py",
     ]
     subprocess.run(command, check=True)
     print("✅ macOS ARM64 build complete: build/macos_arm64/main.dist/crystal-client-macos-arm64")
@@ -124,6 +125,7 @@ def build_linux_amd64():
         "CROSS_COMPILE": "x86_64-linux-gnu-",  # Set cross-compiler prefix
         "CC": "x86_64-linux-gnu-gcc",  # Set the cross-compiler C compiler
         "CXX": "x86_64-linux-gnu-g++",  # Set the cross-compiler C++ compiler
+        # "LD_LIBRARY_PATH": "/usr/lib/x86_64-linux-gnu/",
     }
 
     # Command to cross-compile for x86_64
@@ -132,16 +134,28 @@ def build_linux_amd64():
         "-m",
         "nuitka",
         "--standalone",
-        "--follow-imports",
+        "--noinclude-pytest-mode=nofollow",
+        "--noinclude-setuptools-mode=nofollow",
+        "--include-package-data=tui",
         "--assume-yes-for-downloads",
-        "--include-package=client",
-        "--include-package=shared",
-        "--include-package=prompt_toolkit",
-        "--include-package=sqlalchemy",
+        "--include-package=crystaldba.cli",
+        "--include-package=crystaldba.shared",
         "--include-package=cryptography",
+        "--include-package=litellm",
+        "--include-package=prompt_toolkit",
+        "--include-package=pydantic",
+        # "--include-package=pygments",
+        # "--include-package=pyperclip",
+        "--include-package=rich",
+        "--include-package=sqlalchemy",
+        "--include-package=textual",
+        "--include-package=tui",
+        "--static-libpython=yes",
+        "--include-data-files=tui/tui.scss=tui/tui.scss",
         "--output-dir=build/linux_amd64",
         "--output-filename=crystaldba",
-        "client/main.py",
+        # "--report=private/compilation-report.xml",
+        "tui/__main__.py",
     ]
     subprocess.run(command, check=True, env={**cross_compile_env, **dict(os.environ)})
     print("✅ Linux AMD64 build complete: build/linux_amd64/main.dist/crystal-client-linux-amd64")
