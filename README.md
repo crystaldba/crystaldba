@@ -31,14 +31,11 @@ Reliability and security are the top priorities for database operations.
 We focus on these first, to provide a solid foundation for delivering trustworthy suggestions for performance and efficiency.
 Crystal DBA is designed to give you advice on how to improve your database, but it will not take actions automatically without your review and consent.
 
-
-
 ## 🧑‍💻 About the Authors
 
 Crystal DBA is developed by the engineers and database experts at [Crystal DBA](https://www.crystaldba.ai/).
 Our mission is to make it easy for you to run your database well, so you can focus on building better software.
 Crystal DBA also offers commercial support for Crystal DBA and PostgreSQL.
-
 
 ## 📖 Frequently Asked Questions
 
@@ -46,7 +43,6 @@ Crystal DBA also offers commercial support for Crystal DBA and PostgreSQL.
 
 Crystal DBA is an AI agent for operating PostgreSQL databases.
 This means that it connects to an existing PostgreSQL database and takes actions, as necessary, to ensure that the database remains reliable, efficient, scalable, and secure.
-
 
 ### Will Crystal DBA replace my DBA?
 
@@ -58,17 +54,14 @@ They can also draw upon extensive knowledge bases and operational datasets, allo
 On the other hand, people working in the team will have a more nuanced understanding of the needs of the business.
 They will be better able to make high-level design decisions and to analyze trade-offs that impact the development process.
 
-
 ### Do I still need to hire a DBA if I use Crystal DBA?
 
 If you do not already have a DBA on staff, then chances are good that Crystal DBA can allow you to postpone hiring one, particularly if you have platform engineers or site reliability engineers who are interested in applying its recommendations.
 Crystal DBA and others also offer commercial support for PostgreSQL.
 
-
 ### Which PostgreSQL versions are supported?
 
 Currently, Crystal DBA is compatible with PostgreSQL versions 13 through 17.
-
 
 ### Can I use Crystal DBA with my on-premises PostgreSQL installation?
 
@@ -76,12 +69,10 @@ At present, Crystal DBA only works with AWS RDS PostgreSQL.
 Support for on-premises installations, Google Cloud SQL, and Azure SQL is coming.
 We want Crystal DBA to run anywhere that PostgreSQL runs.
 
-
 ### Will Crystal DBA support databases other than PostgreSQL?
 
 At present, we are fully focused on Crystal DBA for PostgreSQL.
 We expect to maintain that focus for the foreseeable future.
-
 
 ### Is Crystal DBA open source?
 
@@ -97,12 +88,10 @@ Is a model open if the developer releases the weights but not the training data 
 We are committed to providing open weights and some training data.
 However, we also expect to release models trained on proprietary data sets.
 
-
 ### How can I get support for Crystal DBA?
 
 Crystal DBA offers commercial support for Crystal DBA and PostgreSQL.
 For more information or to discuss your needs, please contact us at [support@crystaldba.ai](mailto:support@crystaldba.ai).
-
 
 ### How can I support the Crystal DBA project?
 
