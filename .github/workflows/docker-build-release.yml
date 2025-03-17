@@ -1,0 +1,128 @@
+---
+name: Build and Release Docker Image
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (without v prefix)"
+        required: true
+        default: ""
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-version.outputs.VERSION }}
+    steps:
+      - name: Set version from tag
+        id: set-version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && \
+                "${{ github.ref_type }}" == "tag" ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+  docker:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Prepare Docker tags
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: crystaldba/agent
+          tags: |
+            type=raw,value=${{ needs.prepare.outputs.version }}
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: agent/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          build-args: |
+            BUILDPLATFORM=${{ github.job_runner_context.os }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Create artifact metadata
+        run: |
+          mkdir -p docker-image-info
+          cat > docker-image-info/docker-info.md << EOF
+          # Docker Image Information
+
+          Multi-architecture Docker images are available:
+
+          - \`crystaldba/agent:latest\`
+          - \`crystaldba/agent:${{ needs.prepare.outputs.version }}\`
+
+          Supported platforms:
+          - linux/amd64
+          - linux/arm64
+
+          ## Usage
+
+          ```bash
+          docker pull crystaldba/agent:${{ needs.prepare.outputs.version }}
+          ```
+
+          Run with database connection:
+          ```bash
+          docker run -it --rm crystaldba/agent \
+            postgres://user:pass@host:port/dbname
+          ```
+          EOF
+
+      - name: Upload Docker image info
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-info
+          path: docker-image-info/
+
+  update_release:
+    needs: [prepare, docker]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    permissions:
+      contents: write
+    steps:
+      - name: Download Docker image info
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-info
+          path: docker-image-info
+
+      - name: Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.prepare.outputs.version }}
+          files: |
+            docker-image-info/docker-info.md
+          append_body: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

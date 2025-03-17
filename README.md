@@ -7,8 +7,13 @@ We aim to ensure that everyone who runs PostgreSQL has access to a AI-powered da
 
 **Quick install**
 
-```
+```bash
+# Using pipx (recommended)
 pipx install crystaldba
+
+# Using Docker
+docker pull crystaldba/agent:latest
+docker run -it --rm crystaldba/agent
 ```
 
 **Useful links**

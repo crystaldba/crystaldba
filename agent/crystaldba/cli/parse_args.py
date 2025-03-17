@@ -103,8 +103,12 @@ def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str
     conn_username = find_param("username", "PGUSER", [conn_username, "postgres"])
     conn_password = find_param(None, "PGPASSWORD", [conn_password])
     conn_host = find_param("host", "PGHOST", [conn_host, "localhost"])
-    # Don't set default port if using Unix socket path
-    if conn_host and conn_host.startswith("/"):
+    # Don't set default port if using Unix socket path (Unix/Linux only)
+    if conn_host and (conn_host.startswith("/") or 
+                      # Windows named pipes for PostgreSQL typically start with
+                      # '\\.\pipe\' or similar network paths
+                      conn_host.startswith("\\\\") or 
+                      conn_host.startswith("pipe")):
         conn_port = find_param("port", "PGPORT", [conn_port])
     else:
         conn_port = find_param("port", "PGPORT", [conn_port, "5432"])
@@ -131,8 +135,8 @@ def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str
     # No validation needed for password - SQLAlchemy will handle escaping/encoding
     if conn_password is not None and "\0" in str(conn_password):
         raise ValueError("Password contains invalid characters")
-    # Allow Unix socket paths (including percent-encoded chars) and IPv6 addresses in hostname
-    if not re.match(r"^[a-zA-Z0-9._:/%\-]+$", conn_host):
+    # Allow Unix socket paths, Windows network paths, and IPv6 addresses in hostname
+    if not re.match(r"^[a-zA-Z0-9._:/%\\\$\-]+$", conn_host):
         raise ValueError("Host contains invalid characters")
     if conn_port and not re.match(r"^\d+$", str(conn_port)):
         raise ValueError("Port must be a number")
@@ -165,6 +169,10 @@ def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str
 
 
 def get_log_level(verbosity):
+    """
+    Convert verbosity count to logging level.
+    Works consistently across all platforms.
+    """
     if verbosity >= 2:
         return logging.DEBUG
     elif verbosity == 1:

@@ -15,14 +15,24 @@ See the [website installation instructions](https://www.crystaldba.ai/docs/insta
 
 ### Using Docker
 
-We provide a Docker image for easy usage without installation:
+We provide multi-architecture Docker images (amd64 and arm64) for easy usage without installation:
+
+```bash
+# Pull the Docker image
+docker pull crystaldba/agent:latest
+
+# Run the CLI
+docker run -it --rm crystaldba/agent
+```
+
+Alternatively, build from source:
 
 ```bash
 # Build the Docker image
-docker build -t crystaldba-tui .
+docker build -t crystaldba-agent .
 
 # Run the CLI
-docker run -it --rm crystaldba-tui
+docker run -it --rm crystaldba-agent
 ```
 
 ## Docker Usage Guide
