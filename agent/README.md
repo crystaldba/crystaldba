@@ -25,6 +25,12 @@ docker pull crystaldba/agent:latest
 docker run -it --rm crystaldba/agent
 ```
 
+Here is an example controlling where the Crystal API server is running and a local database. Feel free to modify to suit your needs:
+
+```bash
+docker pull crystaldba/crystaldba && docker run -it --rm -e CRYSTAL_API_URL=http://localhost:7080 crystaldba/crystaldba "postgresql://postgres:mysecretpassword@localhost:5444/postgres"
+```
+
 Alternatively, build from source:
 
 ```bash

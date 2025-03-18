@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM python:3.12-slim AS builder
+FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN /root/.local/bin/poetry config virtualenvs.create false \
   && /root/.local/bin/poetry install --no-interaction --no-ansi --no-root
 
 # Final stage
-FROM --platform=$TARGETPLATFORM python:3.12-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -50,7 +50,7 @@ COPY docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
 
 # Install the package to register the entry points
-RUN pip install -e .
+RUN python -m pip install -e .
 
 # Set environment variables
 ENV PYTHONPATH=/app
