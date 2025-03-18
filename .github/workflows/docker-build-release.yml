@@ -1,5 +1,5 @@
 ---
-name: Build and Release Docker Image
+name: Build and Push Docker Image to DockerHub
 
 on:
   push:
@@ -103,26 +103,3 @@ jobs:
         with:
           name: docker-image-info
           path: docker-image-info/
-
-  update_release:
-    needs: [prepare, docker]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref_type == 'tag'
-    permissions:
-      contents: write
-    steps:
-      - name: Download Docker image info
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-image-info
-          path: docker-image-info
-
-      - name: Update GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ needs.prepare.outputs.version }}
-          files: |
-            docker-image-info/docker-info.md
-          append_body: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
