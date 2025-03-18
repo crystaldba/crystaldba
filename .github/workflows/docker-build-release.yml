@@ -52,7 +52,7 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v5
         with:
-          images: crystaldba/agent
+          images: crystaldba/tui
           tags: |
             type=raw,value=${{ needs.prepare.outputs.version }}
             type=raw,value=latest
@@ -78,8 +78,8 @@ jobs:
 
           Multi-architecture Docker images are available:
 
-          - \`crystaldba/agent:latest\`
-          - \`crystaldba/agent:${{ needs.prepare.outputs.version }}\`
+          - \`crystaldba/tui:latest\`
+          - \`crystaldba/tui:${{ needs.prepare.outputs.version }}\`
 
           Supported platforms:
           - linux/amd64
@@ -88,12 +88,12 @@ jobs:
           ## Usage
 
           ```bash
-          docker pull crystaldba/agent:${{ needs.prepare.outputs.version }}
+          docker pull crystaldba/tui:${{ needs.prepare.outputs.version }}
           ```
 
           Run with database connection:
           ```bash
-          docker run -it --rm crystaldba/agent \
+          docker run -it --rm crystaldba/tui \
             postgres://user:pass@host:port/dbname
           ```
           EOF
