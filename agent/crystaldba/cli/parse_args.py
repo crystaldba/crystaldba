@@ -104,11 +104,14 @@ def get_database_url(args: argparse.Namespace, password_prompt: Callable[[], str
     conn_password = find_param(None, "PGPASSWORD", [conn_password])
     conn_host = find_param("host", "PGHOST", [conn_host, "localhost"])
     # Don't set default port if using Unix socket path (Unix/Linux only)
-    if conn_host and (conn_host.startswith("/") or 
-                      # Windows named pipes for PostgreSQL typically start with
-                      # '\\.\pipe\' or similar network paths
-                      conn_host.startswith("\\\\") or 
-                      conn_host.startswith("pipe")):
+    if conn_host and (
+        conn_host.startswith("/")
+        or
+        # Windows named pipes for PostgreSQL typically start with
+        # '\\.\pipe\' or similar network paths
+        conn_host.startswith("\\\\")
+        or conn_host.startswith("pipe")
+    ):
         conn_port = find_param("port", "PGPORT", [conn_port])
     else:
         conn_port = find_param("port", "PGPORT", [conn_port, "5432"])
