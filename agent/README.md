@@ -1,4 +1,4 @@
-# Crystal DBA Agent Command Line Interface
+# Crystal DBA Agent Text User Interface (TUI)
 
 [Crystal DBA](https://www.crystaldba.ai) is an AI teammate for PostgreSQL database administration.
 For more information, see the [documentation](https://www.crystaldba.ai/docs).
@@ -46,7 +46,7 @@ docker run -it --rm crystaldba-agent
 ### Running during development
 
 ```bash
-docker build -t crystaldba-tui . && docker run -it --rm -e CRYSTAL_API_URL=http://localhost:7080 crystaldba-tui "postgresql://postgres:mysecretpassword@localhost:5444/postgres"
+docker build -t crystaldba/crystaldba . && docker run -it --rm -e CRYSTAL_API_URL=http://localhost:7080 crystaldba/crystaldba "postgresql://postgres:mysecretpassword@localhost:5444/postgres"
 ```
 
 > **Note:** Our Docker image automatically detects and handles connections to localhost in both the CRYSTAL_API_URL and database connection strings. It will remap these automatically to the appropriate Docker host address (host.docker.internal on Mac/Windows, or 172.17.0.1 on Linux).
@@ -64,7 +64,7 @@ The Docker container automatically detects and handles connections to services r
 Run with default settings:
 
 ```bash
-docker run -it --rm crystaldba-tui
+docker run -it --rm crystaldba/crystaldba
 ```
 
 ### Connection Options
@@ -72,13 +72,13 @@ docker run -it --rm crystaldba-tui
 Connect to a specific database using URI:
 
 ```bash
-docker run -it --rm crystaldba-tui postgresql://username:password@hostname:port/dbname
+docker run -it --rm crystaldba/crystaldba postgresql://username:password@hostname:port/dbname
 ```
 
 Or using individual connection parameters:
 
 ```bash
-docker run -it --rm crystaldba-tui -h hostname -p 5432 -U username -d dbname
+docker run -it --rm crystaldba/crystaldba -h hostname -p 5432 -U username -d dbname
 ```
 
 ### Custom API URL
@@ -86,7 +86,7 @@ docker run -it --rm crystaldba-tui -h hostname -p 5432 -U username -d dbname
 Override the default API endpoint:
 
 ```bash
-docker run -it --rm -e CRYSTAL_API_URL=http://your-api-server:port crystaldba-tui
+docker run -it --rm -e CRYSTAL_API_URL=http://your-api-server:port crystaldba/crystaldba
 ```
 
 ### Additional Options
@@ -95,10 +95,10 @@ Set verbosity level:
 
 ```bash
 # INFO level
-docker run -it --rm crystaldba-tui -v dbname
+docker run -it --rm crystaldba/crystaldba -v dbname
 
 # DEBUG level
-docker run -it --rm crystaldba-tui -vv dbname
+docker run -it --rm crystaldba/crystaldba -vv dbname
 ```
 
 ### Network Considerations
@@ -107,17 +107,17 @@ When connecting to services on your host machine from Docker, our entrypoint scr
 
 ```bash
 # Works on all platforms - localhost is automatically remapped
-docker run -it --rm crystaldba-tui postgresql://username:password@localhost:5432/dbname
+docker run -it --rm crystaldba/crystaldba postgresql://username:password@localhost:5432/dbname
 ```
 
 If you encounter connection issues, you can manually specify the host:
 
 ```bash
 # Mac/Windows/Docker Desktop
-docker run -it --rm crystaldba-tui postgresql://username:password@host.docker.internal:5432/dbname
+docker run -it --rm crystaldba/crystaldba postgresql://username:password@host.docker.internal:5432/dbname
 
 # Traditional Linux Docker
-docker run -it --rm crystaldba-tui postgresql://username:password@172.17.0.1:5432/dbname
+docker run -it --rm crystaldba/crystaldba postgresql://username:password@172.17.0.1:5432/dbname
 ```
 
 The `--network=host` flag is generally not needed and should only be used if the automatic remapping doesn't work.

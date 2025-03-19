@@ -4,8 +4,8 @@ name: Build and Push Docker Image to DockerHub
 
 on:
   push:
-    # tags:
-    #   - "v*"
+    tags:
+      - "v*"
   workflow_dispatch:
     inputs:
       version:
@@ -89,36 +89,36 @@ jobs:
           cache-from: type=registry,ref=crystaldba/crystaldba:buildcache
           cache-to: type=registry,ref=crystaldba/crystaldba:buildcache,mode=max
 
-      - name: Create artifact metadata
-        run: |
-          mkdir -p docker-image-info
-          cat > docker-image-info/docker-info.md << EOF
-          # Docker Image Information
-
-          Multi-architecture Docker images are available:
-
-          - \`crystaldba/crystaldba:latest\`
-          - \`crystaldba/crystaldba:${{ needs.prepare.outputs.version }}\`
-
-          Supported platforms:
-          - linux/amd64
-          - linux/arm64
-
-          ## Usage
-
-          ```bash
-          docker pull crystaldba/crystaldba:${{ needs.prepare.outputs.version }}
-          ```
-
-          Run with database connection:
-          ```bash
-          docker run -it --rm crystaldba/crystaldba \
-            postgres://user:pass@host:port/dbname
-          ```
-          EOF
-
-      - name: Upload Docker image info
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-image-info
-          path: docker-image-info/
+      # - name: Create artifact metadata
+      #   run: |
+      #     mkdir -p docker-image-info
+      #     cat > docker-image-info/docker-info.md << EOF
+      #     # Docker Image Information
+      #
+      #     Multi-architecture Docker images are available:
+      #
+      #     - \`crystaldba/crystaldba:latest\`
+      #     - \`crystaldba/crystaldba:${{ needs.prepare.outputs.version }}\`
+      #
+      #     Supported platforms:
+      #     - linux/amd64
+      #     - linux/arm64
+      #
+      #     ## Usage
+      #
+      #     ```bash
+      #     docker pull crystaldba/crystaldba:${{ needs.prepare.outputs.version }}
+      #     ```
+      #
+      #     Run with database connection:
+      #     ```bash
+      #     docker run -it --rm crystaldba/crystaldba \
+      #       postgres://user:pass@host:port/dbname
+      #     ```
+      #     EOF
+      #
+      # - name: Upload Docker image info
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: docker-image-info
+      #     path: docker-image-info/
