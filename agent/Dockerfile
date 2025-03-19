@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install system dependencies and pipx
 RUN apt-get update \
-  && apt-get install -y curl libpq-dev \
+  && apt-get install -y curl libpq-dev gcc \
   && rm -rf /var/lib/apt/lists/*
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
@@ -19,6 +19,15 @@ RUN /root/.local/bin/poetry config virtualenvs.create false \
 FROM python:3.12-slim
 
 WORKDIR /app
+
+# Add platform labels
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+LABEL org.opencontainers.image.description="Crystal DBA Agent - Multi-architecture container (${TARGETPLATFORM})"
+LABEL org.opencontainers.image.source="https://github.com/crystaldba/crystaldba"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.vendor="Crystal DBA"
+LABEL org.opencontainers.image.url="https://www.crystaldba.ai"
 
 # Install runtime system dependencies
 RUN apt-get update && apt-get install -y \
@@ -41,7 +50,7 @@ COPY docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
 
 # Install the package to register the entry points
-RUN pip install -e .
+RUN python -m pip install -e .
 
 # Set environment variables
 ENV PYTHONPATH=/app

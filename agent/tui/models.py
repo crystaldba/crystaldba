@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import UTC
 from datetime import datetime
+from datetime import timezone
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -59,5 +59,5 @@ class ChatData:
     def update_time(self) -> datetime:
         message_timestamp = self.messages[-1].timestamp
         if message_timestamp is None:
-            return datetime.now(UTC)
-        return message_timestamp.astimezone().replace(tzinfo=UTC)
+            return datetime.now(timezone.utc)
+        return message_timestamp.astimezone().replace(tzinfo=timezone.utc)
