@@ -1,4 +1,4 @@
-# Crystal DBA Agent Text User Interface (TUI)
+# Crystal DBA Text User Interface (TUI)
 
 [Crystal DBA](https://www.crystaldba.ai) is an AI teammate for PostgreSQL database administration.
 For more information, see the [documentation](https://www.crystaldba.ai/docs).
@@ -21,26 +21,26 @@ We provide multi-architecture Docker images (amd64 and arm64) for easy usage wit
 
 ```bash
 # Pull the Docker image
-docker pull crystaldba/agent:latest
+docker pull crystaldba/crystaldba:latest
 
 # Run the CLI
-docker run -it --rm crystaldba/agent
+docker run -it --rm crystaldba/crystaldba
 ```
 
 Here is an example controlling where the Crystal API server is running and a local database. Feel free to modify to suit your needs:
 
 ```bash
-docker pull crystaldba/crystaldba && docker run -it --rm -e CRYSTAL_API_URL=http://localhost:7080 crystaldba/crystaldba "postgresql://postgres:mysecretpassword@localhost:5444/postgres"
+docker run -it --rm -e CRYSTAL_API_URL=http://localhost:7080 crystaldba/crystaldba "postgresql://postgres:mysecretpassword@localhost:5444/postgres"
 ```
 
 Alternatively, build from source:
 
 ```bash
 # Build the Docker image
-docker build -t crystaldba-agent .
+docker build -t crystaldba/crystaldba .
 
 # Run the CLI
-docker run -it --rm crystaldba-agent
+docker run -it --rm crystaldba/crystaldba
 ```
 
 ## Docker Usage Guide
