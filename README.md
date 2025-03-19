@@ -7,6 +7,8 @@ We aim to ensure that everyone who runs PostgreSQL has access to a AI-powered da
 
 **Quick install**
 
+Requires Python 3.10+ and [pipx](https://pipx.pypa.io/latest/) to be installed.
+
 ```bash
 # Using pipx (recommended)
 pipx install crystaldba

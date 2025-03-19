@@ -7,7 +7,7 @@ For more information, see the [documentation](https://www.crystaldba.ai/docs).
 
 ### Using pipx (recommended)
 
-If you already have Python version >= 3.11 installed, then pipx is the easiest method to use (Python < 3.11 will not work).
+If you already have Python version >= 3.10 installed, then pipx is the easiest method to use (Python < 3.10 will not work).
 
 ```bash
 pipx install crystaldba
