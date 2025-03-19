@@ -5,8 +5,8 @@ set fallback
 default:
   just -u --list
 
-build-and-push:
-  docker buildx build --platform linux/amd64,linux/arm64 -t crystaldba/crystaldba:latest -t crystaldba/crystaldba:${VERSION} --push -f Dockerfile .
+build-and-push VERSION:
+  docker buildx build --platform linux/amd64,linux/arm64 -t crystaldba/crystaldba:latest -t crystaldba/crystaldba:{{VERSION}} --push -f Dockerfile .
 
 act:
   act -W ../.github/workflows/docker-build-dockerhub.yml -s DOCKERHUB_USERNAME -s DOCKERHUB_TOKEN -s GITHUB_TOKEN="$(gh auth token)"
