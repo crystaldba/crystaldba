@@ -153,3 +153,11 @@ Other options:
 Contact us:
   Email support@crystaldba.ai if you have questions.
 ```
+
+## Pushing to Dockerhub
+
+Replace "0.9.1..." version below with current version to push.
+
+```bash
+cd agent && just build-and-push v0.9.1rcVERSION
+```
